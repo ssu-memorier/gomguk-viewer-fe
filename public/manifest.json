@@ -1,11 +1,6 @@
 {
     "name": "곰국 뷰어 - 논문 전용 PDF Viewer",
     "short_name": "곰국 뷰어",
-    "theme_color": "#2196f3",
-    "background_color": "#2196f3",
-    "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
     "icons": [
         {
             "src": "/img/icons/android-chrome-192x192.png",
@@ -17,5 +12,10 @@
             "type": "image/png",
             "sizes": "512x512"
         }
-    ]
+    ],
+    "display": "standalone",
+    "theme_color": "#2196f3",
+    "background_color": "#2196f3",
+    "scope": "/",
+    "start_url": "/"
 }
