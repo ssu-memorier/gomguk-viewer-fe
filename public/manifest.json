@@ -3,17 +3,17 @@
     "short_name": "곰국 뷰어",
     "theme_color": "#2196f3",
     "background_color": "#2196f3",
-    "display": "browser",
+    "display": "standalone",
     "scope": "/",
     "start_url": "/",
     "icons": [
         {
-            "src": "/public/img/icons/android-chrome-192x192.png",
+            "src": "/img/icons/android-chrome-192x192.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "/public/img/icons/android-chrome-512x512.png",
+            "src": "/img/icons/android-chrome-512x512.png",
             "type": "image/png",
             "sizes": "512x512"
         }
