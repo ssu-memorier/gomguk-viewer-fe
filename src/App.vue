@@ -1,10 +1,16 @@
 <template>
-    <nav>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
-    </nav>
-    <router-view />
+    <header>머리</header>
+    <main>
+        <section>
+            <pdf-view></pdf-view>
+        </section>
+        <section></section>
+    </main>
 </template>
+
+<script setup lang="ts">
+import PdfView from '@/views/PdfView.vue';
+</script>
 
 <style lang="scss">
 #app {
@@ -13,18 +19,5 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-}
-
-nav {
-    padding: 30px;
-
-    a {
-        font-weight: bold;
-        color: #2c3e50;
-
-        &.router-link-exact-active {
-            color: #42b983;
-        }
-    }
 }
 </style>
