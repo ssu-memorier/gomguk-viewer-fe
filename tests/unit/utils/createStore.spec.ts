@@ -1,4 +1,3 @@
-import { shallowMount } from '@vue/test-utils';
 import createStore from '@/utils/createStore';
 
 type Counter = {
