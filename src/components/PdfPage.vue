@@ -9,7 +9,7 @@
 /**
  * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
  */
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, onMounted } from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
 import { PdfState } from '@/Interface/PdfState';
@@ -22,23 +22,26 @@ const props = defineProps({
 const pdfStore = usePdfStore();
 const $pdfView = ref<HTMLCanvasElement>();
 let page: PDFPageProxy | undefined;
-
+let viewport: PageViewport | undefined;
+let ctx: CanvasRenderingContext2D | undefined;
 /**
  * pdfStore의 doc을 구독합니다. doc은 pdf의 각 페이지와 메타데이터를 불러오는 역할을 합니다.
  * 아래 코드에선 doc이 변경되면 페이지를 다시 랜더링하도록 하고 있습니다.
  */
-pdfStore.$subscribe('doc', async (state: PdfState) => {
-    page = await state.getPage(props.pageNum);
-
-    if (!page) return;
-    const viewport = await page?.getViewport({ scale: state.scale });
-    const ctx = $pdfView.value?.getContext('2d') as CanvasRenderingContext2D;
-
-    if ($pdfView.value) {
-        $pdfView.value.width = viewport.width;
-        $pdfView.value.height = viewport.height;
+onMounted(async () => {
+    if (!pdfStore.doc) return;
+    if (!page) {
+        page = await pdfStore.doc.getPage(props.pageNum);
     }
-    await renderPage(page, ctx, viewport);
+
+    await renderPage(page, pdfStore.scale);
+});
+
+pdfStore.$subscribe('doc', async (state: PdfState) => {
+    if (!state.doc) return;
+
+    page = await state.doc.getPage(props.pageNum);
+    await renderPage(page, state.scale);
 });
 
 /**
@@ -47,13 +50,22 @@ pdfStore.$subscribe('doc', async (state: PdfState) => {
  * @param canvasContext 페이지를 그릴 캔버스의 컨텍스트입니다.
  * @param viewport 페이지의 크기 정보입니다. (width,height)
  */
-async function renderPage(
-    page: PDFPageProxy,
-    canvasContext: CanvasRenderingContext2D,
-    viewport: PageViewport
-) {
+async function renderPage(page: PDFPageProxy | undefined, scale: number) {
+    if (!page) return;
+    if (!viewport) {
+        viewport = await page?.getViewport({ scale });
+    }
+    if (!ctx) {
+        ctx = $pdfView.value?.getContext('2d') as CanvasRenderingContext2D;
+    }
+
+    if ($pdfView.value) {
+        $pdfView.value.width = viewport.width;
+        $pdfView.value.height = viewport.height;
+    }
+
     const renderContext = {
-        canvasContext,
+        canvasContext: ctx,
         viewport,
     };
     const renderTask = page.render(renderContext);
