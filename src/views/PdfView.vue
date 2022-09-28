@@ -22,8 +22,8 @@ import { onBeforeMount, ref } from 'vue';
 const tempPdfUrl = '/compressed.tracemonkey-pldi-09.pdf';
 const pdfStore = usePdfStore();
 const pdfPageNumList = ref<number[]>([]);
-onBeforeMount(async () => {
-    await pdfStore.setPdfFromUrl(tempPdfUrl);
+onBeforeMount(() => {
+    pdfStore.setPdfFromUrl(tempPdfUrl);
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
