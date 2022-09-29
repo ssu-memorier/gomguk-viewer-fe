@@ -30,16 +30,17 @@ body {
     padding: 0;
     margin: 0;
     width: 100vw;
+    background-color: var(--bg-color);
 }
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
     width: 100%;
 }
 header {
+    background-color: var(--surface-color);
     text-align: left;
     padding: 2rem;
     padding-top: 0.5rem;
@@ -47,12 +48,15 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    z-index: 100;
     .appName {
         font-weight: bold;
         font-size: 1.6rem;
     }
 }
 main {
-    padding-top: 2rem;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 }
 </style>

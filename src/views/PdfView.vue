@@ -54,6 +54,8 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
 .pdfView {
     width: 100%;
     height: 100%;
+    padding-top: 1rem;
+    padding-bottom: 10rem;
     display: flex;
     flex-direction: column;
 }
