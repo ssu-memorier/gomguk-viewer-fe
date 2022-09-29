@@ -1,5 +1,5 @@
 <template>
-    <div ref="$pdfPage" class="pdfPage">
+    <div ref="$pdfPage" class="pdfPage card">
         <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
     </div>
 </template>
@@ -109,7 +109,6 @@ async function renderPdfLayer(
 <style lang="scss" scoped>
 .pdfPage {
     position: relative;
-    border: 1px solid black;
     margin: 0.5rem auto;
     .pdfLayer,
     .textLayer {
