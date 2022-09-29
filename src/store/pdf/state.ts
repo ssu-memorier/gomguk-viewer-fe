@@ -1,6 +1,7 @@
 import { PdfState } from '@/Interface/PdfState';
 
 const state: PdfState = {
+    fileName: '',
     doc: null,
     scale: 1.6,
     pageCache: new Map(),
