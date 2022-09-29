@@ -28,16 +28,15 @@ let ctx: CanvasRenderingContext2D;
 onMounted(async () => {
     ctx = $pdfLayer.value?.getContext('2d') as CanvasRenderingContext2D;
     page = await pdfStore.getPage(props.pageIndex);
-    const option = { scale: pdfStore.scale };
+    const options = { scale: pdfStore.scale };
 
-    renderPage(page, option);
+    renderPage(page, options);
 });
 
 /**
  * page를 랜더링 합니다.
  * @param page pdf의 한 페이지에 해당하는 객체입니다.
- * @param canvasContext 페이지를 그릴 캔버스의 컨텍스트입니다.
- * @param viewport 페이지의 크기 정보입니다. (width,height)
+ * @param options 랜더링 옵션 (scale 등)
  */
 async function renderPage(
     page: PDFPageProxy,
@@ -62,6 +61,13 @@ function setPageSize(viewport: PageViewport) {
     $pdfLayer.value.width = viewport.width;
     $pdfLayer.value.height = viewport.height;
 }
+
+/**
+ * pdf view를 캔버스에 랜더링 합니다.
+ * @param page pdf의 한 페이지에 해당하는 객체입니다.
+ * @param canvasContext 페이지를 그릴 캔버스의 컨텍스트입니다.
+ * @param viewport 페이지의 크기 정보입니다. (width,height)
+ */
 async function renderPdfLayer(
     page: PDFPageProxy,
     viewport: PageViewport,
