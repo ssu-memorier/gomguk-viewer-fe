@@ -1,5 +1,5 @@
 <template>
-    <div class="pdfPage">
+    <div ref="$pdfPage" class="pdfPage">
         <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
     </div>
 </template>
@@ -20,6 +20,7 @@ const props = defineProps({
     },
 });
 const pdfStore = usePdfStore();
+const $pdfPage = ref<HTMLDivElement>();
 const $pdfLayer = ref<HTMLCanvasElement>();
 let page: PDFPageProxy | undefined;
 let viewport: PageViewport | undefined;
@@ -50,10 +51,17 @@ async function renderPage(
     if (!page || !viewport || !ctx) {
         return;
     }
-
+    setPageSize(viewport);
     renderPdfLayer(page, viewport, ctx);
 }
+function setPageSize(viewport: PageViewport) {
+    if (!$pdfPage.value || !$pdfLayer.value) return;
 
+    $pdfPage.value.style.width = viewport.width + 'px';
+    $pdfPage.value.style.height = viewport.height + 'px';
+    $pdfLayer.value.width = viewport.width;
+    $pdfLayer.value.height = viewport.height;
+}
 async function renderPdfLayer(
     page: PDFPageProxy,
     viewport: PageViewport,
