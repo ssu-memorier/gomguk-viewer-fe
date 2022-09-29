@@ -11,7 +11,6 @@
 import { defineProps, ref, onMounted } from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
-import * as pdfjsLib from 'pdfjs-dist';
 
 const props = defineProps({
     pageIndex: {
@@ -22,13 +21,16 @@ const props = defineProps({
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $pdfLayer = ref<HTMLCanvasElement>();
-let page: PDFPageProxy | undefined;
-let viewport: PageViewport | undefined;
-let ctx: CanvasRenderingContext2D | undefined;
+let page: PDFPageProxy;
+let viewport: PageViewport;
+let ctx: CanvasRenderingContext2D;
 
 onMounted(async () => {
     ctx = $pdfLayer.value?.getContext('2d') as CanvasRenderingContext2D;
-    renderPage(pdfStore.doc, { scale: pdfStore.scale });
+    page = await pdfStore.getPage(props.pageIndex);
+    const option = { scale: pdfStore.scale };
+
+    renderPage(page, option);
 });
 
 /**
@@ -38,19 +40,17 @@ onMounted(async () => {
  * @param viewport 페이지의 크기 정보입니다. (width,height)
  */
 async function renderPage(
-    doc: pdfjsLib.PDFDocumentProxy | null,
+    page: PDFPageProxy,
     options: {
         scale: number;
     }
 ) {
-    if (!doc) return;
-
-    page = await doc.getPage(props.pageIndex);
-    viewport = await page?.getViewport(options);
+    viewport = await page.getViewport(options);
 
     if (!page || !viewport || !ctx) {
         return;
     }
+
     setPageSize(viewport);
     renderPdfLayer(page, viewport, ctx);
 }
@@ -87,6 +87,7 @@ async function renderPdfLayer(
  * 이번 PR의 주 목적이 아니기 때문에 주석처리했고, copy기능을 구현하면서 제거할 예정입니다.
  * 따라서 textLayer 관련 코드는 무시하고 보시면 됩니다.
  *
+ * import * as pdfjsLib from 'pdfjs-dist';
  * <div ref="$textLayer" class="textLayer"></div>
  * const $textLayer = ref<HTMLDivElement>();
  *
