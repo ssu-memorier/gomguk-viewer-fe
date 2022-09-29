@@ -1,5 +1,5 @@
 <template>
-    <div class="pdf-view">
+    <div class="pdfView">
         <PdfPage
             v-for="PageIndex in pageIndexList"
             :key="PageIndex.key"
@@ -49,3 +49,12 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
     return list;
 }
 </script>
+
+<style lang="scss" scoped>
+.pdfView {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+</style>

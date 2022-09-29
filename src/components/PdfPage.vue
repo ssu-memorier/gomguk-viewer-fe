@@ -85,6 +85,7 @@ async function renderPdfLayer(
  *
  * 아래 코드는 textLayer를 추가할 때 사용할 예정입니다.
  * 이번 PR의 주 목적이 아니기 때문에 주석처리했고, copy기능을 구현하면서 제거할 예정입니다.
+ * 따라서 textLayer 관련 코드는 무시하고 보시면 됩니다.
  *
  * <div ref="$textLayer" class="textLayer"></div>
  * const $textLayer = ref<HTMLDivElement>();
@@ -105,44 +106,42 @@ async function renderPdfLayer(
  */
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .pdfPage {
-    display: inline-block;
     position: relative;
     border: 1px solid black;
-    width: 979px;
-    height: 1267px;
+    margin: 0.5rem auto;
     .pdfLayer,
     .textLayer {
         position: absolute;
         left: 0;
         top: 0;
     }
-    .textLayer {
-        text-align: initial;
-        overflow: hidden;
-        opacity: 0.2;
-        line-height: 1;
-        z-index: 10;
-        width: 979px;
-        height: 1267px;
-        span,
-        br {
-            color: transparent;
-            position: absolute;
-            white-space: pre;
-            transform-origin: 0% 0%;
-            overflow: hidden;
-            line-height: 100%;
-            vertical-align: bottom;
-        }
-        span::selection,
-        br::selection {
-            color: transparent;
-        }
-        ::selection {
-            background: green;
-        }
-    }
+    // .textLayer {
+    //     text-align: initial;
+    //     overflow: hidden;
+    //     opacity: 0.2;
+    //     line-height: 1;
+    //     z-index: 10;
+    //     width: 979px;
+    //     height: 1267px;
+    //     span,
+    //     br {
+    //         color: transparent;
+    //         position: absolute;
+    //         white-space: pre;
+    //         transform-origin: 0% 0%;
+    //         overflow: hidden;
+    //         line-height: 100%;
+    //         vertical-align: bottom;
+    //     }
+    //     span::selection,
+    //     br::selection {
+    //         color: transparent;
+    //     }
+    //     ::selection {
+    //         background: green;
+    //     }
+    // }
 }
 </style>
