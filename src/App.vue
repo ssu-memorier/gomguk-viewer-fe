@@ -1,7 +1,9 @@
 <template>
     <header class="card">
-        <b class="appName">곰국 뷰어</b>
-        <pdf-load-button @load="loadPdfHandler"></pdf-load-button>
+        <div class="center">
+            <b class="appName">곰국 뷰어</b>
+            <pdf-load-button @load="loadPdfHandler"></pdf-load-button>
+        </div>
     </header>
     <main>
         <section>
@@ -25,6 +27,9 @@ function loadPdfHandler(pdf: File) {
 
 <style lang="scss">
 @import url('@/assets/theme.css');
+:root {
+    --screen-main-max-width: 900px;
+}
 html,
 body {
     padding: 0;
@@ -41,14 +46,16 @@ body {
 }
 header {
     background-color: var(--surface-color);
-    text-align: left;
-    padding: 2rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    padding: 0.5rem 2rem;
     z-index: 100;
+    .center {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0 auto;
+        width: 100%;
+        max-width: var(--screen-main-max-width);
+    }
     .appName {
         font-weight: bold;
         font-size: 1.6rem;
