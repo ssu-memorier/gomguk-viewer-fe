@@ -14,7 +14,7 @@ import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
 import * as pdfjsLib from 'pdfjs-dist';
 
 const props = defineProps({
-    pageNum: {
+    pageIndex: {
         type: Number,
         required: true,
     },
@@ -44,7 +44,7 @@ async function renderPage(
 ) {
     if (!doc) return;
 
-    page = await doc.getPage(props.pageNum);
+    page = await doc.getPage(props.pageIndex);
     viewport = await page?.getViewport(options);
 
     if (!page || !viewport || !ctx) {
