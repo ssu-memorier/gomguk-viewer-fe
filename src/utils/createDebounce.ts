@@ -5,7 +5,6 @@ export default function createDebounce(
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
     return function debounce(...params: unknown[]) {
-        console.log(params);
         if (debounceTimer) {
             clearTimeout(debounceTimer);
         }
