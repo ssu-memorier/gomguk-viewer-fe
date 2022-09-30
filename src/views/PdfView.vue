@@ -1,11 +1,14 @@
 <template>
-    <div class="pdf-view">
+    <div class="pdfView" v-if="isPdfExist">
         <PdfPage
-            v-for="pageNum in pdfPageNumList"
-            :key="pageNum"
-            :pageNum="pageNum"
+            v-for="PageIndex in pageIndexList"
+            :key="PageIndex.key"
+            :pageIndex="PageIndex.idx"
         >
         </PdfPage>
+    </div>
+    <div class="noPdf" v-else>
+        <p>파일을 불러와주세요</p>
     </div>
 </template>
 
@@ -13,25 +16,61 @@
 import PdfPage from '@/components/PdfPage.vue';
 import { PdfState } from '@/Interface/PdfState';
 import { usePdfStore } from '@/store/pdf';
-import { onBeforeMount, ref } from 'vue';
+import { ref } from 'vue';
+type PageIndex = {
+    idx: number;
+    key: string;
+};
 
-/**
- * tempPdfUrl은 파일을 불러오는 기능을 추가하기 전 임시로 PDF를 불러오기 위해 사용합니다.
- * 다음 브랜치에서 삭제할 예정입니다.
- */
-const tempPdfUrl = '/compressed.tracemonkey-pldi-09.pdf';
 const pdfStore = usePdfStore();
-const pdfPageNumList = ref<number[]>([]);
-onBeforeMount(() => {
-    pdfStore.setPdfFromUrl(tempPdfUrl);
-});
+const pageIndexList = ref<PageIndex[]>([]);
+const isPdfExist = ref<boolean>(false);
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
-    if (state.doc) {
-        const maxPageNum = pdfStore.doc.numPages;
-        for (let i = 1; i <= maxPageNum; i++) {
-            pdfPageNumList.value.push(i);
-        }
+    if (!state.doc) {
+        isPdfExist.value = false;
+
+        return;
     }
+
+    isPdfExist.value = true;
+    pageIndexList.value = createPageIndexList(
+        state.fileName,
+        state.doc.numPages
+    );
 });
+
+function createPageIndexList(fileName: string, maxPageNum: number) {
+    const list = [];
+    for (let i = 1; i <= maxPageNum; i++) {
+        list.push({
+            idx: i,
+            key: `${fileName}-${i}`,
+        });
+    }
+    return list;
+}
 </script>
+
+<style lang="scss" scoped>
+.pdfView {
+    width: 100%;
+    height: 100%;
+    padding-top: 1rem;
+    padding-bottom: 10rem;
+    display: flex;
+    flex-direction: column;
+}
+.noPdf {
+    position: relative;
+    height: 500px;
+    p {
+        position: absolute;
+        width: 200px;
+        top: 50%;
+        margin-top: -100px;
+        left: 50%;
+        margin-left: -100px;
+    }
+}
+</style>

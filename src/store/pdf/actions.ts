@@ -1,5 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import { PdfState } from '@/Interface/PdfState';
+import getBase64 from '@/utils/getBase64';
 
 /**
  * url을 통해 PDF 파일을 불러오는 함수입니다.
@@ -16,9 +17,24 @@ async function setPdfFromUrl(state: PdfState, payload: string) {
 
     state.doc = pdfDoc;
     state.pageCache = new Map();
+}
+async function setPdfFromFile(state: PdfState, payload: File) {
+    if (!payload) {
+        return;
+    }
 
+    const base64 = await getBase64(payload);
+
+    if (!base64) return;
+
+    const loadingTask = pdfjsLib.getDocument(base64);
+    const pdfDoc = await loadingTask.promise;
+    state.pageCache = new Map();
+    state.fileName = payload.name;
+    state.doc = pdfDoc;
     return;
 }
 export default {
     setPdfFromUrl,
+    setPdfFromFile,
 };
