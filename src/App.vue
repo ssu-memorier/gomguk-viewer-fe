@@ -8,7 +8,7 @@
     <main>
         <section>
             <pdf-view></pdf-view>
-            <translator-view class="translateArea card"></translator-view>
+            <translator-view></translator-view>
         </section>
         <section></section>
     </main>
@@ -80,6 +80,7 @@ main {
     height: calc(100% - var(--header-height));
     width: 100%;
     margin: 0;
+    overflow: auto;
     section {
         overflow: auto;
     }
