@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 /**
- * TrasnlateView는 텍스트를 입력하면 번역된 결과를 보여주는 뷰입니다.
+ * TrasnlatorView는 텍스트를 입력하면 번역된 결과를 보여주는 뷰입니다.
  */
 import { ref } from 'vue';
 import TRANSLATE from '@/constants/TRANSLATE';
