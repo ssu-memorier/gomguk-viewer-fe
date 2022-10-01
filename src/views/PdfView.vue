@@ -1,5 +1,5 @@
 <template>
-    <div class="pdfView" v-if="isPdfExist">
+    <div class="pdfView" v-if="isPdfExist" @copy="copyHandler">
         <PdfPage
             v-for="PageIndex in pageIndexList"
             :key="PageIndex.key"
@@ -17,6 +17,7 @@ import PdfPage from '@/components/PdfPage.vue';
 import { PdfState } from '@/Interface/PdfState';
 import { usePdfStore } from '@/store/pdf';
 import { ref } from 'vue';
+import getCopiedText from '@/utils/getCopiedText';
 type PageIndex = {
     idx: number;
     key: string;
@@ -49,6 +50,16 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
         });
     }
     return list;
+}
+
+function copyHandler(evt: ClipboardEvent) {
+    const copiedText = getCopiedText();
+    const clipboard = evt.clipboardData;
+
+    if (!clipboard) return;
+
+    clipboard.setData('text/plain', copiedText);
+    evt.preventDefault();
 }
 </script>
 
