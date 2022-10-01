@@ -18,6 +18,8 @@ import { PdfState } from '@/Interface/PdfState';
 import { usePdfStore } from '@/store/pdf';
 import { ref } from 'vue';
 import getCopiedText from '@/utils/getCopiedText';
+import CLIPBOARD from '@/constants/CLIPBOARD';
+
 type PageIndex = {
     idx: number;
     key: string;
@@ -58,7 +60,7 @@ function copyHandler(evt: ClipboardEvent) {
 
     if (!clipboard) return;
 
-    clipboard.setData('text/plain', copiedText);
+    clipboard.setData(CLIPBOARD.CONTENT_TYPE, copiedText);
     evt.preventDefault();
 }
 </script>
