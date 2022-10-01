@@ -14,14 +14,14 @@
  * LanguageTranslator는 텍스트를 입력하면 번역된 결과를 보여주는 컴포넌트 입니다.
  */
 import { ref, watch } from 'vue';
-import { requestTranslate } from '@/api/translate';
+import { requestTranslateOriginText } from '@/api/translate';
 import TRANSLATE from '@/constants/TRANSLATE';
 import createDebounce from '@/utils/createDebounce';
 import DEBOUNCE from '@/constants/DEBOUNCE';
 
 const originText = ref<string>('');
 const translateText = ref<string>('');
-const debounceTranslate = createDebounce(translate, DEBOUNCE.LATENCY);
+const debounceTranslate = createDebounce(translateOriginText, DEBOUNCE.LATENCY);
 
 /**
  * watch는 텍스트의 변경을 감지하고 콜백을 수행하는 역할을 합니다.
@@ -30,8 +30,8 @@ watch(originText, (newValue) => {
     debounceTranslate(newValue);
 });
 
-async function translate(originText: string) {
-    const response = await requestTranslate(originText);
+async function translateOriginText(originText: string) {
+    const response = await requestTranslateOriginText(originText);
 
     if (response) {
         translateText.value = response.text.translated;
