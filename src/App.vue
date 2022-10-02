@@ -8,6 +8,7 @@
     <main>
         <section>
             <pdf-view></pdf-view>
+            <translator-view></translator-view>
         </section>
         <section></section>
     </main>
@@ -17,6 +18,7 @@
 import PdfView from '@/views/PdfView.vue';
 import { usePdfStore } from '@/store/pdf';
 import PdfLoadButton from '@/components/button/PdfLoadButton.vue';
+import TranslatorView from '@/views/TranslatorView.vue';
 
 const store = usePdfStore();
 
@@ -29,31 +31,43 @@ function loadPdfHandler(pdf: File) {
 @import url('@/assets/theme.css');
 :root {
     --screen-main-max-width: 900px;
+    --border-radius: 4px;
+    --header-height: 60px;
+}
+* {
+    box-sizing: border-box;
 }
 html,
 body {
     padding: 0;
     margin: 0;
     width: 100vw;
+    height: 100vh;
     background-color: var(--bg-color);
 }
 #app {
+    position: absolute;
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    width: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 header {
+    position: relative;
+    box-sizing: border-box;
+    height: var(--header-height);
     background-color: var(--surface-color);
     padding: 0.5rem 2rem;
-    z-index: 100;
+    z-index: 200;
     .center {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         margin: 0 auto;
         width: 100%;
+        height: 100%;
         max-width: var(--screen-main-max-width);
     }
     .appName {
@@ -62,8 +76,13 @@ header {
     }
 }
 main {
+    position: relative;
+    height: calc(100% - var(--header-height));
     width: 100%;
-    height: 100%;
+    margin: 0;
     overflow: auto;
+    section {
+        overflow: auto;
+    }
 }
 </style>
