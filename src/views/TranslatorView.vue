@@ -58,6 +58,7 @@ function positionHandler() {
 <style lang="scss" scoped>
 div.translatorView {
     position: fixed;
+    z-index: 100;
     border-radius: var(--border-radius);
     width: 400px;
     height: fit-content;

@@ -83,6 +83,7 @@ main {
     overflow: auto;
     section {
         overflow: auto;
+        z-index: 1;
     }
 }
 </style>
