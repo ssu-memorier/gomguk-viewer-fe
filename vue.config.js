@@ -4,7 +4,7 @@ module.exports = defineConfig({
     devServer: {
         proxy: {
             '/translate': {
-                target: 'https://zd6lygxeki.execute-api.ap-northeast-2.amazonaws.com/memorial-papago/',
+                target: process.env.TRANSLATE_DOMAIN,
             },
         },
     },
