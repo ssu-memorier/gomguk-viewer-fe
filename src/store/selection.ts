@@ -1,36 +1,19 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
+import getSerializedText from '@/utils/getSerializedText';
 
 export const useSelectionStore = defineStore('selection', () => {
-    const isPopupShow = ref<boolean>(false);
     const selection = ref<Selection | null>(null);
-    const selectedText = computed(
-        () =>
-            selection.value
-                ?.toString()
-                .replace(/-[\n\r]+/g, '')
-                .replace(/[\n\r]+/g, ' ') || ''
-    );
+    const selectedText = ref<string>('');
 
-    function setSelection(newSelection: Selection | null) {
+    function setSelection(newSelection: Selection) {
         selection.value = newSelection;
-
-        if (!selection.value || selection.value.isCollapsed) {
-            isPopupShow.value = false;
-            return;
-        }
-        isPopupShow.value = true;
-    }
-
-    function getSelectionText() {
-        return window.getSelection();
+        selectedText.value = getSerializedText(newSelection.toString());
     }
 
     return {
         selection,
         selectedText,
-        isPopupShow,
         setSelection,
-        getSelectionText,
     };
 });
