@@ -23,6 +23,12 @@ jobs:
                   path: node_modules
                   key: ${{ runner.OS }}
 
+            - name: Make ENV file
+              run: |
+                  echo "VUE_APP_TRANSLATE_DOMAIN=$TRANSLATE_DOMAIN" >> .env.local
+              env:
+                  TRANSLATE_DOMAIN: ${{ secrets.TRANSLATE_DOMAIN }}
+
             - name: Install Dependencies
               run: npm install
 

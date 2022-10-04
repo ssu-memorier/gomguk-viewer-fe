@@ -1,10 +1,24 @@
-import axios from 'axios';
 import TRANSLATE from '@/constants/TRANSLATE';
+import getTranslateModel from '@/utils/getTranslateModel';
+import { Response } from '@/Interface/Response';
+import createResponse from '@/utils/createResponse';
 
-export async function requestTranslateOriginText(text: string) {
-    const response = await axios.post(TRANSLATE.HOST, {
-        message: text,
-    });
+const model = getTranslateModel();
 
-    return response.data.body;
+export async function requestTranslatedText(text: string): Promise<Response> {
+    if (!text) {
+        return createResponse(true, '');
+    }
+
+    try {
+        const body = {
+            message: text,
+        };
+        const response = await model.post(TRANSLATE.TRANSLATE_URL, body);
+        const translatedText = response.data.body.text.translated;
+
+        return createResponse(true, translatedText);
+    } catch (err) {
+        return createResponse(false);
+    }
 }
