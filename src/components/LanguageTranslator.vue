@@ -1,9 +1,9 @@
 <template>
-    <div class="translateTextarea">
+    <div class="translatorTextarea">
         <textarea
             class="origin"
-            :placeholder="TRANSLATE.VIEW.PLACEHOLDER"
-            v-model="originText"
+            :placeholder="TRANSLATOR.VIEW.PLACEHOLDER"
+            v-model="translatorStore.originalText"
         ></textarea>
         <div class="translated" disabled>
             {{ translatorStore.translatedText }}
@@ -15,25 +15,14 @@
 /**
  * LanguageTranslator는 텍스트를 입력하면 번역된 결과를 보여주는 컴포넌트 입니다.
  */
-import { ref, watch } from 'vue';
-import TRANSLATE from '@/constants/TRANSLATE';
-import createDebounce from '@/utils/createDebounce';
+import TRANSLATOR from '@/constants/TRANSLATOR';
 import { useTranslatorStore } from '@/store/translator';
 
-const originText = ref<string>('');
 const translatorStore = useTranslatorStore();
-const debounceTranslate = createDebounce(
-    translatorStore.setTranslatedText,
-    TRANSLATE.LATENCY
-);
-
-watch(originText, (newValue) => {
-    debounceTranslate(newValue);
-});
 </script>
 
 <style lang="scss" scoped>
-div.translateTextarea {
+div.translatorTextarea {
     width: 100%;
     height: 100%;
     display: flex;
