@@ -1,6 +1,11 @@
 <template>
     <div class="pdfView" ref="$pdfView">
-        <div class="pageContainer" v-if="isPdfExist" @copy="copyHandler">
+        <div
+            class="pageContainer"
+            ref="$pageContainer"
+            v-if="isPdfExist"
+            @copy="copyHandler"
+        >
             <PdfPage
                 v-for="PageIndex in pageIndexList"
                 :key="PageIndex.key"
@@ -26,9 +31,7 @@ import { usePdfStore } from '@/store/pdf';
 import { useSelectionStore } from '@/store/selection';
 import { ref, onMounted } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
-import createCalcRelativePos from '@/utils/createCalcRelativePos';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
-import { IPosition } from '@/Interface/IPosition';
 
 type PageIndex = {
     idx: number;
@@ -41,24 +44,18 @@ const pageIndexList = ref<PageIndex[]>([]);
 const isPdfExist = ref<boolean>(false);
 const $selectionPopup = ref();
 const $pdfView = ref();
+const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
-let calcRelativePos: (absX: number, absY: number) => IPosition;
 
 onMounted(() => {
-    const pdfViewRect = $pdfView.value.getBoundingClientRect();
-    const baseX = pdfViewRect.x;
-    const baseY = pdfViewRect.y;
-    calcRelativePos = createCalcRelativePos(baseX, baseY);
-
     $pdfView.value.addEventListener('mouseup', (evt: MouseEvent) => {
         const selection = window.getSelection();
         const { clientX, clientY } = evt;
-        const popupPosition = calcRelativePos(clientX, clientY);
         /**
          * selection end시 팝업을 띄우고 selection 데이터를 selectionStore에 저장
          */
         if (selection && !selection.isCollapsed) {
-            setPopupPosition(popupPosition.x, popupPosition.y);
+            setPopupPosition(clientX, clientY);
             selectionStore.setRange(selection.getRangeAt(0));
             isPopupShow.value = true;
         } else {
@@ -104,9 +101,12 @@ function copyHandler(evt: ClipboardEvent) {
 function setPopupPosition(x: number, y: number): void {
     const scrollTop = $pdfView.value.scrollTop;
     const scrollLeft = $pdfView.value.scrollLeft;
+    const pageContainerRect = $pageContainer.value.getBoundingClientRect();
+    const baseX = pageContainerRect.x;
+    const baseY = pageContainerRect.y;
 
-    $selectionPopup.value.$el.style.left = `${x + scrollLeft}px`;
-    $selectionPopup.value.$el.style.top = `${y + scrollTop}px`;
+    $selectionPopup.value.$el.style.left = `${x + scrollLeft - baseX}px`;
+    $selectionPopup.value.$el.style.top = `${y + scrollTop - baseY}px`;
 }
 </script>
 
@@ -115,6 +115,8 @@ function setPopupPosition(x: number, y: number): void {
     width: inherit;
     height: inherit;
     overflow: scroll;
+    padding-top: 1rem;
+    padding-bottom: 10rem;
     .selectionPopup {
         position: absolute;
         left: 0;
@@ -128,11 +130,10 @@ function setPopupPosition(x: number, y: number): void {
     }
 
     .pageContainer {
+        margin: 0 auto;
         position: relative;
         width: 100%;
         height: fit-content;
-        padding-top: 1rem;
-        padding-bottom: 10rem;
         display: flex;
         flex-direction: column;
         z-index: 1;
