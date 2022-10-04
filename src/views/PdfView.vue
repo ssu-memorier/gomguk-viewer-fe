@@ -23,10 +23,10 @@
 import PdfPage from '@/components/PdfPage.vue';
 import { PdfState } from '@/Interface/PdfState';
 import { usePdfStore } from '@/store/pdf';
-import { ref, onMounted } from 'vue';
-import getSelectedText from '@/utils/getSelectionText';
+import { useSelectionStore } from '@/store/selection';
+import { ref, onMounted, watch } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
-import SELECTION from '@/constants/SELECTION';
+import createCalcRelativePos from '@/utils/createCalcRelativePos';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
 
 type PageIndex = {
@@ -35,6 +35,7 @@ type PageIndex = {
 };
 
 const pdfStore = usePdfStore();
+const selectionStore = useSelectionStore();
 const pageIndexList = ref<PageIndex[]>([]);
 const isPdfExist = ref<boolean>(false);
 const $selectionPopup = ref();
@@ -42,13 +43,22 @@ const $pdfView = ref();
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
-    $pdfView.value.addEventListener(
-        SELECTION.SELECTION_END_EVENT,
-        selectionEndHandler
-    );
-    $pdfView.value.addEventListener('mousedown', () => {
-        isPopupShow.value = false;
+    const pdfViewRect = $pdfView.value.getBoundingClientRect();
+    const baseX = pdfViewRect.x;
+    const baseY = pdfViewRect.y;
+    const calcRelativePos = createCalcRelativePos(baseX, baseY);
+
+    $pdfView.value.addEventListener('mouseup', (evt: MouseEvent) => {
+        const { clientX, clientY } = evt;
+        const popupPosition = calcRelativePos(clientX, clientY);
+
+        setPopupPosition(popupPosition.x, popupPosition.y);
+        selectionStore.setSelection(window.getSelection());
     });
+});
+
+watch(selectionStore.$state, () => {
+    decidePopupShow();
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
@@ -77,24 +87,27 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
 }
 
 function copyHandler(evt: ClipboardEvent) {
-    const copiedText = getSelectedText();
     const clipboard = evt.clipboardData;
 
     if (!clipboard) return;
 
-    clipboard.setData(CLIPBOARD.CONTENT_TYPE, copiedText);
+    clipboard.setData(CLIPBOARD.CONTENT_TYPE, selectionStore.selectedText);
     evt.preventDefault();
 }
 
-function selectionEndHandler(evt: CustomEvent) {
-    isPopupShow.value = true;
-    const { clientX, clientY } = evt.detail;
-    const { left, top } = $pdfView.value.getBoundingClientRect();
-
-    const x = Math.max(clientX - left);
-    const y = Math.max(clientY - top);
+function setPopupPosition(x: number, y: number): void {
     $selectionPopup.value.$el.style.left = `${x}px`;
     $selectionPopup.value.$el.style.top = `${y}px`;
+}
+
+function decidePopupShow() {
+    const selection = selectionStore.selection;
+
+    if (selection && !selection.isCollapsed) {
+        isPopupShow.value = true;
+        return;
+    }
+    isPopupShow.value = false;
 }
 </script>
 
