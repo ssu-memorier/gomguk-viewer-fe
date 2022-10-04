@@ -14,7 +14,7 @@
  * LanguageTranslator는 텍스트를 입력하면 번역된 결과를 보여주는 컴포넌트 입니다.
  */
 import { ref, watch } from 'vue';
-import { getTranslatedText } from '@/api/translate';
+import { requestTranslatedText } from '@/api/translate';
 import TRANSLATE from '@/constants/TRANSLATE';
 import createDebounce from '@/utils/createDebounce';
 import DEBOUNCE from '@/constants/DEBOUNCE';
@@ -31,7 +31,7 @@ watch(originText, (newValue) => {
 });
 
 async function translateOriginText(originText: string) {
-    const response = await getTranslatedText(originText);
+    const response = await requestTranslatedText(originText);
 
     if (response.isSuccess) {
         translateText.value = response.data;

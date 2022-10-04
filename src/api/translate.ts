@@ -5,7 +5,7 @@ import { Failed } from '@/Interface/Response/Failed';
 
 const model = getTranslateModel();
 
-export async function getTranslatedText(
+export async function requestTranslatedText(
     text: string
 ): Promise<Success | Failed> {
     if (!text)
