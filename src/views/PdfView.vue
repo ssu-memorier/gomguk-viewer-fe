@@ -1,10 +1,5 @@
 <template>
-    <div ref="$pdfView">
-        <SelectionPopup
-            class="selectionPopup"
-            :class="{ show: isPopupShow }"
-            ref="$selectionPopup"
-        ></SelectionPopup>
+    <div class="pdfView" ref="$pdfView">
         <div class="pageContainer" v-if="isPdfExist" @copy="copyHandler">
             <PdfPage
                 v-for="PageIndex in pageIndexList"
@@ -12,6 +7,11 @@
                 :pageIndex="PageIndex.idx"
             >
             </PdfPage>
+            <SelectionPopup
+                class="selectionPopup"
+                :class="{ show: isPopupShow }"
+                ref="$selectionPopup"
+            ></SelectionPopup>
         </div>
         <div class="noPdf" v-else>
             <p>파일을 불러와주세요</p>
@@ -28,6 +28,7 @@ import { ref, onMounted } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import createCalcRelativePos from '@/utils/createCalcRelativePos';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
+import { IPosition } from '@/Interface/IPosition';
 
 type PageIndex = {
     idx: number;
@@ -41,12 +42,13 @@ const isPdfExist = ref<boolean>(false);
 const $selectionPopup = ref();
 const $pdfView = ref();
 const isPopupShow = ref<boolean>(false);
+let calcRelativePos: (absX: number, absY: number) => IPosition;
 
 onMounted(() => {
     const pdfViewRect = $pdfView.value.getBoundingClientRect();
     const baseX = pdfViewRect.x;
     const baseY = pdfViewRect.y;
-    const calcRelativePos = createCalcRelativePos(baseX, baseY);
+    calcRelativePos = createCalcRelativePos(baseX, baseY);
 
     $pdfView.value.addEventListener('mouseup', (evt: MouseEvent) => {
         const selection = window.getSelection();
@@ -100,44 +102,53 @@ function copyHandler(evt: ClipboardEvent) {
 }
 
 function setPopupPosition(x: number, y: number): void {
-    $selectionPopup.value.$el.style.left = `${x}px`;
-    $selectionPopup.value.$el.style.top = `${y}px`;
+    const scrollTop = $pdfView.value.scrollTop;
+    const scrollLeft = $pdfView.value.scrollLeft;
+
+    $selectionPopup.value.$el.style.left = `${x + scrollLeft}px`;
+    $selectionPopup.value.$el.style.top = `${y + scrollTop}px`;
 }
 </script>
 
 <style lang="scss" scoped>
-.selectionPopup {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    z-index: -1;
-    &.show {
-        opacity: 1;
-        z-index: 200;
-    }
-}
-
-.pageContainer {
-    width: 100%;
-    height: 100%;
-    padding-top: 1rem;
-    padding-bottom: 10rem;
-    display: flex;
-    flex-direction: column;
-    z-index: 1;
-}
-.noPdf {
-    position: relative;
-    height: 500px;
-    p {
+.pdfView {
+    width: inherit;
+    height: inherit;
+    overflow: scroll;
+    .selectionPopup {
         position: absolute;
-        width: 200px;
-        top: 50%;
-        margin-top: -100px;
-        left: 50%;
-        margin-left: -100px;
-        user-select: none;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        z-index: -1;
+        &.show {
+            opacity: 1;
+            z-index: 200;
+        }
+    }
+
+    .pageContainer {
+        position: relative;
+        width: 100%;
+        height: fit-content;
+        padding-top: 1rem;
+        padding-bottom: 10rem;
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
+    }
+    .noPdf {
+        position: relative;
+        height: 500px;
+        p {
+            position: absolute;
+            width: 200px;
+            top: 50%;
+            margin-top: -100px;
+            left: 50%;
+            margin-left: -100px;
+            user-select: none;
+        }
     }
 }
 </style>
