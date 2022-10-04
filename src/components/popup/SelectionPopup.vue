@@ -1,5 +1,5 @@
 <template>
-    <ul :class="{ show: props.isShow }" class="card">
+    <ul class="card">
         <li
             v-for="MENU in SELECTION.MENUS"
             :key="MENU.TYPE"
@@ -13,18 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
 import { useSelectionStore } from '@/store/selection';
 import SELECTION from '@/constants/SELECTION';
 import writeToClipboard from '@/utils/writeToClipboard';
 
-const props = defineProps({
-    isShow: {
-        type: Boolean,
-        required: true,
-    },
-});
 const translatorStore = useTranslatorStore();
 const selectionStore = useSelectionStore();
 
@@ -34,13 +27,13 @@ function menuHandler(evt: Event) {
 
     switch (eventType) {
         case SELECTION.MENUS.TRANSLATE.TYPE: {
-            const originText = selectionStore.selectedText;
+            const originText = selectionStore.getSelectedText();
 
             translatorStore.setOriginalText(originText);
             break;
         }
         case SELECTION.MENUS.COPY.TYPE: {
-            const originText = selectionStore.selectedText;
+            const originText = selectionStore.getSelectedText();
 
             writeToClipboard(originText);
             break;
@@ -53,8 +46,6 @@ function menuHandler(evt: Event) {
 ul.selectionPopup {
     display: inline-flex;
     flex-direction: row;
-    opacity: 0;
-    z-index: 200;
     background-color: #fff;
     padding: 0;
     li.menu {
@@ -62,8 +53,5 @@ ul.selectionPopup {
         padding: 0.5rem 1rem;
         cursor: pointer;
     }
-}
-ul.selectionPopup.show {
-    opacity: 1;
 }
 </style>
