@@ -2,7 +2,7 @@ import axios from 'axios';
 import TRANSLATE from '@/constants/TRANSLATE';
 
 export async function requestTranslateOriginText(text: string) {
-    const response = await axios.post(TRANSLATE.HOST, {
+    const response = await axios.post(TRANSLATE.DOMAIN, {
         message: text,
     });
 
