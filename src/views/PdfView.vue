@@ -24,7 +24,7 @@ import PdfPage from '@/components/PdfPage.vue';
 import { PdfState } from '@/Interface/PdfState';
 import { usePdfStore } from '@/store/pdf';
 import { useSelectionStore } from '@/store/selection';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import createCalcRelativePos from '@/utils/createCalcRelativePos';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
@@ -49,16 +49,21 @@ onMounted(() => {
     const calcRelativePos = createCalcRelativePos(baseX, baseY);
 
     $pdfView.value.addEventListener('mouseup', (evt: MouseEvent) => {
+        const selection = window.getSelection();
         const { clientX, clientY } = evt;
         const popupPosition = calcRelativePos(clientX, clientY);
 
-        setPopupPosition(popupPosition.x, popupPosition.y);
-        selectionStore.setSelection(window.getSelection());
+        /**
+         * selection end시 팝업을 띄우고 selection 데이터를 selectionStore에 저장
+         */
+        if (selection && !selection.isCollapsed) {
+            setPopupPosition(popupPosition.x, popupPosition.y);
+            selectionStore.setSelection(selection);
+            isPopupShow.value = true;
+        } else {
+            isPopupShow.value = false;
+        }
     });
-});
-
-watch(selectionStore.$state, () => {
-    decidePopupShow();
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
@@ -98,16 +103,6 @@ function copyHandler(evt: ClipboardEvent) {
 function setPopupPosition(x: number, y: number): void {
     $selectionPopup.value.$el.style.left = `${x}px`;
     $selectionPopup.value.$el.style.top = `${y}px`;
-}
-
-function decidePopupShow() {
-    const selection = selectionStore.selection;
-
-    if (selection && !selection.isCollapsed) {
-        isPopupShow.value = true;
-        return;
-    }
-    isPopupShow.value = false;
 }
 </script>
 
