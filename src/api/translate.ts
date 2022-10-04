@@ -1,10 +1,33 @@
-import axios from 'axios';
 import TRANSLATE from '@/constants/TRANSLATE';
+import getTranslateModel from '@/utils/getTranslateModel';
+import { Success } from '@/Interface/Response/Success';
+import { Failed } from '@/Interface/Response/Failed';
 
-export async function requestTranslateOriginText(text: string) {
-    const response = await axios.post(TRANSLATE.DOMAIN, {
-        message: text,
-    });
+const model = getTranslateModel();
 
-    return response.data.body;
+export async function getTranslatedText(
+    text: string
+): Promise<Success | Failed> {
+    if (!text)
+        return {
+            isSuccess: true,
+            data: '',
+        };
+
+    try {
+        const body = {
+            message: text,
+        };
+        const response = await model.post(TRANSLATE.TRANSLATE_URL, body);
+        const translatedText = response.data.body.text.translated;
+
+        return {
+            isSuccess: true,
+            data: translatedText,
+        };
+    } catch (err) {
+        return {
+            isSuccess: false,
+        };
+    }
 }
