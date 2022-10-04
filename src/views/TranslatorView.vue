@@ -7,20 +7,20 @@
         }"
     >
         <div class="translatorHeader">
-            <span class="name">{{ TRANSLATE.VIEW.NAME }}</span>
+            <span class="name">{{ TRANSLATOR.VIEW.NAME }}</span>
             <span>
                 <button class="position" @click="positionHandler">
                     {{
                         position === POSITION.LEFT_TOP
-                            ? TRANSLATE.VIEW.RIGHT_TOP
-                            : TRANSLATE.VIEW.LEFT_TOP
+                            ? TRANSLATOR.VIEW.RIGHT_TOP
+                            : TRANSLATOR.VIEW.LEFT_TOP
                     }}
                 </button>
                 <button class="minimize" @click="minimizeHandler">
                     {{
                         translatorStore.isMinimized
-                            ? TRANSLATE.VIEW.OPEN
-                            : TRANSLATE.VIEW.CLOSE
+                            ? TRANSLATOR.VIEW.OPEN
+                            : TRANSLATOR.VIEW.CLOSE
                     }}
                 </button>
             </span>
@@ -37,7 +37,7 @@
  * TrasnlatorView는 텍스트를 입력하면 번역된 결과를 보여주는 뷰입니다.
  */
 import { ref } from 'vue';
-import TRANSLATE from '@/constants/TRANSLATE';
+import TRANSLATOR from '@/constants/TRANSLATOR';
 import POSITION from '@/constants/POSITION';
 import type { PositionType } from '@/types/PositionType';
 import LanguageTranslator from '@/components/LanguageTranslator.vue';
