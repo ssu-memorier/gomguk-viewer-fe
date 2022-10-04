@@ -2,8 +2,8 @@
     <div ref="$pdfView">
         <SelectionPopup
             class="selectionPopup"
+            :class="{ show: isPopupShow }"
             ref="$selectionPopup"
-            :isShow="isPopupShow"
         ></SelectionPopup>
         <div class="pageContainer" v-if="isPdfExist" @copy="copyHandler">
             <PdfPage
@@ -52,13 +52,12 @@ onMounted(() => {
         const selection = window.getSelection();
         const { clientX, clientY } = evt;
         const popupPosition = calcRelativePos(clientX, clientY);
-
         /**
          * selection end시 팝업을 띄우고 selection 데이터를 selectionStore에 저장
          */
         if (selection && !selection.isCollapsed) {
             setPopupPosition(popupPosition.x, popupPosition.y);
-            selectionStore.setSelection(selection);
+            selectionStore.setRange(selection.getRangeAt(0));
             isPopupShow.value = true;
         } else {
             isPopupShow.value = false;
@@ -96,7 +95,7 @@ function copyHandler(evt: ClipboardEvent) {
 
     if (!clipboard) return;
 
-    clipboard.setData(CLIPBOARD.CONTENT_TYPE, selectionStore.selectedText);
+    clipboard.setData(CLIPBOARD.CONTENT_TYPE, selectionStore.getSelectedText());
     evt.preventDefault();
 }
 
@@ -111,8 +110,14 @@ function setPopupPosition(x: number, y: number): void {
     position: absolute;
     left: 0;
     top: 0;
-    z-index: 200;
+    opacity: 0;
+    z-index: -1;
+    &.show {
+        opacity: 1;
+        z-index: 200;
+    }
 }
+
 .pageContainer {
     width: 100%;
     height: 100%;
