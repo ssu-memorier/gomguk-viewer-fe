@@ -31,6 +31,7 @@ import { usePdfStore } from '@/store/pdf';
 import { useSelectionStore } from '@/store/selection';
 import { ref, onMounted } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
+import SELECTION from '@/constants/SELECTION';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
 
 type PageIndex = {
@@ -101,12 +102,11 @@ function copyHandler(evt: ClipboardEvent) {
 function setPopupPosition(x: number, y: number): void {
     const scrollTop = $pdfView.value.scrollTop;
     const scrollLeft = $pdfView.value.scrollLeft;
-    const pageContainerRect = $pageContainer.value.getBoundingClientRect();
-    const baseX = pageContainerRect.x;
-    const baseY = pageContainerRect.y;
 
-    $selectionPopup.value.$el.style.left = `${x + scrollLeft - baseX}px`;
-    $selectionPopup.value.$el.style.top = `${y + scrollTop - baseY}px`;
+    $selectionPopup.value.$el.style.left = `${x + scrollLeft}px`;
+    $selectionPopup.value.$el.style.top = `${
+        y + scrollTop - SELECTION.VIEW.BASE_Y
+    }px`;
 }
 </script>
 
