@@ -36,7 +36,7 @@
 /**
  * TrasnlatorView는 텍스트를 입력하면 번역된 결과를 보여주는 뷰입니다.
  */
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import TRANSLATOR from '@/constants/TRANSLATOR';
 import POSITION from '@/constants/POSITION';
 import type { PositionType } from '@/types/PositionType';
