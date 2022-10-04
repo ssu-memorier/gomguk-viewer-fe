@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
-import getCopiedText from '@/utils/getSelectionText';
+import getSelectedText from '@/utils/getSelectionText';
 import SELECTION from '@/constants/SELECTION';
 
 const props = defineProps({
@@ -32,7 +32,7 @@ function menuHandler(evt: Event) {
 
     switch (eventType) {
         case SELECTION.MENUS.TRANSLATE.TYPE: {
-            const originText = getCopiedText();
+            const originText = getSelectedText();
             translatorStore.setTranslatedText(originText);
         }
     }

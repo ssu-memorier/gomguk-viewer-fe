@@ -24,7 +24,7 @@ import PdfPage from '@/components/PdfPage.vue';
 import { PdfState } from '@/Interface/PdfState';
 import { usePdfStore } from '@/store/pdf';
 import { ref, onMounted } from 'vue';
-import getCopiedText from '@/utils/getSelectionText';
+import getSelectedText from '@/utils/getSelectionText';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import SELECTION from '@/constants/SELECTION';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
@@ -77,7 +77,7 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
 }
 
 function copyHandler(evt: ClipboardEvent) {
-    const copiedText = getCopiedText();
+    const copiedText = getSelectedText();
     const clipboard = evt.clipboardData;
 
     if (!clipboard) return;
