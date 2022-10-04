@@ -1,16 +1,13 @@
 import TRANSLATE from '@/constants/TRANSLATE';
 import getTranslateModel from '@/utils/getTranslateModel';
-import { Success } from '@/Interface/Response/Success';
-import { Failed } from '@/Interface/Response/Failed';
-import { createSuccess, createFailed } from '@/utils/response';
+import { Response } from '@/Interface/Response';
+import createResponse from '@/utils/createResponse';
 
 const model = getTranslateModel();
 
-export async function requestTranslatedText(
-    text: string
-): Promise<Success | Failed> {
+export async function requestTranslatedText(text: string): Promise<Response> {
     if (!text) {
-        return createSuccess('');
+        return createResponse(true, '');
     }
 
     try {
@@ -20,8 +17,8 @@ export async function requestTranslatedText(
         const response = await model.post(TRANSLATE.TRANSLATE_URL, body);
         const translatedText = response.data.body.text.translated;
 
-        return createSuccess(translatedText);
+        return createResponse(true, translatedText);
     } catch (err) {
-        return createFailed();
+        return createResponse(false);
     }
 }
