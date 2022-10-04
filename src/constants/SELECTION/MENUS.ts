@@ -1,3 +1,6 @@
-const TRANSLATE = '번역하기';
+const TRANSLATE = {
+    NAME: '번역하기',
+    TYPE: 'translate',
+};
 
 export { TRANSLATE };
