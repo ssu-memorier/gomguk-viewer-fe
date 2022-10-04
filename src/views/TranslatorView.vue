@@ -18,14 +18,16 @@
                 </button>
                 <button class="minimize" @click="minimizeHandler">
                     {{
-                        isMinimized ? TRANSLATE.VIEW.OPEN : TRANSLATE.VIEW.CLOSE
+                        translatorStore.isMinimized
+                            ? TRANSLATE.VIEW.OPEN
+                            : TRANSLATE.VIEW.CLOSE
                     }}
                 </button>
             </span>
         </div>
         <language-translator
             class="translator"
-            v-show="!isMinimized"
+            v-show="!translatorStore.isMinimized"
         ></language-translator>
     </div>
 </template>
@@ -39,13 +41,15 @@ import TRANSLATE from '@/constants/TRANSLATE';
 import POSITION from '@/constants/POSITION';
 import type { PositionType } from '@/types/PositionType';
 import LanguageTranslator from '@/components/LanguageTranslator.vue';
+import { useTranslatorStore } from '@/store/translator';
 
-const isMinimized = ref<boolean>(false);
+const translatorStore = useTranslatorStore();
 const position = ref<PositionType>(POSITION.RIGHT_TOP);
 
 function minimizeHandler() {
-    isMinimized.value = !isMinimized.value;
+    translatorStore.setMinimize(!translatorStore.isMinimized);
 }
+
 function positionHandler() {
     if (position.value === POSITION.LEFT_TOP) {
         position.value = POSITION.RIGHT_TOP;
