@@ -1,4 +1,4 @@
-import VIEW from '@/constants/TRANSLATE/VIEW';
+import VIEW from '@/constants/TRANSLATOR/VIEW';
 
 export default {
     VIEW,
