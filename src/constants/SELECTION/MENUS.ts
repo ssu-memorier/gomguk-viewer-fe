@@ -3,4 +3,9 @@ const TRANSLATE = {
     TYPE: 'translate',
 };
 
-export { TRANSLATE };
+const COPY = {
+    NAME: '복사',
+    TYPE: 'copy',
+};
+
+export { TRANSLATE, COPY };

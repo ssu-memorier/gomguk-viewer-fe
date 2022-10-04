@@ -5,7 +5,7 @@
             :key="MENU.TYPE"
             class="menu"
             :data-event-type="MENU.TYPE"
-            @click="menuHandler"
+            @click.capture="menuHandler"
         >
             {{ MENU.NAME }}
         </li>
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
-import getSelectedText from '@/utils/getSelectionText';
+import { useSelectionStore } from '@/store/selection';
 import SELECTION from '@/constants/SELECTION';
 
 const props = defineProps({
@@ -25,6 +25,7 @@ const props = defineProps({
     },
 });
 const translatorStore = useTranslatorStore();
+const selectionStore = useSelectionStore();
 
 function menuHandler(evt: Event) {
     const $target = evt.target as HTMLElement;
@@ -32,9 +33,15 @@ function menuHandler(evt: Event) {
 
     switch (eventType) {
         case SELECTION.MENUS.TRANSLATE.TYPE: {
-            const originText = getSelectedText();
+            const originText = selectionStore.selectedText;
 
             translatorStore.setOriginalText(originText);
+            break;
+        }
+        case SELECTION.MENUS.COPY.TYPE: {
+            const originText = selectionStore.selectedText;
+
+            navigator.clipboard.writeText(originText);
             break;
         }
     }
