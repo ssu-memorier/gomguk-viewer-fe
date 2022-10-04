@@ -33,7 +33,9 @@ function menuHandler(evt: Event) {
     switch (eventType) {
         case SELECTION.MENUS.TRANSLATE.TYPE: {
             const originText = getSelectedText();
-            translatorStore.setTranslatedText(originText);
+
+            translatorStore.setOriginalText(originText);
+            break;
         }
     }
 }
