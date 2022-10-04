@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { requestTranslateOriginText } from '@/api/translate';
+import { requestTranslatedText } from '@/api/translate';
 export const useTranslatorStore = defineStore('translator', () => {
     const isMinimized = ref<boolean>(false);
     const translatedText = ref<string>('');
@@ -9,7 +9,11 @@ export const useTranslatorStore = defineStore('translator', () => {
         isMinimized.value = isMinimize;
     }
     async function setTranslatedText(originText: string) {
-        translatedText.value = await requestTranslateOriginText(originText);
+        const response = await requestTranslatedText(originText);
+
+        if (response.isSuccess) {
+            translatedText.value = response.data;
+        }
     }
     return {
         isMinimized,
