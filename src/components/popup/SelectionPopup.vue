@@ -5,7 +5,7 @@
             :key="MENU.TYPE"
             class="menu"
             :data-event-type="MENU.TYPE"
-            @click.capture="menuHandler"
+            @click="menuHandler"
         >
             {{ MENU.NAME }}
         </li>
