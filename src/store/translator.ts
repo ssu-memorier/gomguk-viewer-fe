@@ -5,8 +5,6 @@ import { requestTranslatedText } from '@/api/translate';
 import createDebounce from '@/utils/createDebounce';
 
 export const useTranslatorStore = defineStore('translator', () => {
-    const isMinimized = ref<boolean>(false);
-    const isError = ref<boolean>(false);
     const originalText = ref<string>('');
     const translatedText = ref<string>('');
     const debouncedFetchTranslatedText = createDebounce(
@@ -18,16 +16,13 @@ export const useTranslatorStore = defineStore('translator', () => {
         debouncedFetchTranslatedText(newText);
     });
 
-    function setMinimize(isMinimize: boolean) {
-        isMinimized.value = isMinimize;
-    }
     function setOriginalText(text: string) {
         originalText.value = text;
     }
     async function fetchTranslatedText(originText: string) {
         const response = await requestTranslatedText(originText);
 
-        if ((isError.value = !response.isSuccess)) {
+        if (!response.isSuccess) {
             translatedText.value = '';
             return;
         }
@@ -35,10 +30,8 @@ export const useTranslatorStore = defineStore('translator', () => {
     }
 
     return {
-        isMinimized,
         originalText,
         translatedText,
         setOriginalText,
-        setMinimize,
     };
 });

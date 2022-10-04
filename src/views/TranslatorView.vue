@@ -18,7 +18,7 @@
                 </button>
                 <button class="minimize" @click="minimizeHandler">
                     {{
-                        translatorStore.isMinimized
+                        isMinimized
                             ? TRANSLATOR.VIEW.OPEN
                             : TRANSLATOR.VIEW.CLOSE
                     }}
@@ -27,7 +27,7 @@
         </div>
         <language-translator
             class="translator"
-            v-show="!translatorStore.isMinimized"
+            v-show="!isMinimized"
         ></language-translator>
     </div>
 </template>
@@ -36,7 +36,7 @@
 /**
  * TrasnlatorView는 텍스트를 입력하면 번역된 결과를 보여주는 뷰입니다.
  */
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import TRANSLATOR from '@/constants/TRANSLATOR';
 import POSITION from '@/constants/POSITION';
 import type { PositionType } from '@/types/PositionType';
@@ -45,9 +45,18 @@ import { useTranslatorStore } from '@/store/translator';
 
 const translatorStore = useTranslatorStore();
 const position = ref<PositionType>(POSITION.RIGHT_TOP);
+const isMinimized = ref<boolean>(false);
+
+translatorStore.$subscribe(() => {
+    setMinimize(false);
+});
+
+function setMinimize(isMinimize: boolean) {
+    isMinimized.value = isMinimize;
+}
 
 function minimizeHandler() {
-    translatorStore.setMinimize(!translatorStore.isMinimized);
+    setMinimize(!isMinimized.value);
 }
 
 function positionHandler() {
