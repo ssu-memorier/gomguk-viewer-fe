@@ -17,6 +17,7 @@ import { defineProps } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
 import { useSelectionStore } from '@/store/selection';
 import SELECTION from '@/constants/SELECTION';
+import writeToClipboard from '@/utils/writeToClipboard';
 
 const props = defineProps({
     isShow: {
@@ -41,7 +42,7 @@ function menuHandler(evt: Event) {
         case SELECTION.MENUS.COPY.TYPE: {
             const originText = selectionStore.selectedText;
 
-            navigator.clipboard.writeText(originText);
+            writeToClipboard(originText);
             break;
         }
     }
