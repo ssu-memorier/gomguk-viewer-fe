@@ -110,12 +110,12 @@ div.translatorView {
     width: 400px;
     height: fit-content;
     overflow: hidden;
+    background-color: #ccc;
     div.translatorHeader {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         padding: 0.5rem;
-        background-color: #ccc;
         button {
             cursor: pointer;
         }

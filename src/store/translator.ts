@@ -6,8 +6,8 @@ import { requestTranslatedText } from '@/api/translate';
 import createDebounce from '@/utils/createDebounce';
 
 export const useTranslatorStore = defineStore('translator', () => {
-    const source = ref<LanguageType>('ko');
-    const target = ref<LanguageType>('en');
+    const source = ref<LanguageType>('en');
+    const target = ref<LanguageType>('ko');
     const originalText = ref<string>('');
     const translatedText = ref<string>('');
     const debouncedFetchTranslatedText = createDebounce(
@@ -18,6 +18,13 @@ export const useTranslatorStore = defineStore('translator', () => {
     watch(originalText, (newText) => {
         debouncedFetchTranslatedText(newText);
     });
+    watch(source, () => {
+        fetchTranslatedText(originalText.value);
+    });
+    watch(target, () => {
+        fetchTranslatedText(originalText.value);
+    });
+
     function setSourceLanguage(code: LanguageType) {
         source.value = code;
     }
