@@ -112,7 +112,7 @@ async function renderTextLayer(page: PDFPageProxy, viewport: PageViewport) {
 <style lang="scss" scoped>
 .pdfPage {
     position: relative;
-    margin: 0.5rem auto;
+    margin: 0 auto 1rem auto;
     .pdfLayer,
     .textLayer {
         position: absolute;

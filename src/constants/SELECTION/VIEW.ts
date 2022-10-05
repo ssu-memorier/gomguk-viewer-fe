@@ -1,3 +1,3 @@
 export default {
-    LATENCY: 200,
+    BASE_Y: 60,
 };

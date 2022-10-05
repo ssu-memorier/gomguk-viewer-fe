@@ -1,11 +1,13 @@
 <template>
-    <div class="translateTextarea">
+    <div class="translatorTextarea">
         <textarea
             class="origin"
-            :placeholder="TRANSLATE.VIEW.PLACEHOLDER"
-            v-model="originText"
+            :placeholder="TRANSLATOR.VIEW.PLACEHOLDER"
+            v-model="translatorStore.originalText"
         ></textarea>
-        <div class="translated" disabled>{{ translateText }}</div>
+        <div class="translated" disabled>
+            {{ translatorStore.translatedText }}
+        </div>
     </div>
 </template>
 
@@ -13,34 +15,14 @@
 /**
  * LanguageTranslator는 텍스트를 입력하면 번역된 결과를 보여주는 컴포넌트 입니다.
  */
-import { ref, watch } from 'vue';
-import { requestTranslatedText } from '@/api/translate';
-import TRANSLATE from '@/constants/TRANSLATE';
-import createDebounce from '@/utils/createDebounce';
-import DEBOUNCE from '@/constants/DEBOUNCE';
+import TRANSLATOR from '@/constants/TRANSLATOR';
+import { useTranslatorStore } from '@/store/translator';
 
-const originText = ref<string>('');
-const translateText = ref<string>('');
-const debounceTranslate = createDebounce(translateOriginText, DEBOUNCE.LATENCY);
-
-/**
- * watch는 텍스트의 변경을 감지하고 콜백을 수행하는 역할을 합니다.
- */
-watch(originText, (newValue) => {
-    debounceTranslate(newValue);
-});
-
-async function translateOriginText(originText: string) {
-    const response = await requestTranslatedText(originText);
-
-    if (response.isSuccess) {
-        translateText.value = response.data;
-    }
-}
+const translatorStore = useTranslatorStore();
 </script>
 
 <style lang="scss" scoped>
-div.translateTextarea {
+div.translatorTextarea {
     width: 100%;
     height: 100%;
     display: flex;

@@ -7,18 +7,20 @@
         }"
     >
         <div class="translatorHeader">
-            <span class="name">{{ TRANSLATE.VIEW.NAME }}</span>
+            <span class="name">{{ TRANSLATOR.VIEW.NAME }}</span>
             <span>
                 <button class="position" @click="positionHandler">
                     {{
                         position === POSITION.LEFT_TOP
-                            ? TRANSLATE.VIEW.RIGHT_TOP
-                            : TRANSLATE.VIEW.LEFT_TOP
+                            ? TRANSLATOR.VIEW.RIGHT_TOP
+                            : TRANSLATOR.VIEW.LEFT_TOP
                     }}
                 </button>
                 <button class="minimize" @click="minimizeHandler">
                     {{
-                        isMinimized ? TRANSLATE.VIEW.OPEN : TRANSLATE.VIEW.CLOSE
+                        isMinimized
+                            ? TRANSLATOR.VIEW.OPEN
+                            : TRANSLATOR.VIEW.CLOSE
                     }}
                 </button>
             </span>
@@ -35,17 +37,28 @@
  * TrasnlatorView는 텍스트를 입력하면 번역된 결과를 보여주는 뷰입니다.
  */
 import { ref } from 'vue';
-import TRANSLATE from '@/constants/TRANSLATE';
+import TRANSLATOR from '@/constants/TRANSLATOR';
 import POSITION from '@/constants/POSITION';
 import type { PositionType } from '@/types/PositionType';
 import LanguageTranslator from '@/components/LanguageTranslator.vue';
+import { useTranslatorStore } from '@/store/translator';
 
-const isMinimized = ref<boolean>(false);
+const translatorStore = useTranslatorStore();
 const position = ref<PositionType>(POSITION.RIGHT_TOP);
+const isMinimized = ref<boolean>(false);
+
+translatorStore.$subscribe(() => {
+    setMinimize(false);
+});
+
+function setMinimize(isMinimize: boolean) {
+    isMinimized.value = isMinimize;
+}
 
 function minimizeHandler() {
-    isMinimized.value = !isMinimized.value;
+    setMinimize(!isMinimized.value);
 }
+
 function positionHandler() {
     if (position.value === POSITION.LEFT_TOP) {
         position.value = POSITION.RIGHT_TOP;

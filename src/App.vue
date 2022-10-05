@@ -10,7 +10,6 @@
             <pdf-view></pdf-view>
             <translator-view></translator-view>
         </section>
-        <section></section>
     </main>
 </template>
 
@@ -82,7 +81,7 @@ main {
     margin: 0;
     overflow: auto;
     section {
-        overflow: auto;
+        height: 100%;
         z-index: 1;
     }
 }

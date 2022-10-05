@@ -1,8 +1,8 @@
 import axios from 'axios';
-import TRANSLATE from '@/constants/TRANSLATE';
+import TRANSLATOR from '@/constants/TRANSLATOR';
 
 const translateModel = axios.create({
-    baseURL: TRANSLATE.DOMAIN,
+    baseURL: TRANSLATOR.DOMAIN,
 });
 
 export default function getTranslateModel() {
