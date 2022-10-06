@@ -25,6 +25,28 @@
                 </button>
             </span>
         </div>
+        <div class="translatorLanguageSelect">
+            <select @change="sourceLanguageHandler">
+                <option
+                    v-for="LANG in LANGUAGES"
+                    :key="LANG.KEY"
+                    :value="LANG.KEY"
+                    :selected="LANG.KEY === translatorStore.source"
+                >
+                    {{ LANG.NAME }}
+                </option>
+            </select>
+            <select @change="targetLanguageHandler">
+                <option
+                    v-for="LANG in LANGUAGES"
+                    :key="LANG.KEY"
+                    :value="LANG.KEY"
+                    :selected="LANG.KEY === translatorStore.target"
+                >
+                    {{ LANG.NAME }}
+                </option>
+            </select>
+        </div>
         <language-translator
             class="translator"
             v-show="!isMinimized"
@@ -39,9 +61,11 @@
 import { ref } from 'vue';
 import TRANSLATOR from '@/constants/TRANSLATOR';
 import POSITION from '@/constants/POSITION';
+import LANGUAGES from '@/constants/TRANSLATOR/LANGUAGES';
 import type { PositionType } from '@/types/PositionType';
 import LanguageTranslator from '@/components/LanguageTranslator.vue';
 import { useTranslatorStore } from '@/store/translator';
+import { LanguageType } from '@/types/LanguageType';
 
 const translatorStore = useTranslatorStore();
 const position = ref<PositionType>(POSITION.RIGHT_TOP);
@@ -66,6 +90,16 @@ function positionHandler() {
         position.value = POSITION.LEFT_TOP;
     }
 }
+
+function sourceLanguageHandler(evt: Event) {
+    const $target = evt.target as HTMLOptionElement;
+    translatorStore.setSourceLanguage($target.value as LanguageType);
+}
+
+function targetLanguageHandler(evt: Event) {
+    const $target = evt.target as HTMLOptionElement;
+    translatorStore.setTargetLanguage($target.value as LanguageType);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -76,12 +110,12 @@ div.translatorView {
     width: 400px;
     height: fit-content;
     overflow: hidden;
+    background-color: #ccc;
     div.translatorHeader {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         padding: 0.5rem;
-        background-color: #ccc;
         button {
             cursor: pointer;
         }
