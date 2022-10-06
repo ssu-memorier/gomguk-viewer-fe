@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import getSerializedText from '@/utils/getSerializedText';
+import getSerializedTextFromNodes from '@/utils/getSerializedTextFromNodes';
 
 export const useSelectionStore = defineStore('selection', () => {
     const range = ref<Range>();
@@ -11,7 +11,9 @@ export const useSelectionStore = defineStore('selection', () => {
 
     function getSelectedText() {
         if (range.value) {
-            return getSerializedText(range.value.toString());
+            const nodes = Array(...range.value.cloneContents().childNodes);
+
+            return getSerializedTextFromNodes(nodes);
         }
         return '';
     }
