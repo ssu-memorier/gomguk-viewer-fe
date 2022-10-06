@@ -7,17 +7,17 @@ import createResponse from '@/utils/createResponse';
 const model = getTranslateModel();
 
 export async function requestTranslatedText(
-    option: IRequestTranslatedTextParams
+    params: IRequestTranslatedTextParams
 ): Promise<Response> {
-    if (!option.text) {
+    if (!params.text) {
         return createResponse(true, '');
     }
 
     try {
         const body = {
-            message: option.text,
-            source: option.source,
-            target: option.target,
+            message: params.text,
+            source: params.source,
+            target: params.target,
         };
         const response = await model.post(TRANSLATOR.TRANSLATE_URL, body);
         const translatedText = response.data.body.text.translated;
