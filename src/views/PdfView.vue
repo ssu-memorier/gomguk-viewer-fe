@@ -49,19 +49,27 @@ const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
-    $pdfView.value.addEventListener('mouseup', (evt: MouseEvent) => {
+    document.addEventListener('selectionchange', () => {
         const selection = window.getSelection();
+        if (selection && !selection.isCollapsed) {
+            selectionStore.setRange(selection.getRangeAt(0));
+        } else {
+            selectionStore.setRange(null);
+        }
+    });
+    $pdfView.value.addEventListener('mouseup', (evt: MouseEvent) => {
         const { clientX, clientY } = evt;
         /**
          * selection end시 팝업을 띄우고 selection 데이터를 selectionStore에 저장
          */
-        if (selection && !selection.isCollapsed) {
-            setPopupPosition(clientX, clientY);
-            selectionStore.setRange(selection.getRangeAt(0));
-            isPopupShow.value = true;
-        } else {
-            isPopupShow.value = false;
-        }
+        setTimeout(() => {
+            if (selectionStore.range) {
+                setPopupPosition(clientX, clientY);
+                isPopupShow.value = true;
+            } else {
+                isPopupShow.value = false;
+            }
+        }, SELECTION.SELECT_END_DELAY);
     });
 });
 
