@@ -1,15 +1,17 @@
 <template>
-    <ul class="card">
-        <li
-            v-for="MENU in SELECTION.MENUS"
-            :key="MENU.TYPE"
-            class="menu"
-            :data-event-type="MENU.TYPE"
-            @click="menuHandler"
-        >
-            {{ MENU.NAME }}
-        </li>
-    </ul>
+    <div class="selectionPopup">
+        <ul class="card" v-if="selectionStore.range">
+            <li
+                v-for="MENU in SELECTION.MENUS"
+                :key="MENU.TYPE"
+                class="menu"
+                :data-event-type="MENU.TYPE"
+                @mousedown="menuHandler"
+            >
+                {{ MENU.NAME }}
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +26,6 @@ const selectionStore = useSelectionStore();
 function menuHandler(evt: Event) {
     const $target = evt.target as HTMLElement;
     const eventType = $target.dataset[SELECTION.DATASET.EVENT_TYPE];
-
     switch (eventType) {
         case SELECTION.MENUS.TRANSLATE.TYPE: {
             const originText = selectionStore.getSelectedText();
@@ -43,11 +44,14 @@ function menuHandler(evt: Event) {
 </script>
 
 <style lang="scss">
-ul.selectionPopup {
-    display: inline-flex;
-    flex-direction: row;
+div.selectionPopup {
     background-color: #fff;
-    padding: 0;
+    ul {
+        padding: 0;
+        display: inline-flex;
+        flex-direction: row;
+        margin: 0;
+    }
     li.menu {
         list-style: none;
         padding: 0.5rem 1rem;
