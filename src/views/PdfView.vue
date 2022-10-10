@@ -111,28 +111,23 @@ function setPopupPosition(x: number, y: number): void {
     const popupRect = $selectionPopup.value.$el.getBoundingClientRect();
     const pageContainerRect = $pageContainer.value.getBoundingClientRect();
 
-    const popupExistRange = {
-        leftMin: pageContainerRect.left,
-        rightMin: pageContainerRect.right,
-        topMin: pageContainerRect.top,
-        bottomMin: pageContainerRect.bottom,
+    const posMax = {
+        x: pageContainerRect.width - popupRect.width,
+        y: pageContainerRect.height - popupRect.height,
     };
-    const mousePosition = {
-        x: x + scrollLeft,
-        y: y + scrollTop - SELECTION.VIEW.BASE_Y,
+    const mouseRelativePos = {
+        x: x + scrollLeft - pageContainerRect.left,
+        y: y + scrollTop - pageContainerRect.top + SELECTION.VIEW.BASE_Y,
     };
 
-    if (mousePosition.x < popupExistRange.leftMin) {
-        $selectionPopup.value.$el.style.left = `${popupExistRange.leftMin}px`;
-    } else if (mousePosition.x + popupRect.width > popupExistRange.rightMin) {
-        $selectionPopup.value.$el.style.left = `${
-            popupExistRange.rightMin - popupRect.width
-        }px`;
-    }
-    $selectionPopup.value.$el.style.left = `${x + scrollLeft}px`;
-    $selectionPopup.value.$el.style.top = `${
-        y + scrollTop - SELECTION.VIEW.BASE_Y
-    }px`;
+    $selectionPopup.value.$el.style.left = `${Math.min(
+        mouseRelativePos.x,
+        posMax.x
+    )}px`;
+    $selectionPopup.value.$el.style.top = `${Math.min(
+        mouseRelativePos.y,
+        posMax.y
+    )}px`;
 }
 </script>
 
