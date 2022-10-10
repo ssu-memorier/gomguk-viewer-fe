@@ -51,14 +51,9 @@ const isPdfExist = ref<boolean>(false);
 const $selectionPopup = ref();
 const $pdfView = ref();
 const $pageContainer = ref();
-const pageContainerRect = ref<DOMRect>();
-const popupPosMax = ref<Pos>({ x: 0, y: 0 });
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
-    pageContainerRect.value = $pageContainer.value.getBoundingClientRect();
-    initPopupPosMax();
-
     $pdfView.value.addEventListener('mousedown', () => {
         selectionStore.setRange(null);
         isPopupShow.value = false;
@@ -121,40 +116,45 @@ function copyHandler(evt: ClipboardEvent) {
 }
 
 function setPopupPosition(pos: Pos): void {
-    if (!pageContainerRect.value) {
-        return;
-    }
+    const popupPosMax = getPopupPosMax(
+        $pageContainer.value,
+        $selectionPopup.value.$el
+    );
+
     const { x, y } = pos;
     const mouseRelativePos = {
         x:
             x -
-            pageContainerRect.value.x -
+            $pageContainer.value.offsetLeft -
             SECLECTION.VIEW.BASE_X +
             POPUP.MARGIN.X,
         y:
             y -
-            pageContainerRect.value.y -
+            $pageContainer.value.offsetTop -
             SECLECTION.VIEW.BASE_Y +
             POPUP.MARGIN.Y,
     };
 
     $selectionPopup.value.$el.style.left = `${Math.min(
         mouseRelativePos.x,
-        popupPosMax.value.x
+        popupPosMax.x
     )}px`;
     $selectionPopup.value.$el.style.top = `${Math.min(
         mouseRelativePos.y,
-        popupPosMax.value.y
+        popupPosMax.y
     )}px`;
 }
 
-function initPopupPosMax() {
-    if (!pageContainerRect.value) return;
-    const popupRect = $selectionPopup.value.getBoundingClientRect();
+function getPopupPosMax(
+    $pageContainer: HTMLElement,
+    $selectionPopup: HTMLElement
+): Pos {
+    const pageContainerRect = $pageContainer.getBoundingClientRect();
+    const popupRect = $selectionPopup.getBoundingClientRect();
 
-    popupPosMax.value = {
-        x: pageContainerRect.value.width - popupRect.value.width,
-        y: pageContainerRect.value.height - popupRect.value.height,
+    return {
+        x: pageContainerRect.width - popupRect.width,
+        y: pageContainerRect.height - popupRect.height,
     };
 }
 </script>
