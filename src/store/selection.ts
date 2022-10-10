@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import getSerializedTextFromNodes from '@/utils/getSerializedTextFromNodes';
 
 export const useSelectionStore = defineStore('selection', () => {
-    const range = ref<Range>();
+    const range = ref<Range | null>();
 
-    function setRange(newRange: Range) {
+    function setRange(newRange: Range | null) {
         range.value = newRange;
     }
 
@@ -21,5 +21,6 @@ export const useSelectionStore = defineStore('selection', () => {
     return {
         setRange,
         getSelectedText,
+        range,
     };
 });

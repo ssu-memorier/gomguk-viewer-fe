@@ -6,4 +6,5 @@ export default {
     VIEW,
     MENUS,
     DATASET,
+    SELECT_END_DELAY: 50,
 };
