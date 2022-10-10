@@ -1,3 +1,4 @@
 export default {
-    BASE_Y: 60,
+    BASE_X: 0,
+    BASE_Y: 64,
 };
