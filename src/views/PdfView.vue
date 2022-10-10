@@ -39,6 +39,10 @@ type PageIndex = {
     idx: number;
     key: string;
 };
+type Pos = {
+    x: number;
+    y: number;
+};
 
 const pdfStore = usePdfStore();
 const selectionStore = useSelectionStore();
@@ -47,9 +51,14 @@ const isPdfExist = ref<boolean>(false);
 const $selectionPopup = ref();
 const $pdfView = ref();
 const $pageContainer = ref();
+const pageContainerRect = ref<DOMRect>();
+const popupPosMax = ref<Pos>({ x: 0, y: 0 });
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
+    pageContainerRect.value = $pageContainer.value.getBoundingClientRect();
+    initPopupPosMax();
+
     $pdfView.value.addEventListener('mousedown', () => {
         selectionStore.setRange(null);
         isPopupShow.value = false;
@@ -67,7 +76,12 @@ onMounted(() => {
         }
 
         const { clientX, clientY } = evt;
-        setPopupPosition(clientX, clientY);
+        const { scrollLeft, scrollTop } = $pdfView.value;
+        const mousePos: Pos = {
+            x: clientX + scrollLeft,
+            y: clientY + scrollTop,
+        };
+        setPopupPosition(mousePos);
         isPopupShow.value = true;
     });
 });
@@ -106,28 +120,42 @@ function copyHandler(evt: ClipboardEvent) {
     evt.preventDefault();
 }
 
-function setPopupPosition(x: number, y: number): void {
-    const scrollTop = $pdfView.value.scrollTop;
-    const scrollLeft = $pdfView.value.scrollLeft;
-    const popupRect = $selectionPopup.value.$el.getBoundingClientRect();
-    const pageContainerRect = $pageContainer.value.getBoundingClientRect();
-    const posMax = {
-        x: pageContainerRect.width - popupRect.width,
-        y: pageContainerRect.height - popupRect.height,
-    };
+function setPopupPosition(pos: Pos): void {
+    if (!pageContainerRect.value) {
+        return;
+    }
+    const { x, y } = pos;
     const mouseRelativePos = {
-        x: x + scrollLeft - SECLECTION.VIEW.BASE_X + POPUP.MARGIN.X,
-        y: y + scrollTop - SECLECTION.VIEW.BASE_Y + POPUP.MARGIN.Y,
+        x:
+            x -
+            pageContainerRect.value.x -
+            SECLECTION.VIEW.BASE_X +
+            POPUP.MARGIN.X,
+        y:
+            y -
+            pageContainerRect.value.y -
+            SECLECTION.VIEW.BASE_Y +
+            POPUP.MARGIN.Y,
     };
 
     $selectionPopup.value.$el.style.left = `${Math.min(
         mouseRelativePos.x,
-        posMax.x
+        popupPosMax.value.x
     )}px`;
     $selectionPopup.value.$el.style.top = `${Math.min(
         mouseRelativePos.y,
-        posMax.y
+        popupPosMax.value.y
     )}px`;
+}
+
+function initPopupPosMax() {
+    if (!pageContainerRect.value) return;
+    const popupRect = $selectionPopup.value.getBoundingClientRect();
+
+    popupPosMax.value = {
+        x: pageContainerRect.value.width - popupRect.value.width,
+        y: pageContainerRect.value.height - popupRect.value.height,
+    };
 }
 </script>
 
