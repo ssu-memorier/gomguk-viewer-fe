@@ -108,7 +108,27 @@ function copyHandler(evt: ClipboardEvent) {
 function setPopupPosition(x: number, y: number): void {
     const scrollTop = $pdfView.value.scrollTop;
     const scrollLeft = $pdfView.value.scrollLeft;
+    const popupRect = $selectionPopup.value.$el.getBoundingClientRect();
+    const pageContainerRect = $pageContainer.value.getBoundingClientRect();
 
+    const popupExistRange = {
+        leftMin: pageContainerRect.left,
+        rightMin: pageContainerRect.right,
+        topMin: pageContainerRect.top,
+        bottomMin: pageContainerRect.bottom,
+    };
+    const mousePosition = {
+        x: x + scrollLeft,
+        y: y + scrollTop - SELECTION.VIEW.BASE_Y,
+    };
+
+    if (mousePosition.x < popupExistRange.leftMin) {
+        $selectionPopup.value.$el.style.left = `${popupExistRange.leftMin}px`;
+    } else if (mousePosition.x + popupRect.width > popupExistRange.rightMin) {
+        $selectionPopup.value.$el.style.left = `${
+            popupExistRange.rightMin - popupRect.width
+        }px`;
+    }
     $selectionPopup.value.$el.style.left = `${x + scrollLeft}px`;
     $selectionPopup.value.$el.style.top = `${
         y + scrollTop - SELECTION.VIEW.BASE_Y
@@ -138,7 +158,7 @@ function setPopupPosition(x: number, y: number): void {
     .pageContainer {
         margin: 0 auto;
         position: relative;
-        width: 100%;
+        width: fit-content;
         height: fit-content;
         display: flex;
         flex-direction: column;
