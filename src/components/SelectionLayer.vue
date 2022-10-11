@@ -93,7 +93,7 @@ function getFirstLineStartOffset(startContainer: Node, startOffset: number) {
     const beforeStartRange = new Range();
     beforeStartRange.setStart(startContainer, 0);
     beforeStartRange.setEnd(startContainer, startOffset);
-    const { width } = beforeStartRange.getClientRects()[0];
+    const { width } = beforeStartRange.getBoundingClientRect();
 
     return width;
 }
@@ -105,7 +105,7 @@ function getLastLineEndOffset(endContainer: Node, endOffset: number) {
     afterEndRange.setStart(endContainer, endOffset);
     afterEndRange.setEnd(endContainer, wholeText.length);
 
-    const { width } = afterEndRange.getClientRects()[0];
+    const { width } = afterEndRange.getBoundingClientRect();
 
     return width;
 }
