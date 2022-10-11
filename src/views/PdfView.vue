@@ -56,29 +56,26 @@ const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
     $pdfView.value.addEventListener('mousedown', () => {
-        selectionStore.setRange(null);
+        selectionStore.setSelection(null);
         isPopupShow.value = false;
     });
     document.addEventListener('selectionchange', () => {
         const selection = window.getSelection();
-        if (selection && !selection.isCollapsed) {
-            selectionStore.setRange(selection.getRangeAt(0));
-        }
+        if (!selection || selection.isCollapsed) return;
+
+        selectionStore.setSelection(selection);
     });
     document.addEventListener('mouseup', (evt: MouseEvent) => {
-        if (!selectionStore.range) {
-            isPopupShow.value = false;
+        if (selectionStore.isSelectionExist) {
+            const { clientX, clientY } = evt;
+
+            setPopupPosition({ x: clientX, y: clientY });
+            isPopupShow.value = true;
             return;
         }
 
-        const { clientX, clientY } = evt;
-        const { scrollLeft, scrollTop } = $pdfView.value;
-        const mousePos: Pos = {
-            x: clientX + scrollLeft,
-            y: clientY + scrollTop,
-        };
-        setPopupPosition(mousePos);
-        isPopupShow.value = true;
+        isPopupShow.value = false;
+        return;
     });
 });
 

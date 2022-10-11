@@ -4,9 +4,16 @@ import getSerializedTextFromNodes from '@/utils/getSerializedTextFromNodes';
 
 export const useSelectionStore = defineStore('selection', () => {
     const range = ref<Range | null>();
+    const isSelectionExist = ref<boolean>();
 
-    function setRange(newRange: Range | null) {
-        range.value = newRange;
+    function setSelection(newSelection: Selection | null) {
+        range.value = newSelection?.getRangeAt(0);
+
+        if (range.value) {
+            isSelectionExist.value = true;
+        } else {
+            isSelectionExist.value = false;
+        }
     }
 
     function getSelectedText() {
@@ -19,8 +26,9 @@ export const useSelectionStore = defineStore('selection', () => {
     }
 
     return {
-        setRange,
+        setSelection,
         getSelectedText,
+        isSelectionExist,
         range,
     };
 });
