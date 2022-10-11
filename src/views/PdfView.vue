@@ -34,7 +34,7 @@ import CLIPBOARD from '@/constants/CLIPBOARD';
 import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
 import SECLECTION from '@/constants/SELECTION';
-import upperLimit from '@/utils/upperLimit';
+import createUpperLimit from '@/utils/createUpperLimit';
 
 type PageIndex = {
     idx: number;
@@ -135,8 +135,8 @@ function setPopupPosition(pos: Pos): void {
             POPUP.MARGIN.Y,
     };
 
-    const limitMouseLeft = upperLimit(popupPosMax.x);
-    const limitMouseTop = upperLimit(popupPosMax.y);
+    const limitMouseLeft = createUpperLimit(popupPosMax.x);
+    const limitMouseTop = createUpperLimit(popupPosMax.y);
     const limitedLeft = limitMouseLeft(mouseRelativePos.x);
     const limitedTop = limitMouseTop(mouseRelativePos.y);
 
