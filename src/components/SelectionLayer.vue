@@ -29,14 +29,13 @@ onMounted(async () => {
 
 selectionStore.$subscribe((_, state) => {
     const { range } = state;
-    console.log(range);
+
     if (!range || range.collapsed) {
         clearCanvas();
         return;
     }
-    const pageIndex = state.selectedPageIndex;
-    console.log(pageIndex);
-    if (pageIndex !== props.pageIndex) return;
+    if (state.selectedPageIndex !== props.pageIndex) return;
+
     const { startContainer, startOffset, endContainer, endOffset } = range;
     if (
         startContainer.nodeName !== '#text' ||
