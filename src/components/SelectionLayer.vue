@@ -7,11 +7,14 @@
  * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
  */
 import { defineProps, ref, onMounted } from 'vue';
-import TOKEN from '@/constants/TOKEN';
 import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
 import getLineNum from '@/utils/getLineNum';
 import isTextSelection from '@/utils/isTextSelection';
+import getFirstLineStartOffset from '@/utils/line/getFirstLineStartOffset';
+import getLastLineEndOffset from '@/utils/line/getLastLineEndOffset';
+import getSelectedTokens from '@/utils/getSelectedTokens';
+import getLineMap from '@/utils/line/getLineMap';
 
 const props = defineProps({
     pageIndex: {
@@ -84,59 +87,6 @@ function drawSelectionLines(lines: Line[]) {
         ctx.value.fillStyle = 'red';
         ctx.value.fill();
     });
-}
-function getFirstLineStartOffset(startContainer: Node, startOffset: number) {
-    const beforeStartRange = new Range();
-    beforeStartRange.setStart(startContainer, 0);
-    beforeStartRange.setEnd(startContainer, startOffset);
-    const { width } = beforeStartRange.getBoundingClientRect();
-
-    return width;
-}
-
-function getLastLineEndOffset(endContainer: Node, endOffset: number) {
-    const afterEndRange = new Range();
-    const wholeText = (endContainer as Text).wholeText;
-
-    afterEndRange.setStart(endContainer, endOffset);
-    afterEndRange.setEnd(endContainer, wholeText.length);
-
-    const { width } = afterEndRange.getBoundingClientRect();
-
-    return width;
-}
-
-function getLineMap(tokens: HTMLElement[]) {
-    return tokens.reduce((map, $token) => {
-        const tokenInfo = $token.dataset;
-        const lineNum = parseInt(
-            tokenInfo[TOKEN.DATASET.LINE_NUM] as string,
-            10
-        );
-
-        if (!map.has(lineNum)) {
-            map.set(lineNum, new Line(lineNum));
-        }
-        map.get(lineNum)?.addToken($token);
-
-        return map;
-    }, new Map<number, Line>());
-}
-
-function getSelectedTokens(range: Range): HTMLElement[] {
-    const selectedNodes = [...range.cloneContents().childNodes];
-    const commonAncestorContainer = range.commonAncestorContainer;
-
-    if (
-        commonAncestorContainer.nodeName === '#text' &&
-        commonAncestorContainer.parentElement
-    ) {
-        return [commonAncestorContainer.parentElement];
-    }
-
-    return selectedNodes
-        .filter((node) => node.nodeName === 'SPAN')
-        .map((node) => node as HTMLElement);
 }
 </script>
 
