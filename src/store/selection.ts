@@ -10,7 +10,7 @@ export const useSelectionStore = defineStore('selection', () => {
     function setSelection(newSelection: Selection | null) {
         range.value = newSelection?.getRangeAt(0);
 
-        if (range.value) {
+        if (range.value && !range.value.collapsed) {
             isSelectionExist.value = true;
             selectedPageIndex.value = getSelectionPageIndex(range.value);
         } else {

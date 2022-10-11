@@ -29,9 +29,9 @@ onMounted(async () => {
 });
 
 selectionStore.$subscribe((_, state) => {
-    const { range } = state;
+    const range = state.range as Range;
 
-    if (!range || range.collapsed) {
+    if (!state.isSelectionExist) {
         clearCanvas();
         return;
     }
