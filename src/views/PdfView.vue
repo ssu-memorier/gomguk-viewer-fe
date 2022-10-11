@@ -31,12 +31,18 @@ import { usePdfStore } from '@/store/pdf';
 import { useSelectionStore } from '@/store/selection';
 import { ref, onMounted } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
-import SELECTION from '@/constants/SELECTION';
+import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
+import SECLECTION from '@/constants/SELECTION';
+import createUpperLimit from '@/utils/createUpperLimit';
 
 type PageIndex = {
     idx: number;
     key: string;
+};
+type Pos = {
+    x: number;
+    y: number;
 };
 
 const pdfStore = usePdfStore();
@@ -66,7 +72,12 @@ onMounted(() => {
         }
 
         const { clientX, clientY } = evt;
-        setPopupPosition(clientX, clientY);
+        const { scrollLeft, scrollTop } = $pdfView.value;
+        const mousePos: Pos = {
+            x: clientX + scrollLeft,
+            y: clientY + scrollTop,
+        };
+        setPopupPosition(mousePos);
         isPopupShow.value = true;
     });
 });
@@ -105,14 +116,45 @@ function copyHandler(evt: ClipboardEvent) {
     evt.preventDefault();
 }
 
-function setPopupPosition(x: number, y: number): void {
-    const scrollTop = $pdfView.value.scrollTop;
-    const scrollLeft = $pdfView.value.scrollLeft;
+function setPopupPosition(pos: Pos): void {
+    const popupPosMax = getPopupPosMax(
+        $pageContainer.value,
+        $selectionPopup.value.$el
+    );
+    const { x, y } = pos;
+    const mouseRelativePos = {
+        x:
+            x -
+            $pageContainer.value.offsetLeft -
+            SECLECTION.VIEW.BASE_X +
+            POPUP.MARGIN.X,
+        y:
+            y -
+            $pageContainer.value.offsetTop -
+            SECLECTION.VIEW.BASE_Y +
+            POPUP.MARGIN.Y,
+    };
 
-    $selectionPopup.value.$el.style.left = `${x + scrollLeft}px`;
-    $selectionPopup.value.$el.style.top = `${
-        y + scrollTop - SELECTION.VIEW.BASE_Y
-    }px`;
+    const limitMouseLeft = createUpperLimit(popupPosMax.x);
+    const limitMouseTop = createUpperLimit(popupPosMax.y);
+    const limitedLeft = limitMouseLeft(mouseRelativePos.x);
+    const limitedTop = limitMouseTop(mouseRelativePos.y);
+
+    $selectionPopup.value.$el.style.left = `${limitedLeft}px`;
+    $selectionPopup.value.$el.style.top = `${limitedTop}px`;
+}
+
+function getPopupPosMax(
+    $pageContainer: HTMLElement,
+    $selectionPopup: HTMLElement
+): Pos {
+    const pageContainerRect = $pageContainer.getBoundingClientRect();
+    const popupRect = $selectionPopup.getBoundingClientRect();
+
+    return {
+        x: pageContainerRect.width - popupRect.width,
+        y: pageContainerRect.height - popupRect.height,
+    };
 }
 </script>
 
@@ -138,7 +180,7 @@ function setPopupPosition(x: number, y: number): void {
     .pageContainer {
         margin: 0 auto;
         position: relative;
-        width: 100%;
+        width: fit-content;
         height: fit-content;
         display: flex;
         flex-direction: column;

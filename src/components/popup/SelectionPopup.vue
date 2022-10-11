@@ -46,6 +46,7 @@ function menuHandler(evt: Event) {
 <style lang="scss">
 div.selectionPopup {
     background-color: #fff;
+    width: 160px;
     ul {
         padding: 0;
         display: inline-flex;
