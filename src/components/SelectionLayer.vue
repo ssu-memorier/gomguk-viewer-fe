@@ -36,16 +36,10 @@ selectionStore.$subscribe((_, state) => {
         return;
     }
     if (state.selectedPageIndex !== props.pageIndex) return;
-
-    const { startContainer, startOffset, endContainer, endOffset } = range;
-    if (
-        startContainer.nodeName !== '#text' ||
-        endContainer.nodeName !== '#text'
-    )
-        return;
+    if (!isTextSelection(range)) return;
 
     clearCanvas();
-
+    const { startContainer, startOffset, endContainer, endOffset } = range;
     const selectedTokens = getSelectedTokens(range);
     const lineMap = getLineMap(selectedTokens);
     const $startToken = startContainer.parentElement;
@@ -142,6 +136,13 @@ function getSelectedTokens(range: Range): HTMLElement[] {
     return selectedNodes
         .filter((node) => node.nodeName === 'SPAN')
         .map((node) => node as HTMLElement);
+}
+
+function isTextSelection(range: Range) {
+    const { startContainer, endContainer } = range;
+    return (
+        startContainer.nodeName === '#text' && endContainer.nodeName === '#text'
+    );
 }
 </script>
 
