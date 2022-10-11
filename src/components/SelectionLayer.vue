@@ -11,6 +11,7 @@ import TOKEN from '@/constants/TOKEN';
 import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
 import getLineNum from '@/utils/getLineNum';
+import isTextSelection from '@/utils/isTextSelection';
 
 const props = defineProps({
     pageIndex: {
@@ -136,13 +137,6 @@ function getSelectedTokens(range: Range): HTMLElement[] {
     return selectedNodes
         .filter((node) => node.nodeName === 'SPAN')
         .map((node) => node as HTMLElement);
-}
-
-function isTextSelection(range: Range) {
-    const { startContainer, endContainer } = range;
-    return (
-        startContainer.nodeName === '#text' && endContainer.nodeName === '#text'
-    );
 }
 </script>
 
