@@ -1,5 +1,5 @@
 import TOKEN from '@/constants/TOKEN';
-
+import { IPos } from '@/Interface/IPos';
 export default class Line {
     lineNum;
     right = 0;
@@ -27,10 +27,18 @@ export default class Line {
         this.right = Math.max(this.right, tokenRight);
         this.bottom = Math.max(this.left, tokenBottom);
     }
-    setLeft(num: number) {
-        this.left = num;
+    setStartPos(pos: IPos) {
+        this.left = pos.x;
+        this.top = pos.y;
     }
-    setRight(num: number) {
-        this.right = num;
+    setEndPos(pos: IPos) {
+        this.right = pos.x;
+        this.bottom = pos.y;
+    }
+    get lineHeight() {
+        return Math.max(this.bottom - this.top, 0);
+    }
+    get lineWidth() {
+        return Math.max(this.right - this.left, 0);
     }
 }

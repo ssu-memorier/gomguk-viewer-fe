@@ -61,8 +61,8 @@ selectionStore.$subscribe((_, state) => {
 
     const startGap = getFirstLineStartOffset(startContainer, startOffset);
     const endGap = getLastLineEndOffset(endContainer, endOffset);
-    startLine.setLeft(startLine.left + startGap);
-    endLine.setRight(endLine.right - endGap);
+    startLine.setStartPos({ x: startLine.left + startGap, y: startLine.top });
+    endLine.setEndPos({ x: endLine.right - endGap, y: endLine.bottom });
 
     const selectedLines = [...lineMap.values()];
     drawSelectionLines(selectedLines);
