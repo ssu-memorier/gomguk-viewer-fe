@@ -10,6 +10,7 @@ import { defineProps, ref, onMounted } from 'vue';
 import TOKEN from '@/constants/TOKEN';
 import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
+import getLineNum from '@/utils/getLineNum';
 
 const props = defineProps({
     pageIndex: {
@@ -141,13 +142,6 @@ function getSelectedTokens(range: Range): HTMLElement[] {
     return selectedNodes
         .filter((node) => node.nodeName === 'SPAN')
         .map((node) => node as HTMLElement);
-}
-
-function getLineNum($token: HTMLElement): number {
-    const lineNumData = $token.dataset[TOKEN.DATASET.LINE_NUM];
-
-    if (!lineNumData) return -1;
-    return parseInt(lineNumData, 10);
 }
 </script>
 
