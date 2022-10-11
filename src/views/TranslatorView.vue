@@ -62,13 +62,13 @@ import { ref } from 'vue';
 import TRANSLATOR from '@/constants/TRANSLATOR';
 import POSITION from '@/constants/POSITION';
 import LANGUAGES from '@/constants/TRANSLATOR/LANGUAGES';
-import type { PositionType } from '@/types/PositionType';
+import type { TranslatorPosType } from '@/types/TranslatorPosType';
 import LanguageTranslator from '@/components/LanguageTranslator.vue';
 import { useTranslatorStore } from '@/store/translator';
 import { LanguageType } from '@/types/LanguageType';
 
 const translatorStore = useTranslatorStore();
-const position = ref<PositionType>(POSITION.RIGHT_TOP);
+const position = ref<TranslatorPosType>(POSITION.RIGHT_TOP);
 const isMinimized = ref<boolean>(false);
 
 translatorStore.$subscribe(() => {
