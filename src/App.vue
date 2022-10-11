@@ -1,30 +1,88 @@
 <template>
-    <nav>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
-    </nav>
-    <router-view />
+    <header class="card">
+        <div class="center">
+            <b class="appName">곰국 뷰어</b>
+            <pdf-load-button @load="loadPdfHandler"></pdf-load-button>
+        </div>
+    </header>
+    <main>
+        <section>
+            <pdf-view></pdf-view>
+            <translator-view></translator-view>
+        </section>
+    </main>
 </template>
 
+<script setup lang="ts">
+import PdfView from '@/views/PdfView.vue';
+import { usePdfStore } from '@/store/pdf';
+import PdfLoadButton from '@/components/button/PdfLoadButton.vue';
+import TranslatorView from '@/views/TranslatorView.vue';
+
+const store = usePdfStore();
+
+function loadPdfHandler(pdf: File) {
+    store.setPdfFromFile(pdf);
+}
+</script>
+
 <style lang="scss">
+@import url('@/assets/theme.css');
+:root {
+    --screen-main-max-width: 900px;
+    --border-radius: 4px;
+    --header-height: 60px;
+}
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+}
 #app {
+    position: absolute;
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    width: 100vw;
+    height: 100vh;
 }
-
-nav {
-    padding: 30px;
-
-    a {
+header {
+    position: relative;
+    box-sizing: border-box;
+    height: var(--header-height);
+    background-color: var(--surface-color);
+    padding: 0.5rem 2rem;
+    z-index: 200;
+    .center {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+        max-width: var(--screen-main-max-width);
+    }
+    .appName {
         font-weight: bold;
-        color: #2c3e50;
-
-        &.router-link-exact-active {
-            color: #42b983;
-        }
+        font-size: 1.6rem;
+    }
+}
+main {
+    position: relative;
+    height: calc(100% - var(--header-height));
+    width: 100%;
+    margin: 0;
+    overflow: auto;
+    section {
+        height: 100%;
+        z-index: 1;
     }
 }
 </style>

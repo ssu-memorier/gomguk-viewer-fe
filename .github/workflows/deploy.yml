@@ -1,44 +1,49 @@
 name: Development CI
 
 on:
-  push:
-    branches: [ "development" ]
-    
+    push:
+        branches: ['development']
+
 permissions:
-  contents: read
-  
+    contents: read
+
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+    build:
+        runs-on: ubuntu-20.04
 
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16.14.2
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16.14.2
 
-    - name: Cache node modules
-      uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: ${{ runner.OS }}
-        
-    - name: Install Dependencies
-      run: npm install
-      
-    - name: Install Dependencies
-      run: npm run test:unit
-      
-    - name: Build
-      run: npm run build
-    
-    - name: Deploy
-      env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: |
-        aws s3 cp \
-          --recursive \
-          --region ap-northeast-2 \
-          dist s3://gomguk
-          
+            - name: Cache node modules
+              uses: actions/cache@v1
+              with:
+                  path: node_modules
+                  key: ${{ runner.OS }}
+
+            - name: Make ENV file
+              run: |
+                  echo "VUE_APP_TRANSLATE_DOMAIN=$TRANSLATE_DOMAIN" >> .env.local
+              env:
+                  TRANSLATE_DOMAIN: ${{ secrets.TRANSLATE_DOMAIN }}
+
+            - name: Install Dependencies
+              run: npm install
+
+            - name: Run Unit Test
+              run: npm run test:unit
+
+            - name: Build
+              run: npm run build
+
+            - name: Deploy
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              run: |
+                  aws s3 cp \
+                    --recursive \
+                    --region ap-northeast-2 \
+                    dist s3://gomguk-fe-development
