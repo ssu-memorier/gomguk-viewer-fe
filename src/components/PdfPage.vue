@@ -23,7 +23,7 @@ import { usePdfStore } from '@/store/pdf';
 import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
 import * as pdfjsLib from 'pdfjs-dist';
 import TOKEN from '@/constants/TOKEN';
-import SelectionLayer from './SelectionLayer.vue';
+import SelectionLayer from '@/components/SelectionLayer.vue';
 
 const props = defineProps({
     pageIndex: {
