@@ -133,20 +133,20 @@ function addTokenInfo(nodes: Node[]) {
         if ($node.nodeName === 'BR') {
             lineNum++;
         } else {
-            const rect = $node.getBoundingClientRect();
+            const nodeRect = $node.getBoundingClientRect();
 
             $node.dataset[TOKEN.DATASET.LINE_NUM] = `${lineNum}`;
             $node.dataset[TOKEN.DATASET.RIGHT] = `${
-                rect.right - textLayerRect.left
+                nodeRect.right - textLayerRect.left
             }`;
             $node.dataset[TOKEN.DATASET.BOTTOM] = `${
-                rect.bottom - textLayerRect.top
+                nodeRect.bottom - textLayerRect.top
             }`;
             $node.dataset[TOKEN.DATASET.LEFT] = `${
-                rect.left - textLayerRect.left
+                nodeRect.left - textLayerRect.left
             }`;
             $node.dataset[TOKEN.DATASET.TOP] = `${
-                rect.top - textLayerRect.top
+                nodeRect.top - textLayerRect.top
             }`;
         }
     });
