@@ -1,6 +1,12 @@
 <template>
     <div class="selectionPopup">
-        <ul class="card" v-if="selectionStore.isSelectionExist">
+        <ul
+            class="card"
+            v-if="
+                selectionStore.isSelectionExist &&
+                selectionStore.hasSelectedText
+            "
+        >
             <li
                 v-for="MENU in SELECTION.MENUS"
                 :key="MENU.TYPE"

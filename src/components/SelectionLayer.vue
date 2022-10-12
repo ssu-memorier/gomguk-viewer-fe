@@ -10,7 +10,6 @@ import { defineProps, ref, onMounted } from 'vue';
 import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
 import getLineNum from '@/utils/getLineNum';
-import hasText from '@/utils/hasText';
 import getLeftGap from '@/utils/line/getLeftGap';
 import getRightGap from '@/utils/line/getRightGap';
 import getSelectedTokens from '@/utils/getSelectedTokens';
@@ -33,7 +32,8 @@ onMounted(async () => {
 });
 
 selectionStore.$subscribe(() => {
-    const { selectedPageIndex, isSelectionExist, range } = selectionStore;
+    const { selectedPageIndex, isSelectionExist, hasSelectedText, range } =
+        selectionStore;
 
     if (!isSelectionExist) {
         clearSelection();
@@ -45,10 +45,11 @@ selectionStore.$subscribe(() => {
         return;
     }
 
-    if (!range) return;
-    if (!hasText(range)) return;
+    if (!hasSelectedText) return;
 
     clearSelection();
+
+    if (!range) return;
     drawSelection(range);
 });
 
@@ -100,10 +101,3 @@ function drawLines(lines: Line[]) {
     });
 }
 </script>
-
-<style lang="scss" scoped>
-.selectionLayer {
-    z-index: 100;
-    opacity: 0.5;
-}
-</style>

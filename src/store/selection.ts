@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import getSerializedTextFromNodes from '@/utils/getSerializedTextFromNodes';
 import getSelectedPageIndex from '@/utils/getSelectedPageIndex';
+import hasText from '@/utils/hasText';
 
 export const useSelectionStore = defineStore('selection', () => {
     const range = ref<Range | null>();
@@ -12,6 +13,11 @@ export const useSelectionStore = defineStore('selection', () => {
         return isSelectionExist.value
             ? getSelectedPageIndex(range.value as Range)
             : null;
+    });
+    const hasSelectedText = computed(() => {
+        if (range.value) return hasText(range.value);
+
+        return false;
     });
     function setSelection(newSelection: Selection | null) {
         range.value = newSelection?.getRangeAt(0);
@@ -29,6 +35,7 @@ export const useSelectionStore = defineStore('selection', () => {
     return {
         setSelection,
         getSelectedText,
+        hasSelectedText,
         selectedPageIndex,
         isSelectionExist,
         range,
