@@ -32,17 +32,38 @@ onMounted(async () => {
     ctx.value = $selectionLayer.value.getContext('2d');
 });
 
-selectionStore.$subscribe((_, state) => {
-    const range = state.range as Range;
+selectionStore.$subscribe(() => {
+    const { selectedPageIndex, isSelectionExist, range } = selectionStore;
 
-    if (!state.isSelectionExist) {
-        clearCanvas();
+    if (!isSelectionExist) {
+        clearSelection();
         return;
     }
-    if (state.selectedPageIndex !== props.pageIndex) return;
+
+    if (selectedPageIndex !== props.pageIndex) {
+        clearSelection();
+        return;
+    }
+
+    if (!range) return;
     if (!isTextSelected(range)) return;
 
-    clearCanvas();
+    clearSelection();
+    drawSelection(range);
+});
+
+function clearSelection() {
+    if (!ctx.value || !$selectionLayer.value) return;
+
+    ctx.value.clearRect(
+        0,
+        0,
+        $selectionLayer.value.width,
+        $selectionLayer.value.height
+    );
+}
+
+function drawSelection(range: Range) {
     const { startContainer, startOffset, endContainer, endOffset } = range;
     const selectedTokens = getSelectedTokens(range);
     const lineMap = getLineMap(selectedTokens);
@@ -64,20 +85,9 @@ selectionStore.$subscribe((_, state) => {
     endLine.setEndPos({ x: endLine.right - endGap, y: endLine.bottom });
 
     const selectedLines = [...lineMap.values()];
-    drawSelectionLines(selectedLines);
-});
-
-function clearCanvas() {
-    if (!ctx.value || !$selectionLayer.value) return;
-
-    ctx.value.clearRect(
-        0,
-        0,
-        $selectionLayer.value.width,
-        $selectionLayer.value.height
-    );
+    drawLines(selectedLines);
 }
-function drawSelectionLines(lines: Line[]) {
+function drawLines(lines: Line[]) {
     lines.forEach((line) => {
         if (!ctx.value) return;
 
