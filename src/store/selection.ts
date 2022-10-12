@@ -5,13 +5,7 @@ import getSelectedPageIndex from '@/utils/getSelectedPageIndex';
 import hasText from '@/utils/hasText';
 import Line from '@/classes/Line';
 import getSelectedLines from '@/utils/getSelectedLines';
-/**
- * TODO:
- * range가 변경되면 selectedLines을 만든다.
- * isSelectionExist: selectedLine이 있으면 true
- * selectedPageIndex: selection이 발생한 page의 index
- *
- */
+
 export const useSelectionStore = defineStore('selection', () => {
     const range = ref<Range | null>();
     const selectedLines = ref<Line[]>([]);
