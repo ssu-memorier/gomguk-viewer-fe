@@ -10,7 +10,7 @@ import { defineProps, ref, onMounted } from 'vue';
 import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
 import getLineNum from '@/utils/getLineNum';
-import isTextSelected from '@/utils/isTextSelected';
+import hasText from '@/utils/hasText';
 import getFirstLineStartGap from '@/utils/line/getFirstLineStartGap';
 import getLastLineEndGap from '@/utils/line/getLastLineEndGap';
 import getSelectedTokens from '@/utils/getSelectedTokens';
@@ -46,7 +46,7 @@ selectionStore.$subscribe(() => {
     }
 
     if (!range) return;
-    if (!isTextSelected(range)) return;
+    if (!hasText(range)) return;
 
     clearSelection();
     drawSelection(range);
