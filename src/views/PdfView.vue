@@ -35,7 +35,7 @@ import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
 import SECLECTION from '@/constants/SELECTION';
 import createUpperLimit from '@/utils/createUpperLimit';
-
+import clearSelection from '@/utils/clearSelection';
 type PageIndex = {
     idx: number;
     key: string;
@@ -85,6 +85,7 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
     return list;
 }
 function selectionStartHandler() {
+    clearSelection();
     selectionStore.setSelection(null);
     isPopupShow.value = false;
 }
