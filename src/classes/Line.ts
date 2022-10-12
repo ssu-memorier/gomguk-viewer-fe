@@ -1,5 +1,3 @@
-import TOKEN from '@/constants/TOKEN';
-import { IPos } from '@/Interface/IPos';
 import Rect from '@/classes/Rect';
 import Token from '@/classes/Token';
 
