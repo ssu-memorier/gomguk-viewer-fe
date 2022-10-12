@@ -57,7 +57,7 @@ const isPopupShow = ref<boolean>(false);
 onMounted(() => {
     $pdfView.value.addEventListener('mousedown', mousedownHandler);
     document.addEventListener('selectionchange', selectionchangeHandler);
-    document.addEventListener('mouseup', mouseupHandler);
+    $pdfView.value.addEventListener('mouseup', mouseupHandler);
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
