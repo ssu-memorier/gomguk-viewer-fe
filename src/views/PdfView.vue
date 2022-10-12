@@ -55,9 +55,9 @@ const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
-    $pdfView.value.addEventListener('mousedown', mousedownHandler);
-    document.addEventListener('selectionchange', selectionchangeHandler);
-    $pdfView.value.addEventListener('mouseup', mouseupHandler);
+    $pdfView.value.addEventListener('mousedown', selectionStartHandler);
+    document.addEventListener('selectionchange', selectionChangeHandler);
+    $pdfView.value.addEventListener('mouseup', selectionEndHandler);
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
@@ -84,17 +84,17 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
     }
     return list;
 }
-function mousedownHandler() {
+function selectionStartHandler() {
     selectionStore.setSelection(null);
     isPopupShow.value = false;
 }
-function selectionchangeHandler() {
+function selectionChangeHandler() {
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed) return;
 
     selectionStore.setSelection(selection);
 }
-function mouseupHandler(evt: MouseEvent) {
+function selectionEndHandler(evt: MouseEvent) {
     if (selectionStore.isSelectionExist) {
         const { clientX, clientY } = evt;
 
