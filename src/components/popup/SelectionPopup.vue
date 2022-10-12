@@ -6,7 +6,8 @@
                 :key="MENU.TYPE"
                 class="menu"
                 :data-event-type="MENU.TYPE"
-                @mousedown="menuHandler"
+                @mousedown.stop="menuHandler"
+                @mouseup.stop
             >
                 {{ MENU.NAME }}
             </li>
