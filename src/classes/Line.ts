@@ -47,10 +47,25 @@ export default class Line {
     setEndPos(pos: IPos) {
         this.endPoint = pos;
     }
-    get lineHeight() {
+    setLeft(x: number) {
+        this.startPoint.x = x;
+    }
+    setRight(x: number) {
+        this.endPoint.x = x;
+    }
+    get height() {
         return Math.max(this.endPoint.y - this.startPoint.y, 0);
     }
-    get lineWidth() {
+    get width() {
         return Math.max(this.endPoint.x - this.startPoint.x, 0);
+    }
+    get top() {
+        return this.startPoint.y;
+    }
+    get left() {
+        return this.startPoint.x;
+    }
+    get right() {
+        return this.endPoint.x;
     }
 }

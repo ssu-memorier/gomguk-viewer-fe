@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 /**
- * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
+ * SelectionLayer는 pdf에서 selection된 영역을 그리는 레이어 컴포넌트 입니다.
  */
 import { defineProps, ref, onMounted } from 'vue';
 import { useSelectionStore } from '@/store/selection';
@@ -81,8 +81,9 @@ function drawSelection(range: Range) {
 
     const startGap = getLeftGap(startContainer, startOffset);
     const endGap = getRightGap(endContainer, endOffset);
-    startLine.setStartPos({ x: startLine.left + startGap, y: startLine.top });
-    endLine.setEndPos({ x: endLine.right - endGap, y: endLine.bottom });
+
+    startLine.setLeft(startLine.left + startGap);
+    endLine.setRight(endLine.right - endGap);
 
     const selectedLines = [...lineMap.values()];
     drawLines(selectedLines);
@@ -91,9 +92,9 @@ function drawLines(lines: Line[]) {
     lines.forEach((line) => {
         if (!ctx.value) return;
 
-        const { left, top, right, bottom } = line;
+        const { left, top, width, height } = line;
         ctx.value.beginPath();
-        ctx.value.rect(left, top, right - left, bottom - top);
+        ctx.value.rect(left, top, width, height);
         ctx.value.fillStyle = 'red';
         ctx.value.fill();
     });
