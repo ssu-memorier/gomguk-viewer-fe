@@ -1,4 +1,4 @@
-export default function getFirstLineStartOffset(
+export default function getFirstLineStartGap(
     startContainer: Node,
     startOffset: number
 ) {

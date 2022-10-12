@@ -11,8 +11,8 @@ import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
 import getLineNum from '@/utils/getLineNum';
 import isTextSelected from '@/utils/isTextSelected';
-import getFirstLineStartOffset from '@/utils/line/getFirstLineStartOffset';
-import getLastLineEndOffset from '@/utils/line/getLastLineEndOffset';
+import getFirstLineStartGap from '@/utils/line/getFirstLineStartGap';
+import getLastLineEndGap from '@/utils/line/getLastLineEndGap';
 import getSelectedTokens from '@/utils/getSelectedTokens';
 import getLineMap from '@/utils/line/getLineMap';
 
@@ -79,8 +79,8 @@ function drawSelection(range: Range) {
 
     if (!startLine || !endLine) return;
 
-    const startGap = getFirstLineStartOffset(startContainer, startOffset);
-    const endGap = getLastLineEndOffset(endContainer, endOffset);
+    const startGap = getFirstLineStartGap(startContainer, startOffset);
+    const endGap = getLastLineEndGap(endContainer, endOffset);
     startLine.setStartPos({ x: startLine.left + startGap, y: startLine.top });
     endLine.setEndPos({ x: endLine.right - endGap, y: endLine.bottom });
 
