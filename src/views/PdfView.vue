@@ -55,28 +55,9 @@ const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
-    $pdfView.value.addEventListener('mousedown', () => {
-        selectionStore.setSelection(null);
-        isPopupShow.value = false;
-    });
-    document.addEventListener('selectionchange', () => {
-        const selection = window.getSelection();
-        if (!selection || selection.isCollapsed) return;
-
-        selectionStore.setSelection(selection);
-    });
-    document.addEventListener('mouseup', (evt: MouseEvent) => {
-        if (selectionStore.isSelectionExist) {
-            const { clientX, clientY } = evt;
-
-            setPopupPosition({ x: clientX, y: clientY });
-            isPopupShow.value = true;
-            return;
-        }
-
-        isPopupShow.value = false;
-        return;
-    });
+    $pdfView.value.addEventListener('mousedown', mousedownHandler);
+    document.addEventListener('selectionchange', selectionchangeHandler);
+    document.addEventListener('mouseup', mouseupHandler);
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
@@ -103,7 +84,28 @@ function createPageIndexList(fileName: string, maxPageNum: number) {
     }
     return list;
 }
+function mousedownHandler() {
+    selectionStore.setSelection(null);
+    isPopupShow.value = false;
+}
+function selectionchangeHandler() {
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) return;
 
+    selectionStore.setSelection(selection);
+}
+function mouseupHandler(evt: MouseEvent) {
+    if (selectionStore.isSelectionExist) {
+        const { clientX, clientY } = evt;
+
+        setPopupPosition({ x: clientX, y: clientY });
+        isPopupShow.value = true;
+        return;
+    }
+
+    isPopupShow.value = false;
+    return;
+}
 function copyHandler(evt: ClipboardEvent) {
     const clipboard = evt.clipboardData;
 
