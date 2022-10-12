@@ -43,6 +43,7 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: var(--bg-color);
+    overflow: hidden;
 }
 #app {
     position: absolute;
