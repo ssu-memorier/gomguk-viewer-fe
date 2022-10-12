@@ -10,7 +10,7 @@ import { defineProps, ref, onMounted } from 'vue';
 import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
 import getLineNum from '@/utils/getLineNum';
-import isTextSelection from '@/utils/isTextSelection';
+import isTextSelected from '@/utils/isTextSelected';
 import getFirstLineStartOffset from '@/utils/line/getFirstLineStartOffset';
 import getLastLineEndOffset from '@/utils/line/getLastLineEndOffset';
 import getSelectedTokens from '@/utils/getSelectedTokens';
@@ -40,7 +40,7 @@ selectionStore.$subscribe((_, state) => {
         return;
     }
     if (state.selectedPageIndex !== props.pageIndex) return;
-    if (!isTextSelection(range)) return;
+    if (!isTextSelected(range)) return;
 
     clearCanvas();
     const { startContainer, startOffset, endContainer, endOffset } = range;
