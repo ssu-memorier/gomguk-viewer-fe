@@ -11,5 +11,5 @@ export default function linkSentences(sentences: string[]): string {
             return acc + sentence.slice(0, -1);
         }
         return acc + sentence + LINE.SPACE;
-    });
+    }, '');
 }
