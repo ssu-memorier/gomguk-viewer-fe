@@ -1,5 +1,5 @@
 export default function getSelectedPageIndex(range: Range) {
-    if (!range.commonAncestorContainer) return null;
+    if (!range.commonAncestorContainer) return -1;
 
     let ancestorContainer = range.commonAncestorContainer as HTMLElement;
     if (ancestorContainer.nodeName === '#text') {
@@ -9,7 +9,7 @@ export default function getSelectedPageIndex(range: Range) {
 
     const pageIndexData = ancestorContainer.dataset['pageIndex'];
 
-    if (!pageIndexData) return null;
+    if (!pageIndexData) return -1;
 
     return parseInt(pageIndexData, 10);
 }
