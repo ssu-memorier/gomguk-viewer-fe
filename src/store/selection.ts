@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import getSerializedTextFromNodes from '@/utils/getSerializedTextFromNodes';
+import getSelectedPageIndex from '@/utils/getSelectedPageIndex';
 
 export const useSelectionStore = defineStore('selection', () => {
     const range = ref<Range | null>();
@@ -12,7 +13,7 @@ export const useSelectionStore = defineStore('selection', () => {
 
         if (range.value && !range.value.collapsed) {
             isSelectionExist.value = true;
-            selectedPageIndex.value = getSelectionPageIndex(range.value);
+            selectedPageIndex.value = getSelectedPageIndex(range.value);
         } else {
             isSelectionExist.value = false;
             selectedPageIndex.value = null;
@@ -28,22 +29,6 @@ export const useSelectionStore = defineStore('selection', () => {
         return '';
     }
 
-    function getSelectionPageIndex(range: Range) {
-        if (!range.commonAncestorContainer) return null;
-
-        let ancestorContainer = range.commonAncestorContainer as HTMLElement;
-        if (ancestorContainer.nodeName === '#text') {
-            const textContainer =
-                ancestorContainer.parentElement as HTMLElement;
-            ancestorContainer = textContainer.parentElement as HTMLElement;
-        }
-
-        const pageIndexData = ancestorContainer.dataset['pageIndex'];
-
-        if (!pageIndexData) return null;
-
-        return parseInt(pageIndexData, 10);
-    }
     return {
         setSelection,
         getSelectedText,
