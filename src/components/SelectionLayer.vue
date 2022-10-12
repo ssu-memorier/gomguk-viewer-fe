@@ -9,11 +9,6 @@
 import { defineProps, ref, onMounted } from 'vue';
 import { useSelectionStore } from '@/store/selection';
 import Line from '@/classes/Line';
-import getLineNum from '@/utils/getLineNum';
-import getLeftGap from '@/utils/line/getLeftGap';
-import getRightGap from '@/utils/line/getRightGap';
-import getSelectedTokens from '@/utils/getSelectedTokens';
-import getLineMap from '@/utils/line/getLineMap';
 
 const props = defineProps({
     pageIndex: {
@@ -32,9 +27,12 @@ onMounted(async () => {
 });
 
 selectionStore.$subscribe(() => {
-    const { selectedPageIndex, isSelectionExist, hasSelectedText, range } =
-        selectionStore;
-
+    const {
+        selectedPageIndex,
+        isSelectionExist,
+        hasSelectedText,
+        selectedLines,
+    } = selectionStore;
     if (!isSelectionExist) {
         clearSelectionLayer();
         return;
@@ -46,11 +44,10 @@ selectionStore.$subscribe(() => {
     }
 
     if (!hasSelectedText) return;
-
     clearSelectionLayer();
 
-    if (!range) return;
-    drawSelection(range);
+    if (!selectedLines) return;
+    drawLines(selectedLines);
 });
 
 function clearSelectionLayer() {
@@ -64,31 +61,6 @@ function clearSelectionLayer() {
     );
 }
 
-function drawSelection(range: Range) {
-    const { startContainer, startOffset, endContainer, endOffset } = range;
-    const selectedTokens = getSelectedTokens(range);
-    const lineMap = getLineMap(selectedTokens);
-    const $startToken = startContainer.parentElement;
-    const $endToken = endContainer.parentElement;
-
-    if (!$startToken || !$endToken) return;
-
-    const startLineNum = getLineNum($startToken);
-    const endLineNum = getLineNum($endToken);
-    const startLine = lineMap.get(startLineNum);
-    const endLine = lineMap.get(endLineNum);
-
-    if (!startLine || !endLine) return;
-
-    const startGap = getLeftGap(startContainer, startOffset);
-    const endGap = getRightGap(endContainer, endOffset);
-
-    startLine.setLeft(startLine.left + startGap);
-    endLine.setRight(endLine.right - endGap);
-
-    const selectedLines = [...lineMap.values()];
-    drawLines(selectedLines);
-}
 function drawLines(lines: Line[]) {
     lines.forEach((line) => {
         if (!ctx.value) return;
