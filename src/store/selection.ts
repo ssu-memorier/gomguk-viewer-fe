@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-import getSerializedTextFromNodes from '@/utils/getSerializedTextFromNodes';
+import linkSentences from '@/utils/linkSentences';
 import getSelectedPageIndex from '@/utils/getSelectedPageIndex';
 import hasText from '@/utils/hasText';
 import Line from '@/classes/Line';
@@ -25,12 +25,11 @@ export const useSelectionStore = defineStore('selection', () => {
     function getSelectedText() {
         if (!isSelectionExist.value) return '';
 
-        const selectedStr = selectedLines.value.reduce((acc, line) => {
-            return acc + line.getText();
-        }, '');
-
-        return selectedStr;
-        // return getSerializedTextFromNodes(nodes);
+        const selectedSentences = selectedLines.value.map((line) =>
+            line.getText()
+        );
+        const selectedText = linkSentences(selectedSentences);
+        return selectedText;
     }
 
     watch(range, (newRange) => {
