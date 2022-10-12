@@ -1,6 +1,6 @@
 import TOKEN from '@/constants/TOKEN';
-import getLeftGap from '@/utils/line/getLeftGap';
-import getRightGap from '@/utils/line/getRightGap';
+import getLeftGap from '@/utils/getLeftGap';
+import getRightGap from '@/utils/getRightGap';
 import { IOffset } from '@/Interface/IOffset';
 export default class Token {
     $el;
