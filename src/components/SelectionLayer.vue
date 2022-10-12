@@ -36,24 +36,24 @@ selectionStore.$subscribe(() => {
         selectionStore;
 
     if (!isSelectionExist) {
-        clearSelection();
+        clearSelectionLayer();
         return;
     }
 
     if (selectedPageIndex !== props.pageIndex) {
-        clearSelection();
+        clearSelectionLayer();
         return;
     }
 
     if (!hasSelectedText) return;
 
-    clearSelection();
+    clearSelectionLayer();
 
     if (!range) return;
     drawSelection(range);
 });
 
-function clearSelection() {
+function clearSelectionLayer() {
     if (!ctx.value || !$selectionLayer.value) return;
 
     ctx.value.clearRect(
