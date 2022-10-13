@@ -35,6 +35,8 @@ import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
 import SECLECTION from '@/constants/SELECTION';
 import createUpperLimit from '@/utils/createUpperLimit';
+import Line from '@/classes/Line';
+import setSelection from '@/utils/setSelection';
 
 type PageIndex = {
     idx: number;
@@ -98,6 +100,8 @@ function selectionEndHandler(evt: MouseEvent) {
     };
     setPopupPosition(mousePos);
     isPopupShow.value = true;
+
+    setSelection(selectionStore.selectedLines as Line[]);
 }
 function createPageIndexList(fileName: string, maxPageNum: number) {
     const list = [];

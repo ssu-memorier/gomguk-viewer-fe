@@ -31,4 +31,10 @@ export default class Line {
             return acc + token.getText();
         }, '');
     }
+    get firstToken() {
+        return this.tokens[0];
+    }
+    get lastToken() {
+        return this.tokens[this.tokens.length - 1];
+    }
 }
