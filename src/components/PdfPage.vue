@@ -6,6 +6,11 @@
             class="textLayer"
             :data-page-index="pageIndex"
         ></div>
+        <selection-layer
+            class="selectionLayer"
+            ref="$selectionLayer"
+            :pageIndex="pageIndex"
+        ></selection-layer>
     </div>
 </template>
 
@@ -18,6 +23,7 @@ import { usePdfStore } from '@/store/pdf';
 import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
 import * as pdfjsLib from 'pdfjs-dist';
 import TOKEN from '@/constants/TOKEN';
+import SelectionLayer from '@/components/SelectionLayer.vue';
 
 const props = defineProps({
     pageIndex: {
@@ -29,6 +35,7 @@ const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
+const $selectionLayer = ref();
 const viewport = ref<PageViewport>();
 
 let page: PDFPageProxy;
@@ -62,13 +69,16 @@ async function renderPage(page: PDFPageProxy, viewport: PageViewport) {
     await renderPdfLayer(page, viewport, ctx);
     await renderTextLayer(page, viewport);
 }
+
 function setPageSize(viewport: PageViewport) {
-    if (!$pdfPage.value || !$pdfLayer.value) return;
+    if (!$pdfPage.value || !$pdfLayer.value || !$selectionLayer.value) return;
 
     $pdfPage.value.style.width = viewport.width + 'px';
     $pdfPage.value.style.height = viewport.height + 'px';
     $pdfLayer.value.width = viewport.width;
     $pdfLayer.value.height = viewport.height;
+    $selectionLayer.value.$el.width = viewport.width;
+    $selectionLayer.value.$el.height = viewport.height;
 }
 
 /**
