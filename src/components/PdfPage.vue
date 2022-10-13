@@ -1,7 +1,11 @@
 <template>
     <div ref="$pdfPage" class="pdfPage card">
         <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
-        <div ref="$textLayer" class="textLayer"></div>
+        <div
+            ref="$textLayer"
+            class="textLayer"
+            :data-page-index="pageIndex"
+        ></div>
     </div>
 </template>
 
@@ -13,6 +17,7 @@ import { defineProps, ref, onMounted } from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
 import * as pdfjsLib from 'pdfjs-dist';
+import TOKEN from '@/constants/TOKEN';
 
 const props = defineProps({
     pageIndex: {
@@ -24,16 +29,23 @@ const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
+const viewport = ref<PageViewport>();
+
 let page: PDFPageProxy;
-let viewport: PageViewport;
 let ctx: CanvasRenderingContext2D;
 
 onMounted(async () => {
     ctx = $pdfLayer.value?.getContext('2d') as CanvasRenderingContext2D;
     page = await pdfStore.getPage(props.pageIndex);
     const options = { scale: pdfStore.scale };
+    viewport.value = page.getViewport(options);
 
-    renderPage(page, options);
+    await renderPage(page, viewport.value);
+
+    if (!$textLayer.value) return;
+    const nodes = [...$textLayer.value.childNodes];
+
+    addTokenInfo(nodes);
 });
 
 /**
@@ -41,21 +53,14 @@ onMounted(async () => {
  * @param page pdf의 한 페이지에 해당하는 객체입니다.
  * @param options 랜더링 옵션 (scale 등)
  */
-async function renderPage(
-    page: PDFPageProxy,
-    options: {
-        scale: number;
-    }
-) {
-    viewport = await page.getViewport(options);
-
+async function renderPage(page: PDFPageProxy, viewport: PageViewport) {
     if (!page || !viewport || !ctx) {
         return;
     }
 
     setPageSize(viewport);
-    renderPdfLayer(page, viewport, ctx);
-    renderTextLayer(page, viewport);
+    await renderPdfLayer(page, viewport, ctx);
+    await renderTextLayer(page, viewport);
 }
 function setPageSize(viewport: PageViewport) {
     if (!$pdfPage.value || !$pdfLayer.value) return;
@@ -105,6 +110,40 @@ async function renderTextLayer(page: PDFPageProxy, viewport: PageViewport) {
         textContent: await page.getTextContent(),
         container: $textLayer.value,
         viewport: viewport,
+    });
+}
+
+function addTokenInfo(nodes: Node[]) {
+    if (!$textLayer.value) return;
+
+    const textLayerRect = $textLayer.value.getBoundingClientRect();
+    let lineNum = 1;
+    let tokenNum = 1;
+    nodes.forEach((node) => {
+        const $node = node as HTMLElement;
+        if ($node.nodeName === 'BR') {
+            lineNum++;
+            tokenNum = 1;
+        } else {
+            const nodeRect = $node.getBoundingClientRect();
+
+            $node.dataset[TOKEN.DATASET.TOKEN_NUM] = `${tokenNum}`;
+            $node.dataset[TOKEN.DATASET.LINE_NUM] = `${lineNum}`;
+            $node.dataset[TOKEN.DATASET.RIGHT] = `${
+                nodeRect.right - textLayerRect.left
+            }`;
+            $node.dataset[TOKEN.DATASET.BOTTOM] = `${
+                nodeRect.bottom - textLayerRect.top
+            }`;
+            $node.dataset[TOKEN.DATASET.LEFT] = `${
+                nodeRect.left - textLayerRect.left
+            }`;
+            $node.dataset[TOKEN.DATASET.TOP] = `${
+                nodeRect.top - textLayerRect.top
+            }`;
+
+            tokenNum++;
+        }
     });
 }
 </script>
