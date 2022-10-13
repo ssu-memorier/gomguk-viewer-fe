@@ -37,7 +37,7 @@ import SECLECTION from '@/constants/SELECTION';
 import createUpperLimit from '@/utils/createUpperLimit';
 import Line from '@/classes/Line';
 import setSelection from '@/utils/setSelection';
-
+import clearSelection from '@/utils/clearSelection';
 type PageIndex = {
     idx: number;
     key: string;
@@ -78,6 +78,7 @@ pdfStore.$subscribe('doc', (state: PdfState) => {
 
 function selectionStartHandler() {
     selectionStore.setRange(null);
+    clearSelection();
     isPopupShow.value = false;
 }
 function selectionChangeHandler() {

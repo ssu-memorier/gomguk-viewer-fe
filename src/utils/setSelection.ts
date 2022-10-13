@@ -1,4 +1,5 @@
 import Line from '@/classes/Line';
+import clearSelection from '@/utils/clearSelection';
 
 export default function setSelection(selectedLines: Line[]) {
     const firstLine = selectedLines[0];
@@ -21,6 +22,6 @@ export default function setSelection(selectedLines: Line[]) {
 
     if (!selection) return;
 
-    selection.removeAllRanges();
+    clearSelection();
     selection.addRange(range);
 }
