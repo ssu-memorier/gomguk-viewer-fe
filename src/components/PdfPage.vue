@@ -153,7 +153,8 @@ function addTokenInfo(nodes: Node[]) {
     position: relative;
     margin: 0 auto 1rem auto;
     .pdfLayer,
-    .textLayer {
+    .textLayer,
+    .selectionLayer {
         position: absolute;
         left: 0;
         top: 0;
@@ -180,6 +181,14 @@ function addTokenInfo(nodes: Node[]) {
             color: transparent;
             background: green;
         }
+    }
+    .selectionLayer {
+        z-index: 100;
+        opacity: 0.5;
+    }
+    .textLayer {
+        z-index: 200;
+        opacity: 0;
     }
 }
 </style>
