@@ -55,31 +55,9 @@ const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
-    $pdfView.value.addEventListener('mousedown', () => {
-        selectionStore.setRange(null);
-        isPopupShow.value = false;
-    });
-    document.addEventListener('selectionchange', () => {
-        const selection = window.getSelection();
-        if (selection && !selection.isCollapsed) {
-            selectionStore.setRange(selection.getRangeAt(0));
-        }
-    });
-    document.addEventListener('mouseup', (evt: MouseEvent) => {
-        if (!selectionStore.range) {
-            isPopupShow.value = false;
-            return;
-        }
-
-        const { clientX, clientY } = evt;
-        const { scrollLeft, scrollTop } = $pdfView.value;
-        const mousePos: Pos = {
-            x: clientX + scrollLeft,
-            y: clientY + scrollTop,
-        };
-        setPopupPosition(mousePos);
-        isPopupShow.value = true;
-    });
+    $pdfView.value.addEventListener('mousedown', selectionStartHandler);
+    document.addEventListener('selectionchange', selectionChangeHandler);
+    document.addEventListener('mouseup', selectionEndHandler);
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
@@ -96,6 +74,31 @@ pdfStore.$subscribe('doc', (state: PdfState) => {
     );
 });
 
+function selectionStartHandler() {
+    selectionStore.setRange(null);
+    isPopupShow.value = false;
+}
+function selectionChangeHandler() {
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) {
+        selectionStore.setRange(selection.getRangeAt(0));
+    }
+}
+function selectionEndHandler(evt: MouseEvent) {
+    if (!selectionStore.range) {
+        isPopupShow.value = false;
+        return;
+    }
+
+    const { clientX, clientY } = evt;
+    const { scrollLeft, scrollTop } = $pdfView.value;
+    const mousePos: Pos = {
+        x: clientX + scrollLeft,
+        y: clientY + scrollTop,
+    };
+    setPopupPosition(mousePos);
+    isPopupShow.value = true;
+}
 function createPageIndexList(fileName: string, maxPageNum: number) {
     const list = [];
     for (let i = 1; i <= maxPageNum; i++) {
