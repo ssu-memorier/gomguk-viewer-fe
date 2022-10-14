@@ -28,7 +28,7 @@ const translatorStore = useTranslatorStore();
 const selectionStore = useSelectionStore();
 const highlightStore = useHighlightStore();
 
-async function menuHandler(evt: Event) {
+function menuHandler(evt: Event) {
     const $target = evt.target as HTMLElement;
     const eventType = $target.dataset[POPUP.DATASET.EVENT_TYPE];
     switch (eventType) {
