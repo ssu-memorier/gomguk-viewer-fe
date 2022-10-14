@@ -14,7 +14,7 @@
         <highlight-layer
             class="highlightLayer"
             ref="$highlightLayer"
-            :pageNum="pageIndex"
+            :pageIndex="pageIndex"
         >
         </highlight-layer>
     </div>

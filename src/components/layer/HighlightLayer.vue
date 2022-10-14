@@ -12,7 +12,7 @@ import Line from '@/classes/Line';
 import Color from '@/classes/Color';
 
 const props = defineProps({
-    pageNum: {
+    pageIndex: {
         type: Number,
         required: true,
     },
@@ -22,7 +22,7 @@ const $highlightLayer = ref<HTMLCanvasElement>();
 const ctx = ref<CanvasRenderingContext2D | null>(null);
 const highlightsInPage = computed(() => {
     return highlightStore.highlightList.filter(
-        (h) => h.pageNum === props.pageNum
+        (h) => h.pageNum === props.pageIndex
     );
 });
 onMounted(async () => {
