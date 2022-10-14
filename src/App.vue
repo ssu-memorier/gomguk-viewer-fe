@@ -19,10 +19,9 @@ import { usePdfStore } from '@/store/pdf';
 import PdfLoadButton from '@/components/button/PdfLoadButton.vue';
 import TranslatorView from '@/views/TranslatorView.vue';
 
-const store = usePdfStore();
-
+const pdfStore = usePdfStore();
 function loadPdfHandler(pdf: File) {
-    store.setPdfFromFile(pdf);
+    pdfStore.setPdfFile(pdf);
 }
 </script>
 
