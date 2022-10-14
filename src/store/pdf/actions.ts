@@ -1,5 +1,5 @@
 import * as pdfjsLib from 'pdfjs-dist';
-import { PdfState } from '@/Interface/PdfState';
+import { IPdfState } from '@/Interface/IPdfState';
 import getBase64 from '@/utils/getBase64';
 
 /**
@@ -8,7 +8,7 @@ import getBase64 from '@/utils/getBase64';
  * @param payload 파라미터
  * @returns action 함수는 특정 값을 return하지 않습니다.
  */
-async function setPdfFromUrl(state: PdfState, payload: string) {
+async function setPdfFromUrl(state: IPdfState, payload: string) {
     if (!payload) {
         return;
     }
@@ -18,7 +18,7 @@ async function setPdfFromUrl(state: PdfState, payload: string) {
     state.doc = pdfDoc;
     state.pageCache = new Map();
 }
-async function setPdfFromFile(state: PdfState, payload: File) {
+async function setPdfFromFile(state: IPdfState, payload: File) {
     if (!payload) {
         return;
     }

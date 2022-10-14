@@ -20,10 +20,8 @@
  */
 import { defineProps, ref, onMounted } from 'vue';
 import { usePdfStore } from '@/store/pdf';
-import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
-import * as pdfjsLib from 'pdfjs-dist';
-import TOKEN from '@/constants/TOKEN';
 import SelectionLayer from '@/components/SelectionLayer.vue';
+import Page from '@/classes/Page';
 
 const props = defineProps({
     pageIndex: {
@@ -36,125 +34,30 @@ const $pdfPage = ref<HTMLDivElement>();
 const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
-const viewport = ref<PageViewport>();
 
-let page: PDFPageProxy;
-let ctx: CanvasRenderingContext2D;
+let page: Page;
 
 onMounted(async () => {
-    ctx = $pdfLayer.value?.getContext('2d') as CanvasRenderingContext2D;
     page = await pdfStore.getPage(props.pageIndex);
-    const options = { scale: pdfStore.scale };
-    viewport.value = page.getViewport(options);
 
-    await renderPage(page, viewport.value);
+    if (!$pdfLayer.value || !$textLayer.value) return;
 
-    if (!$textLayer.value) return;
-    const nodes = [...$textLayer.value.childNodes];
-
-    addTokenInfo(nodes);
+    const { width, height } = page.viewport;
+    setPageSize(width, height);
+    await page.renderPdfLayer($pdfLayer.value);
+    await page.renderTextLayer($textLayer.value);
+    page.addTokenInfo($textLayer.value);
 });
 
-/**
- * page를 랜더링 합니다.
- * @param page pdf의 한 페이지에 해당하는 객체입니다.
- * @param options 랜더링 옵션 (scale 등)
- */
-async function renderPage(page: PDFPageProxy, viewport: PageViewport) {
-    if (!page || !viewport || !ctx) {
-        return;
-    }
-
-    setPageSize(viewport);
-    await renderPdfLayer(page, viewport, ctx);
-    await renderTextLayer(page, viewport);
-}
-
-function setPageSize(viewport: PageViewport) {
+function setPageSize(width: number, height: number) {
     if (!$pdfPage.value || !$pdfLayer.value || !$selectionLayer.value) return;
 
-    $pdfPage.value.style.width = viewport.width + 'px';
-    $pdfPage.value.style.height = viewport.height + 'px';
-    $pdfLayer.value.width = viewport.width;
-    $pdfLayer.value.height = viewport.height;
-    $selectionLayer.value.$el.width = viewport.width;
-    $selectionLayer.value.$el.height = viewport.height;
-}
-
-/**
- * pdf layer를 캔버스에 랜더링 합니다.
- * @param page pdf의 한 페이지에 해당하는 객체입니다.
- * @param canvasContext 페이지를 그릴 캔버스의 컨텍스트입니다.
- * @param viewport 페이지의 크기 정보입니다. (width,height)
- */
-async function renderPdfLayer(
-    page: PDFPageProxy,
-    viewport: PageViewport,
-    canvasContext: CanvasRenderingContext2D
-) {
-    if ($pdfLayer.value) {
-        $pdfLayer.value.width = viewport.width;
-        $pdfLayer.value.height = viewport.height;
-    }
-
-    const renderContext = {
-        canvasContext,
-        viewport,
-    };
-
-    await page.render(renderContext).promise;
-}
-/**
- * text layer를 랜더링하여 텍스트를 선택할 수 있게 합니다.
- * @param page pdf의 한 페이지에 해당하는 객체입니다.
- * @param viewport 페이지의 크기 정보입니다. (width,height)
- */
-async function renderTextLayer(page: PDFPageProxy, viewport: PageViewport) {
-    if (!$textLayer.value || !$pdfLayer.value) return;
-
-    $textLayer.value.innerHTML = '';
-    $textLayer.value.style.left = $pdfLayer.value.offsetHeight + 'px';
-    $textLayer.value.style.left = $pdfLayer.value.offsetTop + 'px';
-
-    pdfjsLib.renderTextLayer({
-        textContent: await page.getTextContent(),
-        container: $textLayer.value,
-        viewport: viewport,
-    });
-}
-
-function addTokenInfo(nodes: Node[]) {
-    if (!$textLayer.value) return;
-
-    const textLayerRect = $textLayer.value.getBoundingClientRect();
-    let lineNum = 1;
-    let tokenNum = 1;
-    nodes.forEach((node) => {
-        const $node = node as HTMLElement;
-        if ($node.nodeName === 'BR') {
-            lineNum++;
-            tokenNum = 1;
-        } else {
-            const nodeRect = $node.getBoundingClientRect();
-
-            $node.dataset[TOKEN.DATASET.TOKEN_NUM] = `${tokenNum}`;
-            $node.dataset[TOKEN.DATASET.LINE_NUM] = `${lineNum}`;
-            $node.dataset[TOKEN.DATASET.RIGHT] = `${
-                nodeRect.right - textLayerRect.left
-            }`;
-            $node.dataset[TOKEN.DATASET.BOTTOM] = `${
-                nodeRect.bottom - textLayerRect.top
-            }`;
-            $node.dataset[TOKEN.DATASET.LEFT] = `${
-                nodeRect.left - textLayerRect.left
-            }`;
-            $node.dataset[TOKEN.DATASET.TOP] = `${
-                nodeRect.top - textLayerRect.top
-            }`;
-
-            tokenNum++;
-        }
-    });
+    $pdfPage.value.style.width = width + 'px';
+    $pdfPage.value.style.height = height + 'px';
+    $pdfLayer.value.width = width;
+    $pdfLayer.value.height = height;
+    $selectionLayer.value.$el.width = width;
+    $selectionLayer.value.$el.height = height;
 }
 </script>
 

@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import PdfPage from '@/components/PdfPage.vue';
-import { PdfState } from '@/Interface/PdfState';
+import { IPdfState } from '@/Interface/IPdfState';
 import { usePdfStore } from '@/store/pdf';
 import { useSelectionStore } from '@/store/selection';
 import { ref, onMounted } from 'vue';
@@ -62,7 +62,7 @@ onMounted(() => {
     document.addEventListener('mouseup', selectionEndHandler);
 });
 
-pdfStore.$subscribe('doc', (state: PdfState) => {
+pdfStore.$subscribe('doc', (state: IPdfState) => {
     if (!state.doc) {
         isPdfExist.value = false;
 
@@ -135,12 +135,12 @@ function setPopupPosition(pos: Pos): void {
             x -
             $pageContainer.value.offsetLeft -
             SECLECTION.VIEW.BASE_X +
-            POPUP.MARGIN.X,
+            POPUP.VIEW.MARGIN.X,
         y:
             y -
             $pageContainer.value.offsetTop -
             SECLECTION.VIEW.BASE_Y +
-            POPUP.MARGIN.Y,
+            POPUP.VIEW.MARGIN.Y,
     };
 
     const limitMouseLeft = createUpperLimit(popupPosMax.x);

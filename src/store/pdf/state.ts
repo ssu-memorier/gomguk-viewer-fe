@@ -1,10 +1,13 @@
-import { PdfState } from '@/Interface/PdfState';
+import { IPdfState } from '@/Interface/IPdfState';
+import Page from '@/classes/Page';
 
-const state: PdfState = {
+const state: IPdfState = {
     fileName: '',
     doc: null,
-    scale: 1.6,
-    pageCache: new Map(),
+    viewportOption: {
+        scale: 1.6,
+    },
+    pageCache: new Map<number, Page>(),
     async getPage(pageNum: number) {
         if (!this.doc) return;
 
@@ -13,7 +16,8 @@ const state: PdfState = {
         if (pageNum > maxPageNum || pageNum <= 0) return;
 
         if (!this.pageCache.has(pageNum)) {
-            const page = await this.doc.getPage(pageNum);
+            const pageProxy = await this.doc.getPage(pageNum);
+            const page = new Page(pageProxy, this.viewportOption);
             this.pageCache.set(pageNum, page);
         }
         return this.pageCache.get(pageNum);
