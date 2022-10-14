@@ -1,9 +1,11 @@
-export const TRANSLATE = {
+const TRANSLATE = {
     NAME: '번역하기',
     TYPE: 'translate',
 };
 
-export const COPY = {
+const COPY = {
     NAME: '복사',
     TYPE: 'copy',
 };
+
+export { TRANSLATE, COPY };
