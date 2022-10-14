@@ -7,8 +7,3 @@ export const COPY = {
     NAME: '복사',
     TYPE: 'copy',
 };
-
-export const HIGHLIGHT = {
-    NAME: '강조',
-    TYPE: 'highlight',
-};
