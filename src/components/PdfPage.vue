@@ -92,7 +92,7 @@ function setPageSize(width: number, height: number) {
         height: 1267px;
         span,
         br {
-            // color: transparent;
+            color: transparent;
             position: absolute;
             white-space: pre;
             transform-origin: 0% 0%;
