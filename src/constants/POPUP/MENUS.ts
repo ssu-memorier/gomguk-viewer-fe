@@ -8,4 +8,8 @@ const COPY = {
     TYPE: 'copy',
 };
 
-export { TRANSLATE, COPY };
+const HIGHLIGHT = {
+    NAME: '강조',
+    TYPE: 'highlight',
+};
+export { TRANSLATE, COPY, HIGHLIGHT };
