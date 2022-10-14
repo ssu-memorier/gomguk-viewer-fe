@@ -35,7 +35,9 @@ import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
 import SECLECTION from '@/constants/SELECTION';
 import createUpperLimit from '@/utils/createUpperLimit';
-
+import Line from '@/classes/Line';
+import setSelection from '@/utils/setSelection';
+import clearSelection from '@/utils/clearSelection';
 type PageIndex = {
     idx: number;
     key: string;
@@ -55,31 +57,9 @@ const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 
 onMounted(() => {
-    $pdfView.value.addEventListener('mousedown', () => {
-        selectionStore.setRange(null);
-        isPopupShow.value = false;
-    });
-    document.addEventListener('selectionchange', () => {
-        const selection = window.getSelection();
-        if (selection && !selection.isCollapsed) {
-            selectionStore.setRange(selection.getRangeAt(0));
-        }
-    });
-    document.addEventListener('mouseup', (evt: MouseEvent) => {
-        if (!selectionStore.range) {
-            isPopupShow.value = false;
-            return;
-        }
-
-        const { clientX, clientY } = evt;
-        const { scrollLeft, scrollTop } = $pdfView.value;
-        const mousePos: Pos = {
-            x: clientX + scrollLeft,
-            y: clientY + scrollTop,
-        };
-        setPopupPosition(mousePos);
-        isPopupShow.value = true;
-    });
+    $pdfView.value.addEventListener('mousedown', selectionStartHandler);
+    document.addEventListener('selectionchange', selectionChangeHandler);
+    document.addEventListener('mouseup', selectionEndHandler);
 });
 
 pdfStore.$subscribe('doc', (state: PdfState) => {
@@ -96,6 +76,34 @@ pdfStore.$subscribe('doc', (state: PdfState) => {
     );
 });
 
+function selectionStartHandler() {
+    selectionStore.setRange(null);
+    clearSelection();
+    isPopupShow.value = false;
+}
+function selectionChangeHandler() {
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) {
+        selectionStore.setRange(selection.getRangeAt(0));
+    }
+}
+function selectionEndHandler(evt: MouseEvent) {
+    if (!selectionStore.range) {
+        isPopupShow.value = false;
+        return;
+    }
+
+    const { clientX, clientY } = evt;
+    const { scrollLeft, scrollTop } = $pdfView.value;
+    const mousePos: Pos = {
+        x: clientX + scrollLeft,
+        y: clientY + scrollTop,
+    };
+    setPopupPosition(mousePos);
+    isPopupShow.value = true;
+
+    setSelection(selectionStore.selectedLines as Line[]);
+}
 function createPageIndexList(fileName: string, maxPageNum: number) {
     const list = [];
     for (let i = 1; i <= maxPageNum; i++) {
