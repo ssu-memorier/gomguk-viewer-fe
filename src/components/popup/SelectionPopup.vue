@@ -17,12 +17,16 @@
 <script setup lang="ts">
 import { useTranslatorStore } from '@/store/translator';
 import { useSelectionStore } from '@/store/selection';
+import { useHighlightStore } from '@/store/highlight';
 
 import POPUP from '@/constants/POPUP';
 import writeToClipboard from '@/utils/writeToClipboard';
+import Highlight from '@/classes/Highlight';
+import Line from '@/classes/Line';
 
 const translatorStore = useTranslatorStore();
 const selectionStore = useSelectionStore();
+const highlightStore = useHighlightStore();
 
 function menuHandler(evt: Event) {
     const $target = evt.target as HTMLElement;
@@ -41,9 +45,13 @@ function menuHandler(evt: Event) {
             break;
         }
         case POPUP.MENUS.HIGHLIGHT.TYPE: {
-            /**
-             * TODO: 하이라이트 수행시 들어갈 로직 추가
-             */
+            const { selectedLines, selectedPageIndex } = selectionStore;
+            const highlight = new Highlight(
+                selectedPageIndex,
+                selectedLines as Line[]
+            );
+
+            highlightStore.addHighlight(highlight);
             break;
         }
     }

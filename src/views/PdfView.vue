@@ -3,13 +3,13 @@
         <div
             class="pageContainer"
             ref="$pageContainer"
-            v-if="isPdfExist"
+            v-if="pageNumList.length > 0"
             @copy="copyHandler"
         >
             <PdfPage
-                v-for="PageIndex in pageIndexList"
-                :key="PageIndex.key"
-                :pageIndex="PageIndex.idx"
+                v-for="num in pageNumList"
+                :key="pdfStore.fileName + num"
+                :page-index="num"
             >
             </PdfPage>
             <SelectionPopup
@@ -26,9 +26,8 @@
 
 <script setup lang="ts">
 import PdfPage from '@/components/PdfPage.vue';
-import { IPdfState } from '@/Interface/IPdfState';
-import { usePdfStore } from '@/store/pdf';
 import { useSelectionStore } from '@/store/selection';
+import { usePdfStore } from '@/store/pdf';
 import { ref, onMounted } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import POPUP from '@/constants/POPUP';
@@ -38,23 +37,15 @@ import createUpperLimit from '@/utils/createUpperLimit';
 import Line from '@/classes/Line';
 import setSelection from '@/utils/setSelection';
 import clearSelection from '@/utils/clearSelection';
-type PageIndex = {
-    idx: number;
-    key: string;
-};
-type Pos = {
-    x: number;
-    y: number;
-};
+import { IPos } from '@/Interface/IPos';
 
 const pdfStore = usePdfStore();
 const selectionStore = useSelectionStore();
-const pageIndexList = ref<PageIndex[]>([]);
-const isPdfExist = ref<boolean>(false);
 const $selectionPopup = ref();
 const $pdfView = ref();
 const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
+const pageNumList = ref<number[]>([]);
 
 onMounted(() => {
     $pdfView.value.addEventListener('mousedown', selectionStartHandler);
@@ -62,18 +53,11 @@ onMounted(() => {
     document.addEventListener('mouseup', selectionEndHandler);
 });
 
-pdfStore.$subscribe('doc', (state: IPdfState) => {
-    if (!state.doc) {
-        isPdfExist.value = false;
-
-        return;
+pdfStore.$subscribe((_, { numPages }) => {
+    pageNumList.value = [];
+    for (let i = 1; i <= numPages; i++) {
+        pageNumList.value.push(i);
     }
-
-    isPdfExist.value = true;
-    pageIndexList.value = createPageIndexList(
-        state.fileName,
-        state.doc.numPages
-    );
 });
 
 function selectionStartHandler() {
@@ -95,7 +79,7 @@ function selectionEndHandler(evt: MouseEvent) {
 
     const { clientX, clientY } = evt;
     const { scrollLeft, scrollTop } = $pdfView.value;
-    const mousePos: Pos = {
+    const mousePos: IPos = {
         x: clientX + scrollLeft,
         y: clientY + scrollTop,
     };
@@ -103,16 +87,6 @@ function selectionEndHandler(evt: MouseEvent) {
     isPopupShow.value = true;
 
     setSelection(selectionStore.selectedLines as Line[]);
-}
-function createPageIndexList(fileName: string, maxPageNum: number) {
-    const list = [];
-    for (let i = 1; i <= maxPageNum; i++) {
-        list.push({
-            idx: i,
-            key: `${fileName}-${i}`,
-        });
-    }
-    return list;
 }
 
 function copyHandler(evt: ClipboardEvent) {
@@ -124,7 +98,7 @@ function copyHandler(evt: ClipboardEvent) {
     evt.preventDefault();
 }
 
-function setPopupPosition(pos: Pos): void {
+function setPopupPosition(pos: IPos): void {
     const popupPosMax = getPopupPosMax(
         $pageContainer.value,
         $selectionPopup.value.$el
@@ -155,7 +129,7 @@ function setPopupPosition(pos: Pos): void {
 function getPopupPosMax(
     $pageContainer: HTMLElement,
     $selectionPopup: HTMLElement
-): Pos {
+): IPos {
     const pageContainerRect = $pageContainer.getBoundingClientRect();
     const popupRect = $selectionPopup.getBoundingClientRect();
 

@@ -11,6 +11,12 @@
             ref="$selectionLayer"
             :pageIndex="pageIndex"
         ></selection-layer>
+        <highlight-layer
+            class="highlightLayer"
+            ref="$highlightLayer"
+            :pageIndex="pageIndex"
+        >
+        </highlight-layer>
     </div>
 </template>
 
@@ -20,7 +26,8 @@
  */
 import { defineProps, ref, onMounted } from 'vue';
 import { usePdfStore } from '@/store/pdf';
-import SelectionLayer from '@/components/SelectionLayer.vue';
+import SelectionLayer from '@/components/layer/SelectionLayer.vue';
+import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import Page from '@/classes/Page';
 
 const props = defineProps({
@@ -34,13 +41,13 @@ const $pdfPage = ref<HTMLDivElement>();
 const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
+const $highlightLayer = ref();
 
-let page: Page;
+let page: Page | undefined;
 
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
-
-    if (!$pdfLayer.value || !$textLayer.value) return;
+    if (!page || !$pdfLayer.value || !$textLayer.value) return;
 
     const { width, height } = page.viewport;
     setPageSize(width, height);
@@ -58,6 +65,8 @@ function setPageSize(width: number, height: number) {
     $pdfLayer.value.height = height;
     $selectionLayer.value.$el.width = width;
     $selectionLayer.value.$el.height = height;
+    $highlightLayer.value.$el.width = width;
+    $highlightLayer.value.$el.height = height;
 }
 </script>
 
@@ -67,7 +76,8 @@ function setPageSize(width: number, height: number) {
     margin: 0 auto 1rem auto;
     .pdfLayer,
     .textLayer,
-    .selectionLayer {
+    .selectionLayer,
+    .highlightLayer {
         position: absolute;
         left: 0;
         top: 0;
@@ -92,7 +102,7 @@ function setPageSize(width: number, height: number) {
         }
         ::selection {
             color: transparent;
-            background: green;
+            background: transparent;
         }
     }
     .selectionLayer {
