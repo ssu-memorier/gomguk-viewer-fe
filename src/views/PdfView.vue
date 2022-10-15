@@ -3,13 +3,13 @@
         <div
             class="pageContainer"
             ref="$pageContainer"
-            v-if="isPdfExist"
+            v-if="pageNumList.length > 0"
             @copy="copyHandler"
         >
             <PdfPage
-                v-for="PageIndex in pageIndexList"
-                :key="PageIndex.key"
-                :pageIndex="PageIndex.idx"
+                v-for="num in pageNumList"
+                :key="pdfStore.fileName + num"
+                :page-index="num"
             >
             </PdfPage>
             <SelectionPopup
@@ -26,74 +26,67 @@
 
 <script setup lang="ts">
 import PdfPage from '@/components/PdfPage.vue';
-import { PdfState } from '@/Interface/PdfState';
-import { usePdfStore } from '@/store/pdf';
 import { useSelectionStore } from '@/store/selection';
+import { usePdfStore } from '@/store/pdf';
 import { ref, onMounted } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
-import SELECTION from '@/constants/SELECTION';
+import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
-
-type PageIndex = {
-    idx: number;
-    key: string;
-};
+import SECLECTION from '@/constants/SELECTION';
+import createUpperLimit from '@/utils/createUpperLimit';
+import Line from '@/classes/Line';
+import setSelection from '@/utils/setSelection';
+import clearSelection from '@/utils/clearSelection';
+import { IPos } from '@/Interface/IPos';
 
 const pdfStore = usePdfStore();
 const selectionStore = useSelectionStore();
-const pageIndexList = ref<PageIndex[]>([]);
-const isPdfExist = ref<boolean>(false);
 const $selectionPopup = ref();
 const $pdfView = ref();
 const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
+const pageNumList = ref<number[]>([]);
 
 onMounted(() => {
-    $pdfView.value.addEventListener('mousedown', () => {
-        selectionStore.setRange(null);
-        isPopupShow.value = false;
-    });
-    document.addEventListener('selectionchange', () => {
-        const selection = window.getSelection();
-        if (selection && !selection.isCollapsed) {
-            selectionStore.setRange(selection.getRangeAt(0));
-        }
-    });
-    document.addEventListener('mouseup', (evt: MouseEvent) => {
-        if (!selectionStore.range) {
-            isPopupShow.value = false;
-            return;
-        }
-
-        const { clientX, clientY } = evt;
-        setPopupPosition(clientX, clientY);
-        isPopupShow.value = true;
-    });
+    $pdfView.value.addEventListener('mousedown', selectionStartHandler);
+    document.addEventListener('selectionchange', selectionChangeHandler);
+    document.addEventListener('mouseup', selectionEndHandler);
 });
 
-pdfStore.$subscribe('doc', (state: PdfState) => {
-    if (!state.doc) {
-        isPdfExist.value = false;
+pdfStore.$subscribe((_, { numPages }) => {
+    pageNumList.value = [];
+    for (let i = 1; i <= numPages; i++) {
+        pageNumList.value.push(i);
+    }
+});
 
+function selectionStartHandler() {
+    selectionStore.setRange(null);
+    clearSelection();
+    isPopupShow.value = false;
+}
+function selectionChangeHandler() {
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) {
+        selectionStore.setRange(selection.getRangeAt(0));
+    }
+}
+function selectionEndHandler(evt: MouseEvent) {
+    if (!selectionStore.range) {
+        isPopupShow.value = false;
         return;
     }
 
-    isPdfExist.value = true;
-    pageIndexList.value = createPageIndexList(
-        state.fileName,
-        state.doc.numPages
-    );
-});
+    const { clientX, clientY } = evt;
+    const { scrollLeft, scrollTop } = $pdfView.value;
+    const mousePos: IPos = {
+        x: clientX + scrollLeft,
+        y: clientY + scrollTop,
+    };
+    setPopupPosition(mousePos);
+    isPopupShow.value = true;
 
-function createPageIndexList(fileName: string, maxPageNum: number) {
-    const list = [];
-    for (let i = 1; i <= maxPageNum; i++) {
-        list.push({
-            idx: i,
-            key: `${fileName}-${i}`,
-        });
-    }
-    return list;
+    setSelection(selectionStore.selectedLines as Line[]);
 }
 
 function copyHandler(evt: ClipboardEvent) {
@@ -105,14 +98,45 @@ function copyHandler(evt: ClipboardEvent) {
     evt.preventDefault();
 }
 
-function setPopupPosition(x: number, y: number): void {
-    const scrollTop = $pdfView.value.scrollTop;
-    const scrollLeft = $pdfView.value.scrollLeft;
+function setPopupPosition(pos: IPos): void {
+    const popupPosMax = getPopupPosMax(
+        $pageContainer.value,
+        $selectionPopup.value.$el
+    );
+    const { x, y } = pos;
+    const mouseRelativePos = {
+        x:
+            x -
+            $pageContainer.value.offsetLeft -
+            SECLECTION.VIEW.BASE_X +
+            POPUP.VIEW.MARGIN.X,
+        y:
+            y -
+            $pageContainer.value.offsetTop -
+            SECLECTION.VIEW.BASE_Y +
+            POPUP.VIEW.MARGIN.Y,
+    };
 
-    $selectionPopup.value.$el.style.left = `${x + scrollLeft}px`;
-    $selectionPopup.value.$el.style.top = `${
-        y + scrollTop - SELECTION.VIEW.BASE_Y
-    }px`;
+    const limitMouseLeft = createUpperLimit(popupPosMax.x);
+    const limitMouseTop = createUpperLimit(popupPosMax.y);
+    const limitedLeft = limitMouseLeft(mouseRelativePos.x);
+    const limitedTop = limitMouseTop(mouseRelativePos.y);
+
+    $selectionPopup.value.$el.style.left = `${limitedLeft}px`;
+    $selectionPopup.value.$el.style.top = `${limitedTop}px`;
+}
+
+function getPopupPosMax(
+    $pageContainer: HTMLElement,
+    $selectionPopup: HTMLElement
+): IPos {
+    const pageContainerRect = $pageContainer.getBoundingClientRect();
+    const popupRect = $selectionPopup.getBoundingClientRect();
+
+    return {
+        x: pageContainerRect.width - popupRect.width,
+        y: pageContainerRect.height - popupRect.height,
+    };
 }
 </script>
 
@@ -138,7 +162,7 @@ function setPopupPosition(x: number, y: number): void {
     .pageContainer {
         margin: 0 auto;
         position: relative;
-        width: 100%;
+        width: fit-content;
         height: fit-content;
         display: flex;
         flex-direction: column;

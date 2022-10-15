@@ -1,7 +1,22 @@
 <template>
     <div ref="$pdfPage" class="pdfPage card">
         <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
-        <div ref="$textLayer" class="textLayer"></div>
+        <div
+            ref="$textLayer"
+            class="textLayer"
+            :data-page-index="pageIndex"
+        ></div>
+        <selection-layer
+            class="selectionLayer"
+            ref="$selectionLayer"
+            :pageIndex="pageIndex"
+        ></selection-layer>
+        <highlight-layer
+            class="highlightLayer"
+            ref="$highlightLayer"
+            :pageIndex="pageIndex"
+        >
+        </highlight-layer>
     </div>
 </template>
 
@@ -11,8 +26,9 @@
  */
 import { defineProps, ref, onMounted } from 'vue';
 import { usePdfStore } from '@/store/pdf';
-import { PageViewport, PDFPageProxy } from 'pdfjs-dist';
-import * as pdfjsLib from 'pdfjs-dist';
+import SelectionLayer from '@/components/layer/SelectionLayer.vue';
+import HighlightLayer from '@/components/layer/HighlightLayer.vue';
+import Page from '@/classes/Page';
 
 const props = defineProps({
     pageIndex: {
@@ -24,88 +40,33 @@ const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
-let page: PDFPageProxy;
-let viewport: PageViewport;
-let ctx: CanvasRenderingContext2D;
+const $selectionLayer = ref();
+const $highlightLayer = ref();
+
+let page: Page | undefined;
 
 onMounted(async () => {
-    ctx = $pdfLayer.value?.getContext('2d') as CanvasRenderingContext2D;
     page = await pdfStore.getPage(props.pageIndex);
-    const options = { scale: pdfStore.scale };
+    if (!page || !$pdfLayer.value || !$textLayer.value) return;
 
-    renderPage(page, options);
+    const { width, height } = page.viewport;
+    setPageSize(width, height);
+    await page.renderPdfLayer($pdfLayer.value);
+    await page.renderTextLayer($textLayer.value);
+    page.addTokenInfo($textLayer.value);
 });
 
-/**
- * page를 랜더링 합니다.
- * @param page pdf의 한 페이지에 해당하는 객체입니다.
- * @param options 랜더링 옵션 (scale 등)
- */
-async function renderPage(
-    page: PDFPageProxy,
-    options: {
-        scale: number;
-    }
-) {
-    viewport = await page.getViewport(options);
+function setPageSize(width: number, height: number) {
+    if (!$pdfPage.value || !$pdfLayer.value || !$selectionLayer.value) return;
 
-    if (!page || !viewport || !ctx) {
-        return;
-    }
-
-    setPageSize(viewport);
-    renderPdfLayer(page, viewport, ctx);
-    renderTextLayer(page, viewport);
-}
-function setPageSize(viewport: PageViewport) {
-    if (!$pdfPage.value || !$pdfLayer.value) return;
-
-    $pdfPage.value.style.width = viewport.width + 'px';
-    $pdfPage.value.style.height = viewport.height + 'px';
-    $pdfLayer.value.width = viewport.width;
-    $pdfLayer.value.height = viewport.height;
-}
-
-/**
- * pdf layer를 캔버스에 랜더링 합니다.
- * @param page pdf의 한 페이지에 해당하는 객체입니다.
- * @param canvasContext 페이지를 그릴 캔버스의 컨텍스트입니다.
- * @param viewport 페이지의 크기 정보입니다. (width,height)
- */
-async function renderPdfLayer(
-    page: PDFPageProxy,
-    viewport: PageViewport,
-    canvasContext: CanvasRenderingContext2D
-) {
-    if ($pdfLayer.value) {
-        $pdfLayer.value.width = viewport.width;
-        $pdfLayer.value.height = viewport.height;
-    }
-
-    const renderContext = {
-        canvasContext,
-        viewport,
-    };
-
-    await page.render(renderContext).promise;
-}
-/**
- * text layer를 랜더링하여 텍스트를 선택할 수 있게 합니다.
- * @param page pdf의 한 페이지에 해당하는 객체입니다.
- * @param viewport 페이지의 크기 정보입니다. (width,height)
- */
-async function renderTextLayer(page: PDFPageProxy, viewport: PageViewport) {
-    if (!$textLayer.value || !$pdfLayer.value) return;
-
-    $textLayer.value.innerHTML = '';
-    $textLayer.value.style.left = $pdfLayer.value.offsetHeight + 'px';
-    $textLayer.value.style.left = $pdfLayer.value.offsetTop + 'px';
-
-    pdfjsLib.renderTextLayer({
-        textContent: await page.getTextContent(),
-        container: $textLayer.value,
-        viewport: viewport,
-    });
+    $pdfPage.value.style.width = width + 'px';
+    $pdfPage.value.style.height = height + 'px';
+    $pdfLayer.value.width = width;
+    $pdfLayer.value.height = height;
+    $selectionLayer.value.$el.width = width;
+    $selectionLayer.value.$el.height = height;
+    $highlightLayer.value.$el.width = width;
+    $highlightLayer.value.$el.height = height;
 }
 </script>
 
@@ -114,7 +75,9 @@ async function renderTextLayer(page: PDFPageProxy, viewport: PageViewport) {
     position: relative;
     margin: 0 auto 1rem auto;
     .pdfLayer,
-    .textLayer {
+    .textLayer,
+    .selectionLayer,
+    .highlightLayer {
         position: absolute;
         left: 0;
         top: 0;
@@ -139,8 +102,16 @@ async function renderTextLayer(page: PDFPageProxy, viewport: PageViewport) {
         }
         ::selection {
             color: transparent;
-            background: green;
+            background: transparent;
         }
+    }
+    .selectionLayer {
+        z-index: 100;
+        opacity: 0.5;
+    }
+    .textLayer {
+        z-index: 200;
+        opacity: 0;
     }
 }
 </style>

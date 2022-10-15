@@ -1,8 +1,8 @@
 <template>
     <div class="selectionPopup">
-        <ul class="card" v-if="selectionStore.range">
+        <ul class="card" v-if="selectionStore.isSelectionExist">
             <li
-                v-for="MENU in SELECTION.MENUS"
+                v-for="MENU in POPUP.MENUS"
                 :key="MENU.TYPE"
                 class="menu"
                 :data-event-type="MENU.TYPE"
@@ -17,26 +17,41 @@
 <script setup lang="ts">
 import { useTranslatorStore } from '@/store/translator';
 import { useSelectionStore } from '@/store/selection';
-import SELECTION from '@/constants/SELECTION';
+import { useHighlightStore } from '@/store/highlight';
+
+import POPUP from '@/constants/POPUP';
 import writeToClipboard from '@/utils/writeToClipboard';
+import Highlight from '@/classes/Highlight';
+import Line from '@/classes/Line';
 
 const translatorStore = useTranslatorStore();
 const selectionStore = useSelectionStore();
+const highlightStore = useHighlightStore();
 
 function menuHandler(evt: Event) {
     const $target = evt.target as HTMLElement;
-    const eventType = $target.dataset[SELECTION.DATASET.EVENT_TYPE];
+    const eventType = $target.dataset[POPUP.DATASET.EVENT_TYPE];
     switch (eventType) {
-        case SELECTION.MENUS.TRANSLATE.TYPE: {
+        case POPUP.MENUS.TRANSLATE.TYPE: {
             const originText = selectionStore.getSelectedText();
 
             translatorStore.setOriginalText(originText);
             break;
         }
-        case SELECTION.MENUS.COPY.TYPE: {
+        case POPUP.MENUS.COPY.TYPE: {
             const originText = selectionStore.getSelectedText();
 
             writeToClipboard(originText);
+            break;
+        }
+        case POPUP.MENUS.HIGHLIGHT.TYPE: {
+            const { selectedLines, selectedPageIndex } = selectionStore;
+            const highlight = new Highlight(
+                selectedPageIndex,
+                selectedLines as Line[]
+            );
+
+            highlightStore.addHighlight(highlight);
             break;
         }
     }
@@ -46,6 +61,7 @@ function menuHandler(evt: Event) {
 <style lang="scss">
 div.selectionPopup {
     background-color: #fff;
+    width: 240px;
     ul {
         padding: 0;
         display: inline-flex;
