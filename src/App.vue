@@ -7,8 +7,8 @@
     </header>
     <main>
         <section>
-            <pdf-view></pdf-view>
-            <translator-view></translator-view>
+            <pdf-view class="pdfView"></pdf-view>
+            <translator-view class="translatorView"></translator-view>
         </section>
     </main>
 </template>
@@ -81,10 +81,16 @@ main {
     overflow: auto;
     section {
         height: 100%;
-        z-index: 1;
+        width: 100%;
         display: flex;
         flex-direction: row;
-        width: 100%;
+        .pdfView {
+            flex-grow: 1;
+        }
+        .translatorView {
+            width: 400px;
+            flex-shrink: 0;
+        }
     }
 }
 </style>

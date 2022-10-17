@@ -59,7 +59,6 @@ function targetLanguageHandler(evt: Event) {
 
 <style lang="scss" scoped>
 div.translatorView {
-    overflow: hidden;
     background-color: #ccc;
     div.translatorHeader {
         padding: 0.5rem;
