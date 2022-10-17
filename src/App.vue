@@ -26,9 +26,10 @@ function loadPdfHandler(pdf: File) {
 </script>
 
 <style lang="scss">
-@import url('@/assets/theme.css');
+@import '@/assets/css/theme.css';
+@import '@/assets/scss/mediaQuery';
+
 :root {
-    --screen-main-max-width: 900px;
     --border-radius: 4px;
     --header-height: 60px;
 }
@@ -83,13 +84,26 @@ main {
         height: 100%;
         width: 100%;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         .pdfView {
             flex-grow: 1;
         }
         .translatorView {
-            width: 400px;
+            width: 100%;
+            height: 300px;
             flex-shrink: 0;
+        }
+    }
+}
+
+@include desktop {
+    main {
+        section {
+            flex-direction: row;
+            .translatorView {
+                width: 400px;
+                height: 100%;
+            }
         }
     }
 }

@@ -1,0 +1,7 @@
+@import '@/assets/scss/viewport';
+
+@mixin desktop {
+    @media (min-width: #{$breakpoint-desktop}) {
+        @content;
+    }
+}
