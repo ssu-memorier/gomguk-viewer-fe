@@ -82,6 +82,9 @@ main {
     section {
         height: 100%;
         z-index: 1;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
     }
 }
 </style>
