@@ -79,7 +79,7 @@ main {
     height: calc(100% - var(--header-height));
     width: 100%;
     margin: 0;
-    overflow: auto;
+    overflow: hidden;
     section {
         height: 100%;
         width: 100%;
@@ -100,6 +100,7 @@ main {
     main {
         section {
             flex-direction: row;
+
             .translatorView {
                 width: 400px;
                 height: 100%;

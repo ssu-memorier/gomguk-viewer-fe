@@ -60,14 +60,19 @@ function targetLanguageHandler(evt: Event) {
 <style lang="scss" scoped>
 div.translatorView {
     background-color: #ccc;
+    display: flex;
+    flex-direction: column;
     div.translatorHeader {
+        height: 60px;
+        flex-shrink: 0;
         padding: 0.5rem;
         button {
             cursor: pointer;
         }
     }
     .translator {
-        height: 600px;
+        flex-grow: 1;
+        overflow: auto;
     }
 }
 </style>

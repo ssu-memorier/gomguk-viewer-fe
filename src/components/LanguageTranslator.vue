@@ -1,10 +1,5 @@
 <template>
     <div class="translatorTextarea">
-        <textarea
-            class="origin"
-            :placeholder="TRANSLATOR.VIEW.PLACEHOLDER"
-            v-model="translatorStore.originalText"
-        ></textarea>
         <div class="translated" disabled>
             {{ translatorStore.translatedText }}
         </div>
@@ -15,7 +10,6 @@
 /**
  * LanguageTranslator는 텍스트를 입력하면 번역된 결과를 보여주는 컴포넌트 입니다.
  */
-import TRANSLATOR from '@/constants/TRANSLATOR';
 import { useTranslatorStore } from '@/store/translator';
 
 const translatorStore = useTranslatorStore();
@@ -24,7 +18,6 @@ const translatorStore = useTranslatorStore();
 <style lang="scss" scoped>
 div.translatorTextarea {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     textarea.origin,
