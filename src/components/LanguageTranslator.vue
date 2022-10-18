@@ -41,15 +41,14 @@ div.translatorTextarea {
     textarea.origin,
     div.translated {
         color: #{$translator-color};
-        font-size: 1.4rem;
+        font-size: #{$translator-font-size};
         border: none;
-        padding: 1rem;
+        padding: #{$translator-padding};
         box-sizing: border-box;
         background-color: #{$translator-bg-color};
         text-align: left;
         margin: 0;
         flex-grow: 1;
-        height: 50%;
     }
     textarea.origin {
         resize: none;
