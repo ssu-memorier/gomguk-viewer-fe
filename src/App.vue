@@ -102,7 +102,6 @@ main {
     main {
         section {
             flex-direction: row;
-
             .translatorView {
                 width: #{$translator-row-mode-width};
                 height: #{$translator-row-mode-height};
