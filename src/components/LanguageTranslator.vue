@@ -33,18 +33,19 @@ function toggleShowOriginText() {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/translator';
 div.translatorTextarea {
     width: 100%;
     display: flex;
     flex-direction: column;
     textarea.origin,
     div.translated {
-        color: #333;
+        color: #{$translator-color};
         font-size: 1.4rem;
         border: none;
         padding: 1rem;
         box-sizing: border-box;
-        background-color: #fff;
+        background-color: #{$translator-bg-color};
         text-align: left;
         margin: 0;
         flex-grow: 1;
@@ -52,18 +53,12 @@ div.translatorTextarea {
     }
     textarea.origin {
         resize: none;
-        border-bottom: 1px solid #ddd;
     }
     textarea:focus {
         outline: none;
     }
     div.translated {
         overflow: scroll;
-    }
-    hr {
-        margin: 0;
-        border-color: #eee;
-        background-color: #eee;
     }
 }
 </style>
