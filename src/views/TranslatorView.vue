@@ -63,7 +63,7 @@ div.translatorView {
     flex-direction: column;
     div.translatorHeader {
         flex-shrink: 0;
-        padding: #{$translator-header-padding};
+        padding: $translator-header-padding;
         button {
             cursor: pointer;
         }

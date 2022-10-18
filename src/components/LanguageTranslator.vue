@@ -40,12 +40,12 @@ div.translatorTextarea {
     flex-direction: column;
     textarea.origin,
     div.translated {
-        color: #{$translator-color};
-        font-size: #{$translator-font-size};
+        color: $translator-color;
+        font-size: $translator-font-size;
         border: none;
-        padding: #{$translator-padding};
+        padding: $translator-padding;
         box-sizing: border-box;
-        background-color: #{$translator-bg-color};
+        background-color: $translator-bg-color;
         text-align: left;
         margin: 0;
         flex-grow: 1;
