@@ -10,13 +10,10 @@ export const usePdfStore = defineStore('pdf', () => {
     const viewportOption = reactive({
         scale: 1.6,
     });
-    const fileName = computed(() => {
-        if (!pdfFile.value) return '';
-        else return pdfFile.value.name;
-    });
     const numPages = ref<number>(0);
+    const fileName = ref<string>('');
 
-    watch(pdfFile, async (newFile) => {
+    watch(pdfFile, async (newFile: File | undefined) => {
         pageMap.clear();
         if (!newFile) return;
 
@@ -24,6 +21,8 @@ export const usePdfStore = defineStore('pdf', () => {
         if (!doc) return;
 
         await initPages(doc);
+
+        fileName.value = newFile.name || '';
         numPages.value = doc.numPages;
     });
 
@@ -43,6 +42,7 @@ export const usePdfStore = defineStore('pdf', () => {
     }
     async function getDoc(file: File) {
         const base64 = await getBase64(file);
+
         if (!base64) return;
 
         const loadingTask = getDocument(base64);
