@@ -28,6 +28,7 @@ function loadPdfHandler(pdf: File) {
 <style lang="scss">
 @import '@/assets/css/theme.css';
 @import '@/assets/scss/mediaQuery';
+@import '@/assets/scss/translator';
 
 :root {
     --border-radius: 4px;
@@ -89,9 +90,10 @@ main {
             flex-grow: 1;
         }
         .translatorView {
-            width: 100%;
-            height: 200px;
             flex-shrink: 0;
+
+            width: #{$translator-col-mode-width};
+            height: #{$translator-col-mode-height};
         }
     }
 }
@@ -102,8 +104,8 @@ main {
             flex-direction: row;
 
             .translatorView {
-                width: 400px;
-                height: 100%;
+                width: #{$translator-row-mode-width};
+                height: #{$translator-row-mode-height};
             }
         }
     }
