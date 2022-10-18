@@ -56,13 +56,14 @@ function targetLanguageHandler(evt: Event) {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/translator';
 div.translatorView {
     background-color: #ccc;
     display: flex;
     flex-direction: column;
     div.translatorHeader {
         flex-shrink: 0;
-        padding: 0.5rem;
+        padding: #{$translator-header-padding};
         button {
             cursor: pointer;
         }
