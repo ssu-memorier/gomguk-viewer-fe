@@ -26,14 +26,10 @@ function loadPdfHandler(pdf: File) {
 </script>
 
 <style lang="scss">
-@import '@/assets/css/theme.css';
+@import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
 @import '@/assets/scss/translator';
 
-:root {
-    --border-radius: 4px;
-    --header-height: 60px;
-}
 * {
     box-sizing: border-box;
 }
@@ -43,7 +39,7 @@ body {
     margin: 0;
     width: 100vw;
     height: 100vh;
-    background-color: var(--bg-color);
+    background-color: $bg-color;
 }
 #app {
     position: absolute;
@@ -57,8 +53,8 @@ body {
 header {
     position: relative;
     box-sizing: border-box;
-    height: var(--header-height);
-    background-color: var(--surface-color);
+    height: $header-height;
+    background-color: $surface-color;
     padding: 0.5rem 2rem;
     z-index: 200;
     .center {
@@ -68,7 +64,7 @@ header {
         margin: 0 auto;
         width: 100%;
         height: 100%;
-        max-width: var(--screen-main-max-width);
+        max-width: $screen-main-max-width;
     }
     .appName {
         font-weight: bold;
@@ -77,7 +73,7 @@ header {
 }
 main {
     position: relative;
-    height: calc(100% - var(--header-height));
+    height: calc(100% - $header-height);
     width: 100%;
     margin: 0;
     overflow: hidden;
@@ -91,9 +87,8 @@ main {
         }
         .translatorView {
             flex-shrink: 0;
-
-            width: #{$translator-col-mode-width};
-            height: #{$translator-col-mode-height};
+            width: $translator-col-mode-width;
+            height: $translator-col-mode-height;
         }
     }
 }
@@ -103,8 +98,8 @@ main {
         section {
             flex-direction: row;
             .translatorView {
-                width: #{$translator-row-mode-width};
-                height: #{$translator-row-mode-height};
+                width: $translator-row-mode-width;
+                height: $translator-row-mode-height;
             }
         }
     }
