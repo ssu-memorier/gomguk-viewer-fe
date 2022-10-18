@@ -5,9 +5,11 @@ import TOKEN from '@/constants/TOKEN';
 export default class Page {
     #pageProxy: pdfjs.PDFPageProxy;
     viewport: pdfjs.PageViewport;
+    option: IViewportOption;
 
     constructor(pageProxy: pdfjs.PDFPageProxy, option: IViewportOption) {
         this.#pageProxy = pageProxy;
+        this.option = option;
         this.viewport = this.#pageProxy.getViewport(option);
     }
 
@@ -32,6 +34,8 @@ export default class Page {
      * @param $layer 텍스트 요소(span,br)가 들어갈 컨테이너
      */
     async renderTextLayer($layer: HTMLDivElement) {
+        $layer.innerHTML = '';
+
         pdfjs.renderTextLayer({
             textContent: await this.#pageProxy.getTextContent(),
             container: $layer,
@@ -78,6 +82,7 @@ export default class Page {
         });
     }
     updateViewport(option: IViewportOption) {
+        this.option = option;
         this.viewport = this.#pageProxy.getViewport(option);
     }
     get pageNum() {

@@ -1,6 +1,11 @@
 <template>
     <div ref="$pdfPage" class="pdfPage card">
         <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
+        <canvas
+            ref="$tempLayer"
+            class="tempLayer"
+            :class="{ hide: !isRendering }"
+        ></canvas>
         <div
             ref="$textLayer"
             class="textLayer"
@@ -42,12 +47,19 @@ const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
+const $tempLayer = ref<HTMLCanvasElement>();
+const isRendering = ref<boolean>(false);
 
 let page: Page | undefined;
-
+let ctx: CanvasRenderingContext2D | null = null;
+let tempCtx: CanvasRenderingContext2D | null = null;
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
-    if (!page || !$pdfLayer.value || !$textLayer.value) return;
+    if (!page || !$tempLayer.value || !$pdfLayer.value || !$textLayer.value)
+        return;
+
+    ctx = $pdfLayer.value.getContext('2d');
+    tempCtx = $tempLayer.value.getContext('2d');
 
     const { width, height } = page.viewport;
     setPageSize(width, height);
@@ -59,14 +71,43 @@ onMounted(async () => {
 pdfStore.$subscribe(async (_, state) => {
     page = await pdfStore.getPage(props.pageIndex);
 
-    if (!page || !$pdfLayer.value || !$textLayer.value) return;
+    if (!page || !ctx || !tempCtx || !$pdfLayer.value || !$textLayer.value)
+        return;
+
+    isRendering.value = true;
+    const prevCanvas = getCopiedCanvas(ctx, page.viewport);
+    const oldViewport = page.viewport;
 
     page.updateViewport(state.viewportOption);
+
     const { width, height } = page.viewport;
     setPageSize(width, height);
-    await page.renderPdfLayer($pdfLayer.value);
+    tempCtx.scale(
+        page.viewport.width / oldViewport.width,
+        page.viewport.height / oldViewport.height
+    );
+
+    tempCtx.drawImage(prevCanvas, 0, 0);
+    // const oldViewport = page.viewport;
+    // page.updateViewport(state.viewportOption);
+    // const { width, height } = page.viewport;
+    // setPageSize(width, height);
+
+    // ctx.scale(
+    //     page.viewport.width / oldViewport.width,
+    //     page.viewport.height / oldViewport.height
+    // );
+    // ctx.drawImage(newCanvas, 0, 0);
+    const newCanvas = document.createElement('canvas');
+    newCanvas.width = page.viewport.width;
+    newCanvas.height = page.viewport.height;
+    await page.renderPdfLayer(newCanvas);
+
+    // await page.renderPdfLayer($pdfLayer.value);
+    ctx.drawImage(newCanvas, 0, 0);
     await page.renderTextLayer($textLayer.value);
     page.addTokenInfo($textLayer.value);
+    isRendering.value = false;
 });
 
 function setPageSize(width: number, height: number) {
@@ -74,7 +115,8 @@ function setPageSize(width: number, height: number) {
         !$pdfPage.value ||
         !$pdfLayer.value ||
         !$selectionLayer.value ||
-        !$textLayer.value
+        !$textLayer.value ||
+        !$tempLayer.value
     )
         return;
 
@@ -82,6 +124,8 @@ function setPageSize(width: number, height: number) {
     $pdfPage.value.style.height = height + 'px';
     $pdfLayer.value.width = width;
     $pdfLayer.value.height = height;
+    $tempLayer.value.width = width;
+    $tempLayer.value.height = height;
     $selectionLayer.value.$el.width = width;
     $selectionLayer.value.$el.height = height;
     $highlightLayer.value.$el.width = width;
@@ -89,16 +133,30 @@ function setPageSize(width: number, height: number) {
     $textLayer.value.style.width = width + 'px';
     $textLayer.value.style.height = height + 'px';
 }
+
+function getCopiedCanvas(ctx, viewport) {
+    const imgData = ctx.getImageData(0, 0, viewport.width, viewport.height);
+    const newCanvas = document.createElement('canvas');
+    newCanvas.width = viewport.width;
+    newCanvas.height = viewport.height;
+    newCanvas.getContext('2d')?.putImageData(imgData, 0, 0);
+
+    return newCanvas;
+}
 </script>
 
 <style lang="scss" scoped>
+.hide {
+    visibility: hidden;
+}
 .pdfPage {
     position: relative;
     margin: 0 auto 1rem auto;
     .pdfLayer,
     .textLayer,
     .selectionLayer,
-    .highlightLayer {
+    .highlightLayer,
+    .tempLayer {
         position: absolute;
         left: 0;
         top: 0;
