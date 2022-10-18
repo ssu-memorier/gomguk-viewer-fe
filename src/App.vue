@@ -90,7 +90,7 @@ main {
         }
         .translatorView {
             width: 100%;
-            height: 300px;
+            height: 200px;
             flex-shrink: 0;
         }
     }
