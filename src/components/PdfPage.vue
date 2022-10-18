@@ -56,6 +56,19 @@ onMounted(async () => {
     page.addTokenInfo($textLayer.value);
 });
 
+pdfStore.$subscribe(async (_, state) => {
+    page = await pdfStore.getPage(props.pageIndex);
+
+    if (!page || !$pdfLayer.value || !$textLayer.value) return;
+
+    page.updateViewport(state.viewportOption);
+    const { width, height } = page.viewport;
+    setPageSize(width, height);
+    await page.renderPdfLayer($pdfLayer.value);
+    await page.renderTextLayer($textLayer.value);
+    page.addTokenInfo($textLayer.value);
+});
+
 function setPageSize(width: number, height: number) {
     if (
         !$pdfPage.value ||
