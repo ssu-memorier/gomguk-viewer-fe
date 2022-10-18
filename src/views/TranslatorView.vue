@@ -1,7 +1,6 @@
 <template>
     <div class="translatorView card">
         <div class="translatorHeader">
-            <div class="name">{{ TRANSLATOR.VIEW.NAME }}</div>
             <div class="translatorLanguageSelect">
                 <select @change="sourceLanguageHandler">
                     <option
@@ -63,7 +62,7 @@ div.translatorView {
     display: flex;
     flex-direction: column;
     div.translatorHeader {
-        height: 60px;
+        height: 30px;
         flex-shrink: 0;
         padding: 0.5rem;
         button {
