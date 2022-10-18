@@ -33,28 +33,35 @@ function menuHandler(evt: Event) {
     const eventType = $target.dataset[POPUP.DATASET.EVENT_TYPE];
     switch (eventType) {
         case POPUP.MENUS.TRANSLATE.TYPE: {
-            const originText = selectionStore.getSelectedText();
-
-            translatorStore.setOriginalText(originText);
+            translateHandler();
             break;
         }
         case POPUP.MENUS.COPY.TYPE: {
-            const originText = selectionStore.getSelectedText();
-
-            writeToClipboard(originText);
+            copyHandler();
             break;
         }
         case POPUP.MENUS.HIGHLIGHT.TYPE: {
-            const { selectedLines, selectedPageIndex } = selectionStore;
-            const highlight = new Highlight(
-                selectedPageIndex,
-                selectedLines as Line[]
-            );
-
-            highlightStore.addHighlight(highlight);
+            highlightHandler();
             break;
         }
     }
+}
+
+function translateHandler() {
+    const originText = selectionStore.getSelectedText();
+
+    translatorStore.setOriginalText(originText);
+}
+function copyHandler() {
+    const originText = selectionStore.getSelectedText();
+
+    writeToClipboard(originText);
+}
+function highlightHandler() {
+    const { selectedLines, selectedPageIndex } = selectionStore;
+    const highlight = new Highlight(selectedPageIndex, selectedLines as Line[]);
+
+    highlightStore.addHighlight(highlight);
 }
 </script>
 

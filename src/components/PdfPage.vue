@@ -57,7 +57,13 @@ onMounted(async () => {
 });
 
 function setPageSize(width: number, height: number) {
-    if (!$pdfPage.value || !$pdfLayer.value || !$selectionLayer.value) return;
+    if (
+        !$pdfPage.value ||
+        !$pdfLayer.value ||
+        !$selectionLayer.value ||
+        !$textLayer.value
+    )
+        return;
 
     $pdfPage.value.style.width = width + 'px';
     $pdfPage.value.style.height = height + 'px';
@@ -67,6 +73,8 @@ function setPageSize(width: number, height: number) {
     $selectionLayer.value.$el.height = height;
     $highlightLayer.value.$el.width = width;
     $highlightLayer.value.$el.height = height;
+    $textLayer.value.style.width = width + 'px';
+    $textLayer.value.style.height = height + 'px';
 }
 </script>
 
@@ -88,8 +96,6 @@ function setPageSize(width: number, height: number) {
         opacity: 0.2;
         line-height: 1;
         z-index: 10;
-        width: 979px;
-        height: 1267px;
         span,
         br {
             color: transparent;
@@ -107,7 +113,7 @@ function setPageSize(width: number, height: number) {
     }
     .selectionLayer {
         z-index: 100;
-        opacity: 0.5;
+        opacity: 0.3;
     }
     .textLayer {
         z-index: 200;
