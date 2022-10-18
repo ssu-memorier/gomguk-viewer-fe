@@ -1,7 +1,18 @@
 <template>
     <div class="translatorTextarea">
+        <button @click="toggleShowOriginText">
+            {{
+                isShowOriginText
+                    ? TRANSLATOR.VIEW.SHOW_TRANSLATED
+                    : TRANSLATOR.VIEW.SHOW_ORIGIN
+            }}
+        </button>
         <div class="translated" disabled>
-            {{ translatorStore.translatedText }}
+            {{
+                isShowOriginText
+                    ? translatorStore.originalText
+                    : translatorStore.translatedText
+            }}
         </div>
     </div>
 </template>
@@ -10,9 +21,15 @@
 /**
  * LanguageTranslator는 텍스트를 입력하면 번역된 결과를 보여주는 컴포넌트 입니다.
  */
+import { ref } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
-
+import TRANSLATOR from '@/constants/TRANSLATOR';
 const translatorStore = useTranslatorStore();
+const isShowOriginText = ref<boolean>(false);
+
+function toggleShowOriginText() {
+    isShowOriginText.value = !isShowOriginText.value;
+}
 </script>
 
 <style lang="scss" scoped>
