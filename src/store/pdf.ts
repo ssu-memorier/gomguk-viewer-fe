@@ -50,12 +50,21 @@ export const usePdfStore = defineStore('pdf', () => {
 
         return doc;
     }
+    function increaseScale() {
+        viewportOption.scale += 0.1;
+    }
+    function decreaseScale() {
+        viewportOption.scale -= 0.1;
+    }
     return {
         setPdfFile,
         getPage,
+        increaseScale,
+        decreaseScale,
         pageMap,
         pdfFile,
         fileName,
         numPages,
+        viewportOption,
     };
 });
