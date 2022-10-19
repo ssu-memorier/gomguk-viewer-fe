@@ -71,7 +71,7 @@ const debouncedHighResolutionRender = createDebounce(
 
         originalPageSize = newPageSize;
 
-        const newPdfLayer = await page.getPdfLayer();
+        const newPdfLayer = await page.createPdfLayer();
         drawHighResolutionLayer(newPdfLayer);
 
         await renderTextLayer();
@@ -107,7 +107,7 @@ onMounted(async () => {
     originalPageSize = page.size;
     resizePage(originalPageSize);
 
-    const pdfLayer = await page.getPdfLayer();
+    const pdfLayer = await page.createPdfLayer();
     drawHighResolutionLayer(pdfLayer);
     await renderTextLayer();
 

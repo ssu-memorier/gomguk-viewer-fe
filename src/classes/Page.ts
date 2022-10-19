@@ -103,7 +103,7 @@ export default class Page {
             height: this.viewport.value?.height || 0,
         };
     }
-    async getPdfLayer() {
+    async createPdfLayer() {
         const canvas = document.createElement('canvas');
         await this.renderPdfLayer(canvas);
 
