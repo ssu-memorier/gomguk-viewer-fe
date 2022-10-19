@@ -31,11 +31,11 @@
  */
 import { defineProps, ref, onMounted, watch, computed } from 'vue';
 import { usePdfStore } from '@/store/pdf';
+import { PageViewport } from 'pdfjs-dist';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
-import Page from '@/classes/Page';
 import copyCanvas from '@/utils/copyCanvas';
-import { PageViewport } from 'pdfjs-dist';
+import Page from '@/classes/Page';
 
 const props = defineProps({
     pageIndex: {
@@ -43,6 +43,8 @@ const props = defineProps({
         required: true,
     },
 });
+
+const isScaleChanging = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $highResolutionLayer = ref<HTMLCanvasElement>();
@@ -50,7 +52,6 @@ const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
 const $lowResolutionLayer = ref<HTMLCanvasElement>();
-const isScaleChanging = ref<boolean>(false);
 
 let page: Page | undefined;
 const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
