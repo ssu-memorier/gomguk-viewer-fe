@@ -110,8 +110,8 @@ onMounted(async () => {
     await drawHighResolutionLayer(originalPageSize);
     await renderTextLayer();
 
-    watch(page.viewport, async (newViewport, oldViewport) => {
-        if (!newViewport || !oldViewport) return;
+    watch(page.viewport, async (newViewport) => {
+        if (!newViewport) return;
 
         isChangingSize.value = true;
         const newPageSize: Size = {
