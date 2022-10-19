@@ -152,12 +152,12 @@ function drawLowResolutionLayer(
 async function drawHighResolutionLayer(viewport: PageViewport) {
     if (!page || !highResolutionctx.value) return;
 
-    const newCanvas = document.createElement('canvas');
-    newCanvas.width = viewport.width;
-    newCanvas.height = viewport.height;
-    await page.renderPdfLayer(newCanvas);
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = viewport.width;
+    tempCanvas.height = viewport.height;
+    await page.renderPdfLayer(tempCanvas);
 
-    highResolutionctx.value.drawImage(newCanvas, 0, 0);
+    highResolutionctx.value.drawImage(tempCanvas, 0, 0);
 }
 
 async function renderTextLayer() {
