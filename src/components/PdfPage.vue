@@ -159,12 +159,11 @@ function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
     lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
 }
 
-async function drawHighResolutionLayer({ width, height }: SizeType) {
+async function drawHighResolutionLayer(pageSize: SizeType) {
     if (!page || !highResolutionCtx.value) return;
 
     const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = width;
-    tempCanvas.height = height;
+    resizeCanvas(tempCanvas, pageSize);
     await page.renderPdfLayer(tempCanvas);
 
     highResolutionCtx.value.drawImage(tempCanvas, 0, 0);
