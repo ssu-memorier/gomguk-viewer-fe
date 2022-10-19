@@ -29,7 +29,7 @@
 /**
  * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
  */
-import { defineProps, ref, onMounted, watch } from 'vue';
+import { defineProps, ref, onMounted, watch, computed } from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
@@ -52,8 +52,15 @@ const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const isRendering = ref<boolean>(false);
 
 let page: Page | undefined;
-let ctx: CanvasRenderingContext2D | null = null;
-let lowResolutionCtx: CanvasRenderingContext2D | null = null;
+const ctx = computed<CanvasRenderingContext2D | null>(() => {
+    if (!$pdfLayer.value) return null;
+    return $pdfLayer.value.getContext('2d');
+});
+const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
+    if (!$lowResolutionLayer.value) return null;
+    return $lowResolutionLayer.value.getContext('2d');
+});
+
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
     if (
@@ -63,9 +70,6 @@ onMounted(async () => {
         !$textLayer.value
     )
         return;
-
-    ctx = $pdfLayer.value.getContext('2d');
-    lowResolutionCtx = $lowResolutionLayer.value.getContext('2d');
 
     if (!page.viewport.value) return;
 
@@ -87,14 +91,14 @@ onMounted(async () => {
 async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
     if (
         !page ||
-        !ctx ||
-        !lowResolutionCtx ||
+        !ctx.value ||
+        !lowResolutionCtx.value ||
         !$pdfLayer.value ||
         !$textLayer.value
     )
         return;
 
-    const originScaleCanvas = copyCanvas(ctx);
+    const originScaleCanvas = copyCanvas(ctx.value);
 
     const { width, height } = viewport;
     setPageSize(width, height);
@@ -147,17 +151,17 @@ function drawLowResolutionLayer(
     viewport: PageViewport,
     oldViewport: PageViewport
 ) {
-    if (!lowResolutionCtx) return;
+    if (!lowResolutionCtx.value) return;
 
-    lowResolutionCtx.scale(
+    lowResolutionCtx.value.scale(
         viewport.width / oldViewport.width,
         viewport.height / oldViewport.height
     );
-    lowResolutionCtx.drawImage(originScaleCanvas, 0, 0);
+    lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
 }
 
 async function drawHighResolutionLayer(viewport: PageViewport) {
-    if (!page || !ctx) return;
+    if (!page || !ctx.value) return;
 
     const newCanvas = document.createElement('canvas');
     newCanvas.width = viewport.width;
@@ -165,7 +169,7 @@ async function drawHighResolutionLayer(viewport: PageViewport) {
     await page.renderPdfLayer(newCanvas);
 
     // 고해상도 스케일 pdf 그림
-    ctx.drawImage(newCanvas, 0, 0);
+    ctx.value.drawImage(newCanvas, 0, 0);
 }
 </script>
 
