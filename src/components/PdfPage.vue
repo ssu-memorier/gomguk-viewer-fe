@@ -81,7 +81,6 @@ onMounted(async () => {
 
     originalPageSize = page.size;
     await renderPage(page.size);
-    await renderTextLayer(page.size);
 
     watch(page.viewport, async () => {
         await changePageSize(page.size);
