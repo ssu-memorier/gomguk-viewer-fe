@@ -79,12 +79,12 @@ onMounted(async () => {
         if (!newViewport || !oldViewport) return;
 
         isRendering.value = true;
-        await renderPage(newViewport, oldViewport);
+        await scaleChange(newViewport, oldViewport);
         isRendering.value = false;
     });
 });
 
-async function renderPage(viewport: PageViewport, oldViewport: PageViewport) {
+async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
     if (
         !page ||
         !ctx ||
