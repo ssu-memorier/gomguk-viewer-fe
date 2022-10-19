@@ -62,6 +62,7 @@ let originalPageSize: SizeType = {
 
 const debouncedHighResolutionRender = createDebounce(
     async (newPageSize: SizeType) => {
+        const page = await pdfStore.getPage(props.pageIndex);
         if (!page) return;
 
         resizeCanvas($highResolutionLayer.value, newPageSize);
@@ -83,7 +84,6 @@ const debouncedHighResolutionRender = createDebounce(
     500
 );
 
-let page: Page | undefined;
 const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
     if (!$highResolutionLayer.value) return null;
     return $highResolutionLayer.value.getContext('2d');
@@ -100,7 +100,7 @@ onMounted(async () => {
      * 고해상도 페이지를 랜더링하고
      * 텍스트를 랜더링한다.
      */
-    page = await pdfStore.getPage(props.pageIndex);
+    const page = await pdfStore.getPage(props.pageIndex);
 
     if (!page) return;
 
@@ -129,9 +129,10 @@ async function changePageSize(newPageSize: SizeType) {
     isChangingSize.value = true;
     const originScaleCanvas = copyCanvas($highResolutionLayer.value);
 
-    resizeCanvas($lowResolutionLayer.value, newPageSize);
     resizeElement($pdfPage.value, newPageSize);
+    resizeCanvas($lowResolutionLayer.value, newPageSize);
     rescaleCanvas($lowResolutionLayer.value, newPageSize, originalPageSize);
+
     if (originScaleCanvas) {
         drawLowResolutionLayer(originScaleCanvas);
     }
