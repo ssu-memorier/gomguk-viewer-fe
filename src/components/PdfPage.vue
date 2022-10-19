@@ -2,8 +2,8 @@
     <div ref="$pdfPage" class="pdfPage card">
         <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
         <canvas
-            ref="$tempLayer"
-            class="tempLayer"
+            ref="$lowResolutionLayer"
+            class="lowResolutionLayer"
             :class="{ hide: !isRendering }"
         ></canvas>
         <div
@@ -29,12 +29,12 @@
 /**
  * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
  */
-import { defineProps, ref, onMounted } from 'vue';
+import { defineProps, ref, onMounted, watch } from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import Page from '@/classes/Page';
-import { IViewportOption } from '@/Interface/IViewportOption';
+import { PageViewport } from 'pdfjs-dist';
 
 const props = defineProps({
     pageIndex: {
@@ -48,7 +48,7 @@ const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
-const $tempLayer = ref<HTMLCanvasElement>();
+const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const isRendering = ref<boolean>(false);
 
 let page: Page | undefined;
@@ -56,50 +56,56 @@ let ctx: CanvasRenderingContext2D | null = null;
 let tempCtx: CanvasRenderingContext2D | null = null;
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
-    if (!page || !$tempLayer.value || !$pdfLayer.value || !$textLayer.value)
+    if (
+        !page ||
+        !$lowResolutionLayer.value ||
+        !$pdfLayer.value ||
+        !$textLayer.value
+    )
         return;
 
     ctx = $pdfLayer.value.getContext('2d');
-    tempCtx = $tempLayer.value.getContext('2d');
+    tempCtx = $lowResolutionLayer.value.getContext('2d');
 
-    const { width, height } = page.viewport;
+    if (!page.viewport.value) return;
+
+    const { width, height } = page.viewport.value;
     setPageSize(width, height);
     await page.renderPdfLayer($pdfLayer.value);
     await page.renderTextLayer($textLayer.value);
     page.addTokenInfo($textLayer.value);
+
+    watch(page.viewport, async (newViewport, oldViewport) => {
+        if (!newViewport || !oldViewport) return;
+
+        isRendering.value = true;
+        await renderPage(newViewport, oldViewport);
+        isRendering.value = false;
+    });
 });
 
-pdfStore.$subscribe(async (_, state) => {
-    page = await pdfStore.getPage(props.pageIndex);
-
-    isRendering.value = true;
-    await renderPage(state.viewportOption);
-    isRendering.value = false;
-});
-async function renderPage(viewportOption: IViewportOption) {
+async function renderPage(viewport: PageViewport, oldViewport: PageViewport) {
     if (!page || !ctx || !tempCtx || !$pdfLayer.value || !$textLayer.value)
         return;
 
     // 이전 캔버스,viewport 정보
     const prevCanvas = copyCanvas(ctx);
-    const oldViewport = page.viewport;
 
     // 새 viewport 적용
-    page.updateViewport(viewportOption);
-    const { width, height } = page.viewport;
+    const { width, height } = viewport;
     setPageSize(width, height);
 
     // 저해상도 스케일의 pdf 올림
     tempCtx.scale(
-        page.viewport.width / oldViewport.width,
-        page.viewport.height / oldViewport.height
+        viewport.width / oldViewport.width,
+        viewport.height / oldViewport.height
     );
     tempCtx.drawImage(prevCanvas, 0, 0);
 
     // 고해상도 스케일의 pdf 로딩
     const newCanvas = document.createElement('canvas');
-    newCanvas.width = page.viewport.width;
-    newCanvas.height = page.viewport.height;
+    newCanvas.width = viewport.width;
+    newCanvas.height = viewport.height;
     await page.renderPdfLayer(newCanvas);
 
     // 고해상도 스케일 pdf 그림
@@ -115,7 +121,7 @@ function setPageSize(width: number, height: number) {
         !$pdfLayer.value ||
         !$selectionLayer.value ||
         !$textLayer.value ||
-        !$tempLayer.value
+        !$lowResolutionLayer.value
     )
         return;
 
@@ -123,8 +129,8 @@ function setPageSize(width: number, height: number) {
     $pdfPage.value.style.height = height + 'px';
     $pdfLayer.value.width = width;
     $pdfLayer.value.height = height;
-    $tempLayer.value.width = width;
-    $tempLayer.value.height = height;
+    $lowResolutionLayer.value.width = width;
+    $lowResolutionLayer.value.height = height;
     $selectionLayer.value.$el.width = width;
     $selectionLayer.value.$el.height = height;
     $highlightLayer.value.$el.width = width;
