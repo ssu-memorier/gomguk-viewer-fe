@@ -3,7 +3,9 @@
  * @param canvas 복사할 canvas 요소
  * @returns {HTMLCanvasElement | undefined}
  */
-export default function copyCanvas(canvas: HTMLCanvasElement) {
+export default function copyCanvas(canvas: HTMLCanvasElement | undefined) {
+    if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
 
     if (!ctx) return;

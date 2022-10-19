@@ -126,13 +126,6 @@ onMounted(async () => {
  * @param newPageSize
  */
 async function changePageSize(newPageSize: SizeType) {
-    if (
-        !$highResolutionLayer.value ||
-        !lowResolutionCtx.value ||
-        !$lowResolutionLayer.value
-    )
-        return;
-
     isChangingSize.value = true;
     const originScaleCanvas = copyCanvas($highResolutionLayer.value);
 
