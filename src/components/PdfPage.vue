@@ -63,19 +63,11 @@ const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
 
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
-    if (
-        !page ||
-        !$lowResolutionLayer.value ||
-        !$pdfLayer.value ||
-        !$textLayer.value
-    )
-        return;
-
-    if (!page.viewport.value) return;
+    if (!page || !page.viewport.value) return;
 
     const { width, height } = page.viewport.value;
     setPageSize(width, height);
-    await page.renderPdfLayer($pdfLayer.value);
+    await drawHighResolutionLayer(page.viewport.value);
     await renderTextLayer();
 
     watch(page.viewport, async (newViewport, oldViewport) => {
@@ -104,7 +96,6 @@ async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
 
     drawLowResolutionLayer(originScaleCanvas, viewport, oldViewport);
     await drawHighResolutionLayer(viewport);
-
     await renderTextLayer();
 }
 function setPageSize(width: number, height: number) {
