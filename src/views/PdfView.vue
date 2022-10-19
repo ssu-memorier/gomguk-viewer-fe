@@ -173,6 +173,9 @@ function zoomOutHandler() {
         }
     }
     .header {
+        top: 0;
+        z-index: 10;
+        position: sticky;
         background-color: $surface-color;
     }
 
