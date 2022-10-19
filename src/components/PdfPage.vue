@@ -48,10 +48,10 @@ const isScaleChanging = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $highResolutionLayer = ref<HTMLCanvasElement>();
+const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
-const $lowResolutionLayer = ref<HTMLCanvasElement>();
 
 let page: Page | undefined;
 const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
