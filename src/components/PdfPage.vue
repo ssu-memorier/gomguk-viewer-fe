@@ -38,6 +38,7 @@ import createDebounce from '@/utils/createDebounce';
 import { SizeType } from '@/types/SizeType';
 import resizeCanvas from '@/utils/resizeCanvas';
 import resizeElement from '@/utils/resizeElement';
+import rescaleCanvas from '@/utils/rescaleCanvas';
 
 const props = defineProps({
     pageIndex: {
@@ -169,17 +170,6 @@ async function renderTextLayer() {
     $textLayer.value.innerHTML = '';
     $textLayer.value.appendChild(fragment);
     page.addTokenInfo($textLayer.value);
-}
-
-function rescaleCanvas(
-    canvas: HTMLCanvasElement | undefined,
-    newSize: SizeType,
-    oldSize: SizeType
-) {
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    ctx?.scale(newSize.width / oldSize.width, newSize.height / oldSize.height);
 }
 </script>
 
