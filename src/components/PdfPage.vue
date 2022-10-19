@@ -94,31 +94,15 @@ async function renderPage(viewport: PageViewport, oldViewport: PageViewport) {
     )
         return;
 
-    // 이전 캔버스,viewport 정보
-    const prevCanvas = copyCanvas(ctx);
+    const originScaleCanvas = copyCanvas(ctx);
 
-    // 새 viewport 적용
     const { width, height } = viewport;
     setPageSize(width, height);
 
-    // 저해상도 스케일의 pdf 올림
-    lowResolutionCtx.scale(
-        viewport.width / oldViewport.width,
-        viewport.height / oldViewport.height
-    );
-    lowResolutionCtx.drawImage(prevCanvas, 0, 0);
+    drawLowResolutionLayer(originScaleCanvas, viewport, oldViewport);
+    await drawHighResolutionLayer(viewport);
 
-    // 고해상도 스케일의 pdf 로딩
-    const newCanvas = document.createElement('canvas');
-    newCanvas.width = viewport.width;
-    newCanvas.height = viewport.height;
-    await page.renderPdfLayer(newCanvas);
-
-    // 고해상도 스케일 pdf 그림
-    ctx.drawImage(newCanvas, 0, 0);
-    // 새 텍스트 레이어 불러오기
     await page.renderTextLayer($textLayer.value);
-    // 새 text 레이어에 토큰 추가
     page.addTokenInfo($textLayer.value);
 }
 function setPageSize(width: number, height: number) {
@@ -156,6 +140,32 @@ function copyCanvas(ctx: CanvasRenderingContext2D) {
     newCanvas.getContext('2d')?.putImageData(imgData, 0, 0);
 
     return newCanvas;
+}
+
+function drawLowResolutionLayer(
+    originScaleCanvas: HTMLCanvasElement,
+    viewport: PageViewport,
+    oldViewport: PageViewport
+) {
+    if (!lowResolutionCtx) return;
+
+    lowResolutionCtx.scale(
+        viewport.width / oldViewport.width,
+        viewport.height / oldViewport.height
+    );
+    lowResolutionCtx.drawImage(originScaleCanvas, 0, 0);
+}
+
+async function drawHighResolutionLayer(viewport: PageViewport) {
+    if (!page || !ctx) return;
+
+    const newCanvas = document.createElement('canvas');
+    newCanvas.width = viewport.width;
+    newCanvas.height = viewport.height;
+    await page.renderPdfLayer(newCanvas);
+
+    // 고해상도 스케일 pdf 그림
+    ctx.drawImage(newCanvas, 0, 0);
 }
 </script>
 
