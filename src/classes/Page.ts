@@ -1,16 +1,17 @@
+import { ref } from 'vue';
 import { IViewportOption } from '@/Interface/IViewportOption';
 import * as pdfjs from 'pdfjs-dist';
 import TOKEN from '@/constants/TOKEN';
 
 export default class Page {
     #pageProxy: pdfjs.PDFPageProxy;
-    viewport: pdfjs.PageViewport;
-    option: IViewportOption;
+    viewport = ref<pdfjs.PageViewport>();
 
     constructor(pageProxy: pdfjs.PDFPageProxy, option: IViewportOption) {
         this.#pageProxy = pageProxy;
-        this.option = option;
-        this.viewport = this.#pageProxy.getViewport(option);
+        this.viewport = ref<pdfjs.PageViewport>(
+            this.#pageProxy.getViewport(option)
+        );
     }
 
     /**
@@ -20,10 +21,11 @@ export default class Page {
     async renderPdfLayer($layer: HTMLCanvasElement) {
         const ctx = $layer.getContext('2d');
         if (!ctx) return;
+        if (!this.viewport.value) return;
 
         const renderContext = {
             canvasContext: ctx,
-            viewport: this.viewport,
+            viewport: this.viewport.value,
         };
 
         await this.#pageProxy.render(renderContext).promise;
@@ -35,11 +37,12 @@ export default class Page {
      */
     async renderTextLayer($layer: HTMLDivElement) {
         $layer.innerHTML = '';
+        if (!this.viewport.value) return;
 
         pdfjs.renderTextLayer({
             textContent: await this.#pageProxy.getTextContent(),
             container: $layer,
-            viewport: this.viewport,
+            viewport: this.viewport.value,
         });
     }
     /**
@@ -82,8 +85,7 @@ export default class Page {
         });
     }
     updateViewport(option: IViewportOption) {
-        this.option = option;
-        this.viewport = this.#pageProxy.getViewport(option);
+        this.viewport.value = this.#pageProxy.getViewport(option);
     }
     get pageNum() {
         return this.#pageProxy.pageNumber;
