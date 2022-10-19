@@ -37,6 +37,7 @@ import copyCanvas from '@/utils/copyCanvas';
 import Page from '@/classes/Page';
 import createDebounce from '@/utils/createDebounce';
 import { SizeType } from '@/types/SizeType';
+import resizeCanvas from '@/utils/resizeCanvas';
 
 const props = defineProps({
     pageIndex: {
@@ -174,12 +175,6 @@ async function renderTextLayer() {
     page.addTokenInfo($textLayer.value);
 }
 
-function resizeCanvas(canvas: HTMLCanvasElement | undefined, size: SizeType) {
-    if (!canvas) return;
-
-    canvas.width = size.width;
-    canvas.height = size.height;
-}
 function rescaleCanvas(
     canvas: HTMLCanvasElement | undefined,
     newSize: SizeType,
