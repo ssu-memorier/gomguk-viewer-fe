@@ -53,7 +53,7 @@ const isRendering = ref<boolean>(false);
 
 let page: Page | undefined;
 let ctx: CanvasRenderingContext2D | null = null;
-let tempCtx: CanvasRenderingContext2D | null = null;
+let lowResolutionCtx: CanvasRenderingContext2D | null = null;
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
     if (
@@ -65,7 +65,7 @@ onMounted(async () => {
         return;
 
     ctx = $pdfLayer.value.getContext('2d');
-    tempCtx = $lowResolutionLayer.value.getContext('2d');
+    lowResolutionCtx = $lowResolutionLayer.value.getContext('2d');
 
     if (!page.viewport.value) return;
 
@@ -85,7 +85,13 @@ onMounted(async () => {
 });
 
 async function renderPage(viewport: PageViewport, oldViewport: PageViewport) {
-    if (!page || !ctx || !tempCtx || !$pdfLayer.value || !$textLayer.value)
+    if (
+        !page ||
+        !ctx ||
+        !lowResolutionCtx ||
+        !$pdfLayer.value ||
+        !$textLayer.value
+    )
         return;
 
     // 이전 캔버스,viewport 정보
@@ -96,11 +102,11 @@ async function renderPage(viewport: PageViewport, oldViewport: PageViewport) {
     setPageSize(width, height);
 
     // 저해상도 스케일의 pdf 올림
-    tempCtx.scale(
+    lowResolutionCtx.scale(
         viewport.width / oldViewport.width,
         viewport.height / oldViewport.height
     );
-    tempCtx.drawImage(prevCanvas, 0, 0);
+    lowResolutionCtx.drawImage(prevCanvas, 0, 0);
 
     // 고해상도 스케일의 pdf 로딩
     const newCanvas = document.createElement('canvas');
