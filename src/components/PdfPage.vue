@@ -60,12 +60,9 @@ let originalPageSize: SizeType = {
 
 const debouncedHighResolutionRender = createDebounce(
     async (newPageSize: SizeType) => {
-        $highResolutionLayer.value.width = newPageSize.width;
-        $highResolutionLayer.value.height = newPageSize.height;
-        $selectionLayer.value.$el.width = newPageSize.width;
-        $selectionLayer.value.$el.height = newPageSize.height;
-        $highlightLayer.value.$el.width = newPageSize.width;
-        $highlightLayer.value.$el.height = newPageSize.height;
+        resizeCanvas($highResolutionLayer.value, newPageSize);
+        resizeCanvas($selectionLayer.value, newPageSize);
+        resizeCanvas($highlightLayer.value, newPageSize);
         $textLayer.value.style.width = Math.floor(newPageSize.width) + 'px';
         $textLayer.value.style.height = Math.floor(newPageSize.height) + 'px';
 
@@ -127,8 +124,7 @@ async function changePageSize(newPageSize: SizeType) {
     const originScaleCanvas = copyCanvas(highResolutionCtx.value);
     const { width, height } = newPageSize;
 
-    $lowResolutionLayer.value.width = width;
-    $lowResolutionLayer.value.height = height;
+    resizeCanvas($lowResolutionLayer.value, newPageSize);
     $pdfPage.value.style.width = Math.floor(width) + 'px';
     $pdfPage.value.style.height = Math.floor(height) + 'px';
     lowResolutionCtx.value.scale(
@@ -138,7 +134,7 @@ async function changePageSize(newPageSize: SizeType) {
     drawLowResolutionLayer(originScaleCanvas);
     debouncedHighResolutionRender(newPageSize);
 }
-function setPageSize({ width, height }: SizeType) {
+function setPageSize(pageSize: SizeType) {
     if (
         !$pdfPage.value ||
         !$highResolutionLayer.value ||
@@ -148,18 +144,14 @@ function setPageSize({ width, height }: SizeType) {
     )
         return;
 
-    $pdfPage.value.style.width = width + 'px';
-    $pdfPage.value.style.height = height + 'px';
-    $lowResolutionLayer.value.width = width;
-    $lowResolutionLayer.value.height = height;
-    $highResolutionLayer.value.width = width;
-    $highResolutionLayer.value.height = height;
-    $selectionLayer.value.$el.width = width;
-    $selectionLayer.value.$el.height = height;
-    $highlightLayer.value.$el.width = width;
-    $highlightLayer.value.$el.height = height;
-    $textLayer.value.style.width = width + 'px';
-    $textLayer.value.style.height = height + 'px';
+    $pdfPage.value.style.width = pageSize.width + 'px';
+    $pdfPage.value.style.height = pageSize.height + 'px';
+    resizeCanvas($lowResolutionLayer.value, pageSize);
+    resizeCanvas($highResolutionLayer.value, pageSize);
+    resizeCanvas($selectionLayer.value.$el, pageSize);
+    resizeCanvas($highlightLayer.value.$el, pageSize);
+    $textLayer.value.style.width = pageSize.width + 'px';
+    $textLayer.value.style.height = pageSize.height + 'px';
 }
 
 function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
@@ -184,6 +176,13 @@ async function renderTextLayer() {
 
     await page.renderTextLayer($textLayer.value);
     page.addTokenInfo($textLayer.value);
+}
+
+function resizeCanvas(canvas: HTMLCanvasElement | undefined, size: SizeType) {
+    if (!canvas) return;
+
+    canvas.width = size.width;
+    canvas.height = size.height;
 }
 </script>
 
