@@ -34,6 +34,7 @@ import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import Page from '@/classes/Page';
+import { IViewportOption } from '@/Interface/IViewportOption';
 
 const props = defineProps({
     pageIndex: {
@@ -71,45 +72,43 @@ onMounted(async () => {
 pdfStore.$subscribe(async (_, state) => {
     page = await pdfStore.getPage(props.pageIndex);
 
+    isRendering.value = true;
+    await renderPage(state.viewportOption);
+    isRendering.value = false;
+});
+async function renderPage(viewportOption: IViewportOption) {
     if (!page || !ctx || !tempCtx || !$pdfLayer.value || !$textLayer.value)
         return;
 
-    isRendering.value = true;
-    const prevCanvas = getCopiedCanvas(ctx, page.viewport);
+    // 이전 캔버스,viewport 정보
+    const prevCanvas = copyCanvas(ctx);
     const oldViewport = page.viewport;
 
-    page.updateViewport(state.viewportOption);
-
+    // 새 viewport 적용
+    page.updateViewport(viewportOption);
     const { width, height } = page.viewport;
     setPageSize(width, height);
+
+    // 저해상도 스케일의 pdf 올림
     tempCtx.scale(
         page.viewport.width / oldViewport.width,
         page.viewport.height / oldViewport.height
     );
-
     tempCtx.drawImage(prevCanvas, 0, 0);
-    // const oldViewport = page.viewport;
-    // page.updateViewport(state.viewportOption);
-    // const { width, height } = page.viewport;
-    // setPageSize(width, height);
 
-    // ctx.scale(
-    //     page.viewport.width / oldViewport.width,
-    //     page.viewport.height / oldViewport.height
-    // );
-    // ctx.drawImage(newCanvas, 0, 0);
+    // 고해상도 스케일의 pdf 로딩
     const newCanvas = document.createElement('canvas');
     newCanvas.width = page.viewport.width;
     newCanvas.height = page.viewport.height;
     await page.renderPdfLayer(newCanvas);
 
-    // await page.renderPdfLayer($pdfLayer.value);
+    // 고해상도 스케일 pdf 그림
     ctx.drawImage(newCanvas, 0, 0);
+    // 새 텍스트 레이어 불러오기
     await page.renderTextLayer($textLayer.value);
+    // 새 text 레이어에 토큰 추가
     page.addTokenInfo($textLayer.value);
-    isRendering.value = false;
-});
-
+}
 function setPageSize(width: number, height: number) {
     if (
         !$pdfPage.value ||
@@ -134,11 +133,14 @@ function setPageSize(width: number, height: number) {
     $textLayer.value.style.height = height + 'px';
 }
 
-function getCopiedCanvas(ctx, viewport) {
-    const imgData = ctx.getImageData(0, 0, viewport.width, viewport.height);
+function copyCanvas(ctx: CanvasRenderingContext2D) {
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+    const imgData = ctx.getImageData(0, 0, width, height);
     const newCanvas = document.createElement('canvas');
-    newCanvas.width = viewport.width;
-    newCanvas.height = viewport.height;
+
+    newCanvas.width = width;
+    newCanvas.height = height;
     newCanvas.getContext('2d')?.putImageData(imgData, 0, 0);
 
     return newCanvas;
