@@ -88,7 +88,8 @@ onMounted(async () => {
 });
 /**
  * changePageSize PDF 페이지의 크기를 변경하는 로직으로 아래의 과정을 거칩니다.
- * canvas확대/축소 (해상도가 낮아짐) -> 고해상도 canvas를 랜더링
+ * 1. 저해상도 레이어 로딩(캔버스 확대/축소로 해상도가 낮아짐)
+ * 2. 고해상도 canvas를 랜더링한 뒤 저해상도 레이어를 숨김
  * @param newPageSize
  */
 async function changePageSize(newPageSize: SizeType) {
@@ -97,7 +98,11 @@ async function changePageSize(newPageSize: SizeType) {
     renderLowResolutionLayer(newPageSize);
     debouncedRenderPage(newPageSize);
 }
-
+/**
+ * renderPage는 입력된 사이즈로 페이지를 랜더링합니다.
+ * 저해상도 레이어(lowResolutionLayer) 랜더링은 포함하지 않습니다.
+ * @param pageSize
+ */
 async function renderPage(pageSize: SizeType) {
     originalPageSize = pageSize;
     resizeElement($pdfPage.value, pageSize);
@@ -107,6 +112,10 @@ async function renderPage(pageSize: SizeType) {
     await renderHighResolutionLayer(pageSize);
     await renderTextLayer(pageSize);
 }
+/**
+ * 저해상도 레이어를 랜더링합니다.
+ * @param pageSize
+ */
 function renderLowResolutionLayer(pageSize: SizeType) {
     const originCanvas = copyCanvas($highResolutionLayer.value);
 
@@ -117,6 +126,10 @@ function renderLowResolutionLayer(pageSize: SizeType) {
         drawLowResolutionLayer(originCanvas);
     }
 }
+/**
+ * 고해상도 레이어를 랜더링합니다.
+ * @param pageSize
+ */
 async function renderHighResolutionLayer(pageSize: SizeType) {
     const page = await pdfStore.getPage(props.pageIndex);
     if (!page) return;
@@ -138,7 +151,10 @@ function drawHighResolutionLayer(highResolutionCanvas: HTMLCanvasElement) {
 
     highResolutionCtx.value.drawImage(highResolutionCanvas, 0, 0);
 }
-
+/**
+ * 텍스트 레이어를 랜더링합니다.
+ * @param pageSize
+ */
 async function renderTextLayer(pageSize: SizeType) {
     const page = await pdfStore.getPage(props.pageIndex);
 
