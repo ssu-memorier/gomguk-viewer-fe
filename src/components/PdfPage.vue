@@ -129,8 +129,7 @@ async function changePageSize(newPageSize: SizeType) {
     if (
         !$highResolutionLayer.value ||
         !lowResolutionCtx.value ||
-        !$lowResolutionLayer.value ||
-        !page
+        !$lowResolutionLayer.value
     )
         return;
 
@@ -147,21 +146,12 @@ async function changePageSize(newPageSize: SizeType) {
     debouncedHighResolutionRender(newPageSize);
 }
 function resizePage(pageSize: SizeType) {
-    if (
-        !$pdfPage.value ||
-        !$highResolutionLayer.value ||
-        !$selectionLayer.value ||
-        !$textLayer.value ||
-        !$lowResolutionLayer.value
-    )
-        return;
-
     resizeElement($pdfPage.value, pageSize);
-    resizeCanvas($lowResolutionLayer.value, pageSize);
     resizeCanvas($highResolutionLayer.value, pageSize);
     resizeCanvas($selectionLayer.value.$el, pageSize);
-    resizeCanvas($highlightLayer.value.$el, pageSize);
     resizeElement($textLayer.value, pageSize);
+    resizeCanvas($lowResolutionLayer.value, pageSize);
+    resizeCanvas($highlightLayer.value.$el, pageSize);
 }
 
 function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
