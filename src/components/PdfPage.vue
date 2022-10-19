@@ -67,11 +67,11 @@ const debouncedHighResolutionRender = createDebounce(
 
         originalPageSize = newPageSize;
         await drawHighResolutionLayer(newPageSize);
+        await renderTextLayer();
         if ($highResolutionLayer.value) {
             isChangingSize.value = false;
             drawLowResolutionLayer($highResolutionLayer.value);
         }
-        await renderTextLayer();
     },
     500
 );
@@ -87,6 +87,12 @@ const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
 });
 
 onMounted(async () => {
+    /**
+     * 페이지가 마운트되면
+     * 페이지 사이즈를 조절하고
+     * 고해상도 페이지를 랜더링하고
+     * 텍스트를 랜더링한다.
+     */
     page = await pdfStore.getPage(props.pageIndex);
 
     if (!page) return;
@@ -123,11 +129,7 @@ async function changePageSize(newPageSize: SizeType) {
 
     resizeCanvas($lowResolutionLayer.value, newPageSize);
     resizeElement($pdfPage.value, newPageSize);
-
-    lowResolutionCtx.value.scale(
-        newPageSize.width / originalPageSize.width,
-        newPageSize.height / originalPageSize.height
-    );
+    rescaleCanvas($lowResolutionLayer.value, newPageSize, originalPageSize);
     drawLowResolutionLayer(originScaleCanvas);
     debouncedHighResolutionRender(newPageSize);
 }
@@ -178,7 +180,16 @@ function resizeCanvas(canvas: HTMLCanvasElement | undefined, size: SizeType) {
     canvas.width = size.width;
     canvas.height = size.height;
 }
+function rescaleCanvas(
+    canvas: HTMLCanvasElement | undefined,
+    newSize: SizeType,
+    oldSize: SizeType
+) {
+    if (!canvas) return;
 
+    const ctx = canvas.getContext('2d');
+    ctx?.scale(newSize.width / oldSize.width, newSize.height / oldSize.height);
+}
 function resizeElement(el: HTMLElement | undefined, size: SizeType) {
     if (!el) return;
 
