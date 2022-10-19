@@ -55,10 +55,10 @@ export const usePdfStore = defineStore('pdf', () => {
         return doc;
     }
     function increaseScale() {
-        viewportOption.scale += 0.1;
+        viewportOption.scale = Math.round(viewportOption.scale * 10 + 1) / 10;
     }
     function decreaseScale() {
-        viewportOption.scale -= 0.1;
+        viewportOption.scale = Math.round(viewportOption.scale * 10 - 1) / 10;
     }
     return {
         setPdfFile,
