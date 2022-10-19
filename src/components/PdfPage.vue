@@ -78,24 +78,24 @@ onMounted(async () => {
         isScaleChanging.value = false;
     });
 });
-
-async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
-    if (
-        !page ||
-        !highResolutionctx.value ||
-        !lowResolutionCtx.value ||
-        !$highResolutionLayer.value ||
-        !$textLayer.value
-    )
-        return;
+/**
+ * scaleChange는 PDF 페이지의 스케일을 변경하는 로직으로 아래의 과정을 거칩니다.
+ * canvas확대/축소 (해상도가 낮아짐) -> 고해상도 canvas를 로딩
+ * @param newViewport
+ * @param oldViewport
+ */
+async function scaleChange(
+    newViewport: PageViewport,
+    oldViewport: PageViewport
+) {
+    if (!highResolutionctx.value) return;
 
     const originScaleCanvas = copyCanvas(highResolutionctx.value);
+    const { width, height } = newViewport;
 
-    const { width, height } = viewport;
     setPageSize(width, height);
-
-    drawLowResolutionLayer(originScaleCanvas, viewport, oldViewport);
-    await drawHighResolutionLayer(viewport);
+    drawLowResolutionLayer(originScaleCanvas, newViewport, oldViewport);
+    await drawHighResolutionLayer(newViewport);
     await renderTextLayer();
 }
 function setPageSize(width: number, height: number) {
