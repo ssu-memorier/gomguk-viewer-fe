@@ -26,6 +26,10 @@ export const usePdfStore = defineStore('pdf', () => {
         numPages.value = doc.numPages;
     });
 
+    watch(viewportOption, (newOption) => {
+        pageMap.forEach((page) => page.updateViewport(newOption));
+    });
+
     async function getPage(pageNum: number) {
         return pageMap.get(pageNum);
     }
