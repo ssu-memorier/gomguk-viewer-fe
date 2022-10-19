@@ -98,13 +98,12 @@ onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
     if (!page || !page.viewport.value || !$highResolutionLayer.value) return;
 
-    const { width, height } = page.viewport.value;
     oldSize = {
-        width,
-        height,
+        width: page.viewport.value.width,
+        height: page.viewport.value.height,
     };
 
-    setPageSize(width, height);
+    setPageSize(oldSize);
     await drawHighResolutionLayer(page.viewport.value);
     await renderTextLayer();
 
@@ -143,7 +142,7 @@ async function scaleChange(newViewport: PageViewport) {
     drawLowResolutionLayer(originScaleCanvas);
     debouncedHighResolutionRender(newViewport);
 }
-function setPageSize(width: number, height: number) {
+function setPageSize({ width, height }: Size) {
     if (
         !$pdfPage.value ||
         !$highResolutionLayer.value ||
