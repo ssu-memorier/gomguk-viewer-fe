@@ -35,10 +35,10 @@ import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import copyCanvas from '@/utils/copyCanvas';
 import createDebounce from '@/utils/createDebounce';
-import { SizeType } from '@/types/SizeType';
 import resizeCanvas from '@/utils/resizeCanvas';
 import resizeElement from '@/utils/resizeElement';
 import rescaleCanvas from '@/utils/rescaleCanvas';
+import { SizeType } from '@/types/SizeType';
 
 const props = defineProps({
     pageIndex: {
@@ -50,9 +50,9 @@ const props = defineProps({
 const isChangingSize = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
+const $textLayer = ref<HTMLDivElement>();
 const $highResolutionLayer = ref<HTMLCanvasElement>();
 const $lowResolutionLayer = ref<HTMLCanvasElement>();
-const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
 
@@ -79,11 +79,11 @@ onMounted(async () => {
     const page = await pdfStore.getPage(props.pageIndex);
     if (!page) return;
 
-    originalPageSize = page.size;
     await renderPage(page.size);
 
     watch(page.viewport, async () => {
-        await changePageSize(page.size);
+        const newSize = page.size;
+        await changePageSize(newSize);
     });
 });
 /**
@@ -99,6 +99,7 @@ async function changePageSize(newPageSize: SizeType) {
 }
 
 async function renderPage(pageSize: SizeType) {
+    originalPageSize = pageSize;
     resizeElement($pdfPage.value, pageSize);
     resizeCanvas($selectionLayer.value.$el, pageSize);
     resizeCanvas($highlightLayer.value.$el, pageSize);
@@ -121,8 +122,6 @@ async function renderHighResolutionLayer(pageSize: SizeType) {
     if (!page) return;
 
     resizeCanvas($highResolutionLayer.value, pageSize);
-
-    originalPageSize = pageSize;
 
     const newPdfLayer = await page.createPdfLayer();
     drawHighResolutionLayer(newPdfLayer);
