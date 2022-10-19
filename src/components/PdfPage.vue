@@ -76,8 +76,7 @@ onMounted(async () => {
     const { width, height } = page.viewport.value;
     setPageSize(width, height);
     await page.renderPdfLayer($pdfLayer.value);
-    await page.renderTextLayer($textLayer.value);
-    page.addTokenInfo($textLayer.value);
+    await renderTextLayer();
 
     watch(page.viewport, async (newViewport, oldViewport) => {
         if (!newViewport || !oldViewport) return;
@@ -106,8 +105,7 @@ async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
     drawLowResolutionLayer(originScaleCanvas, viewport, oldViewport);
     await drawHighResolutionLayer(viewport);
 
-    await page.renderTextLayer($textLayer.value);
-    page.addTokenInfo($textLayer.value);
+    await renderTextLayer();
 }
 function setPageSize(width: number, height: number) {
     if (
@@ -170,6 +168,13 @@ async function drawHighResolutionLayer(viewport: PageViewport) {
 
     // 고해상도 스케일 pdf 그림
     ctx.value.drawImage(newCanvas, 0, 0);
+}
+
+async function renderTextLayer() {
+    if (!page || !$textLayer.value) return;
+
+    await page.renderTextLayer($textLayer.value);
+    page.addTokenInfo($textLayer.value);
 }
 </script>
 
