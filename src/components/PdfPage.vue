@@ -61,13 +61,18 @@ let originalPageSize: SizeType = {
 
 const debouncedHighResolutionRender = createDebounce(
     async (newPageSize: SizeType) => {
+        if (!page) return;
+
         resizeCanvas($highResolutionLayer.value, newPageSize);
         resizeCanvas($selectionLayer.value, newPageSize);
         resizeCanvas($highlightLayer.value, newPageSize);
         resizeElement($textLayer.value, newPageSize);
 
         originalPageSize = newPageSize;
-        await drawHighResolutionLayer();
+
+        const newPdfLayer = await page.getPdfLayer();
+        drawHighResolutionLayer(newPdfLayer);
+
         await renderTextLayer();
         if ($highResolutionLayer.value) {
             isChangingSize.value = false;
@@ -100,7 +105,9 @@ onMounted(async () => {
 
     originalPageSize = page.size;
     resizePage(originalPageSize);
-    await drawHighResolutionLayer();
+
+    const pdfLayer = await page.getPdfLayer();
+    drawHighResolutionLayer(pdfLayer);
     await renderTextLayer();
 
     watch(page.viewport, async (newViewport) => {
@@ -119,19 +126,23 @@ onMounted(async () => {
  */
 async function changePageSize(newPageSize: SizeType) {
     if (
-        !highResolutionCtx.value ||
+        !$highResolutionLayer.value ||
         !lowResolutionCtx.value ||
-        !$lowResolutionLayer.value
+        !$lowResolutionLayer.value ||
+        !page
     )
         return;
 
     isChangingSize.value = true;
-    const originScaleCanvas = copyCanvas(highResolutionCtx.value);
+    const originScaleCanvas = copyCanvas($highResolutionLayer.value);
 
     resizeCanvas($lowResolutionLayer.value, newPageSize);
     resizeElement($pdfPage.value, newPageSize);
     rescaleCanvas($lowResolutionLayer.value, newPageSize, originalPageSize);
-    drawLowResolutionLayer(originScaleCanvas);
+    if (originScaleCanvas) {
+        drawLowResolutionLayer(originScaleCanvas);
+    }
+
     debouncedHighResolutionRender(newPageSize);
 }
 function resizePage(pageSize: SizeType) {
@@ -158,13 +169,10 @@ function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
     lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
 }
 
-async function drawHighResolutionLayer() {
-    if (!page || !highResolutionCtx.value) return;
+function drawHighResolutionLayer(highResolutionCanvas: HTMLCanvasElement) {
+    if (!highResolutionCtx.value) return;
 
-    const tempCanvas = document.createElement('canvas');
-    await page.renderPdfLayer(tempCanvas);
-
-    highResolutionCtx.value.drawImage(tempCanvas, 0, 0);
+    highResolutionCtx.value.drawImage(highResolutionCanvas, 0, 0);
 }
 
 async function renderTextLayer() {
