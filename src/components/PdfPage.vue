@@ -36,6 +36,7 @@ import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import copyCanvas from '@/utils/copyCanvas';
 import Page from '@/classes/Page';
+import createDebounce from '@/utils/createDebounce';
 
 const props = defineProps({
     pageIndex: {
@@ -44,6 +45,10 @@ const props = defineProps({
     },
 });
 
+type Size = {
+    width: number;
+    height: number;
+};
 const isScaleChanging = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
@@ -52,6 +57,32 @@ const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
+let oldSize: Size = {
+    width: 0,
+    height: 0,
+};
+
+const debouncedHighResolutionRender = createDebounce(async (viewport) => {
+    $highResolutionLayer.value.width = viewport.width;
+    $highResolutionLayer.value.height = viewport.height;
+    $selectionLayer.value.$el.width = viewport.width;
+    $selectionLayer.value.$el.height = viewport.height;
+    $highlightLayer.value.$el.width = viewport.width;
+    $highlightLayer.value.$el.height = viewport.height;
+    $textLayer.value.style.width = Math.floor(viewport.width) + 'px';
+    $textLayer.value.style.height = Math.floor(viewport.height) + 'px';
+
+    oldSize = {
+        width: viewport.width,
+        height: viewport.height,
+    };
+    await drawHighResolutionLayer(viewport);
+    if ($highResolutionLayer.value) {
+        isScaleChanging.value = false;
+        drawLowResolutionLayer($highResolutionLayer.value);
+    }
+    await renderTextLayer();
+}, 500);
 
 let page: Page | undefined;
 const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
@@ -65,9 +96,13 @@ const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
 
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
-    if (!page || !page.viewport.value) return;
+    if (!page || !page.viewport.value || !$highResolutionLayer.value) return;
 
     const { width, height } = page.viewport.value;
+    oldSize = {
+        width,
+        height,
+    };
 
     setPageSize(width, height);
     await drawHighResolutionLayer(page.viewport.value);
@@ -78,7 +113,6 @@ onMounted(async () => {
 
         isScaleChanging.value = true;
         await scaleChange(newViewport, oldViewport);
-        isScaleChanging.value = false;
     });
 });
 /**
@@ -87,19 +121,27 @@ onMounted(async () => {
  * @param newViewport
  * @param oldViewport
  */
-async function scaleChange(
-    newViewport: PageViewport,
-    oldViewport: PageViewport
-) {
-    if (!highResolutionCtx.value) return;
+async function scaleChange(newViewport: PageViewport) {
+    if (
+        !highResolutionCtx.value ||
+        !lowResolutionCtx.value ||
+        !$lowResolutionLayer.value
+    )
+        return;
 
     const originScaleCanvas = copyCanvas(highResolutionCtx.value);
     const { width, height } = newViewport;
 
-    setPageSize(width, height);
-    drawLowResolutionLayer(originScaleCanvas, newViewport, oldViewport);
-    await drawHighResolutionLayer(newViewport);
-    await renderTextLayer();
+    $lowResolutionLayer.value.width = width;
+    $lowResolutionLayer.value.height = height;
+    $pdfPage.value.style.width = Math.floor(width) + 'px';
+    $pdfPage.value.style.height = Math.floor(height) + 'px';
+    lowResolutionCtx.value.scale(
+        newViewport.width / oldSize.width,
+        newViewport.height / oldSize.height
+    );
+    drawLowResolutionLayer(originScaleCanvas);
+    debouncedHighResolutionRender(newViewport);
 }
 function setPageSize(width: number, height: number) {
     if (
@@ -113,10 +155,10 @@ function setPageSize(width: number, height: number) {
 
     $pdfPage.value.style.width = width + 'px';
     $pdfPage.value.style.height = height + 'px';
-    $highResolutionLayer.value.width = width;
-    $highResolutionLayer.value.height = height;
     $lowResolutionLayer.value.width = width;
     $lowResolutionLayer.value.height = height;
+    $highResolutionLayer.value.width = width;
+    $highResolutionLayer.value.height = height;
     $selectionLayer.value.$el.width = width;
     $selectionLayer.value.$el.height = height;
     $highlightLayer.value.$el.width = width;
@@ -125,17 +167,9 @@ function setPageSize(width: number, height: number) {
     $textLayer.value.style.height = height + 'px';
 }
 
-function drawLowResolutionLayer(
-    originScaleCanvas: HTMLCanvasElement,
-    viewport: PageViewport,
-    oldViewport: PageViewport
-) {
+function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
     if (!lowResolutionCtx.value) return;
 
-    lowResolutionCtx.value.scale(
-        viewport.width / oldViewport.width,
-        viewport.height / oldViewport.height
-    );
     lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
 }
 
@@ -160,6 +194,7 @@ async function renderTextLayer() {
 
 <style lang="scss" scoped>
 .pdfPage {
+    overflow: hidden;
     position: relative;
     margin: 0 auto 1rem auto;
     .textLayer,
