@@ -31,7 +31,6 @@
  */
 import { defineProps, ref, onMounted, watch, computed } from 'vue';
 import { usePdfStore } from '@/store/pdf';
-import { PageViewport } from 'pdfjs-dist';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import copyCanvas from '@/utils/copyCanvas';
