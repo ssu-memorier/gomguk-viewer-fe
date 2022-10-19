@@ -167,11 +167,11 @@ function drawHighResolutionLayer(highResolutionCanvas: HTMLCanvasElement) {
 }
 
 async function renderTextLayer() {
+    const page = await pdfStore.getPage(props.pageIndex);
+
     if (!page || !$textLayer.value) return;
 
     const fragment = await page.createTextLayerFragment();
-    if (!fragment) return;
-
     $textLayer.value.innerHTML = '';
     $textLayer.value.appendChild(fragment);
     page.addTokenInfo($textLayer.value);
