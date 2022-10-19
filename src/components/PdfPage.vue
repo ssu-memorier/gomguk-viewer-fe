@@ -4,7 +4,7 @@
         <canvas
             ref="$lowResolutionLayer"
             class="lowResolutionLayer"
-            :class="{ show: isScaleChanging }"
+            :class="{ show: isChangingSize }"
         ></canvas>
         <div
             ref="$textLayer"
@@ -49,7 +49,7 @@ type Size = {
     width: number;
     height: number;
 };
-const isScaleChanging = ref<boolean>(false);
+const isChangingSize = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $highResolutionLayer = ref<HTMLCanvasElement>();
@@ -79,7 +79,7 @@ const debouncedHighResolutionRender = createDebounce(
         };
         await drawHighResolutionLayer(newPageSize);
         if ($highResolutionLayer.value) {
-            isScaleChanging.value = false;
+            isChangingSize.value = false;
             drawLowResolutionLayer($highResolutionLayer.value);
         }
         await renderTextLayer();
@@ -113,7 +113,7 @@ onMounted(async () => {
     watch(page.viewport, async (newViewport, oldViewport) => {
         if (!newViewport || !oldViewport) return;
 
-        isScaleChanging.value = true;
+        isChangingSize.value = true;
         const newPageSize: Size = {
             width: newViewport.width,
             height: newViewport.height,
