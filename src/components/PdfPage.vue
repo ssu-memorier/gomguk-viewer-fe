@@ -98,17 +98,25 @@ onMounted(async () => {
 
     watch(page.viewport, async () => {
         const newSize = page.size;
+        resizeElement($pdfPage.value, newSize);
+
+        if (!isIntersecting.value) return;
+
         await changePageSize(newSize);
     });
 });
 
 watch(isIntersecting, async () => {
     if (!isIntersecting.value) return;
-    if (isRendered.value) return;
 
     const page = await pdfStore.getPage(props.pageIndex);
     if (!page) return;
-
+    if (
+        page.size.width === originalPageSize.width &&
+        page.size.height === originalPageSize.height
+    )
+        return;
+    // resizeElement($pdfPage.value, page.size);
     await renderPage(page.size);
     isRendered.value = true;
 });
@@ -120,7 +128,7 @@ watch(isIntersecting, async () => {
  */
 async function changePageSize(newPageSize: SizeType) {
     isChangingSize.value = true;
-    resizeElement($pdfPage.value, newPageSize);
+    // resizeElement($pdfPage.value, newPageSize);
     renderLowResolutionLayer(newPageSize);
     debouncedRenderPage(newPageSize);
 }
@@ -198,7 +206,7 @@ async function renderTextLayer(pageSize: SizeType) {
 .pdfPage {
     overflow: hidden;
     position: relative;
-    margin: 0 auto 1rem auto;
+    margin: 1rem auto 2rem auto;
     .textLayer,
     .selectionLayer,
     .highlightLayer,
