@@ -162,7 +162,6 @@ async function drawHighResolutionLayer() {
     if (!page || !highResolutionCtx.value) return;
 
     const tempCanvas = document.createElement('canvas');
-    resizeCanvas(tempCanvas, page.size);
     await page.renderPdfLayer(tempCanvas);
 
     highResolutionCtx.value.drawImage(tempCanvas, 0, 0);

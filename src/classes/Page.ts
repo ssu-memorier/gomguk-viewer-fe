@@ -3,6 +3,8 @@ import { IViewportOption } from '@/Interface/IViewportOption';
 import * as pdfjs from 'pdfjs-dist';
 import TOKEN from '@/constants/TOKEN';
 import { SizeType } from '@/types/SizeType';
+import resizeCanvas from '@/utils/resizeCanvas';
+
 export default class Page {
     #pageProxy: pdfjs.PDFPageProxy;
     viewport = ref<pdfjs.PageViewport>();
@@ -20,8 +22,11 @@ export default class Page {
      */
     async renderPdfLayer($layer: HTMLCanvasElement) {
         const ctx = $layer.getContext('2d');
+
         if (!ctx) return;
         if (!this.viewport.value) return;
+
+        resizeCanvas($layer, this.size);
 
         const renderContext = {
             canvasContext: ctx,
