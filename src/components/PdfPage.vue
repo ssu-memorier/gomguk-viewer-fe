@@ -53,7 +53,7 @@ const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const isScaleChanging = ref<boolean>(false);
 
 let page: Page | undefined;
-const highResolutionctx = computed<CanvasRenderingContext2D | null>(() => {
+const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
     if (!$highResolutionLayer.value) return null;
     return $highResolutionLayer.value.getContext('2d');
 });
@@ -90,9 +90,9 @@ async function scaleChange(
     newViewport: PageViewport,
     oldViewport: PageViewport
 ) {
-    if (!highResolutionctx.value) return;
+    if (!highResolutionCtx.value) return;
 
-    const originScaleCanvas = copyCanvas(highResolutionctx.value);
+    const originScaleCanvas = copyCanvas(highResolutionCtx.value);
     const { width, height } = newViewport;
 
     setPageSize(width, height);
@@ -139,14 +139,14 @@ function drawLowResolutionLayer(
 }
 
 async function drawHighResolutionLayer(viewport: PageViewport) {
-    if (!page || !highResolutionctx.value) return;
+    if (!page || !highResolutionCtx.value) return;
 
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = viewport.width;
     tempCanvas.height = viewport.height;
     await page.renderPdfLayer(tempCanvas);
 
-    highResolutionctx.value.drawImage(tempCanvas, 0, 0);
+    highResolutionCtx.value.drawImage(tempCanvas, 0, 0);
 }
 
 async function renderTextLayer() {
