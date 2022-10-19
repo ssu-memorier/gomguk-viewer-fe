@@ -72,9 +72,7 @@ let originalPageSize: SizeType = {
 
 const debouncedRenderPage = createDebounce(async (newPageSize: SizeType) => {
     await renderPage(newPageSize);
-    // await renderHighResolutionLayer(newPageSize);
     isChangingSize.value = false;
-    await renderTextLayer(newPageSize);
 }, 500);
 
 onMounted(async () => {
@@ -107,6 +105,7 @@ async function renderPage(pageSize: SizeType) {
     resizeCanvas($highlightLayer.value.$el, pageSize);
 
     await renderHighResolutionLayer(pageSize);
+    await renderTextLayer(pageSize);
 }
 function renderLowResolutionLayer(pageSize: SizeType) {
     const originCanvas = copyCanvas($highResolutionLayer.value);
@@ -128,10 +127,6 @@ async function renderHighResolutionLayer(pageSize: SizeType) {
 
     const newPdfLayer = await page.createPdfLayer();
     drawHighResolutionLayer(newPdfLayer);
-
-    if ($highResolutionLayer.value) {
-        drawLowResolutionLayer($highResolutionLayer.value);
-    }
 }
 
 function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
