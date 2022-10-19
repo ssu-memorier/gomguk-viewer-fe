@@ -67,6 +67,7 @@ onMounted(async () => {
     if (!page || !page.viewport.value) return;
 
     const { width, height } = page.viewport.value;
+
     setPageSize(width, height);
     await drawHighResolutionLayer(page.viewport.value);
     await renderTextLayer();
