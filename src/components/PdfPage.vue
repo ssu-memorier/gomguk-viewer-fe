@@ -92,7 +92,7 @@ onMounted(async () => {
     if (!page) return;
 
     originalPageSize = page.size;
-    setPageSize(originalPageSize);
+    resizePage(originalPageSize);
     await drawHighResolutionLayer(originalPageSize);
     await renderTextLayer();
 
@@ -131,7 +131,7 @@ async function changePageSize(newPageSize: SizeType) {
     drawLowResolutionLayer(originScaleCanvas);
     debouncedHighResolutionRender(newPageSize);
 }
-function setPageSize(pageSize: SizeType) {
+function resizePage(pageSize: SizeType) {
     if (
         !$pdfPage.value ||
         !$highResolutionLayer.value ||
