@@ -49,6 +49,8 @@ const props = defineProps({
 });
 
 const isChangingSize = ref<boolean>(false);
+const isIntersecting = ref<boolean>(false);
+const isRendered = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $textLayer = ref<HTMLDivElement>();
@@ -79,13 +81,36 @@ const debouncedRenderPage = createDebounce(async (newPageSize: SizeType) => {
 onMounted(async () => {
     const page = await pdfStore.getPage(props.pageIndex);
     if (!page) return;
+    resizeElement($pdfPage.value, page.size);
 
-    await renderPage(page.size);
+    const observer = new IntersectionObserver(
+        async ([entry]) => {
+            isIntersecting.value = entry.isIntersecting;
+        },
+        {
+            root: null,
+            threshold: 0,
+        }
+    );
+    if ($pdfPage.value) {
+        observer.observe($pdfPage.value);
+    }
 
     watch(page.viewport, async () => {
         const newSize = page.size;
         await changePageSize(newSize);
     });
+});
+
+watch(isIntersecting, async () => {
+    if (!isIntersecting.value) return;
+    if (isRendered.value) return;
+
+    const page = await pdfStore.getPage(props.pageIndex);
+    if (!page) return;
+
+    await renderPage(page.size);
+    isRendered.value = true;
 });
 /**
  * changePageSize PDF 페이지의 크기를 변경하는 로직으로 아래의 과정을 거칩니다.
