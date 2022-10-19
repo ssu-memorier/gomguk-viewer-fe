@@ -179,7 +179,11 @@ function drawHighResolutionLayer(highResolutionCanvas: HTMLCanvasElement) {
 async function renderTextLayer() {
     if (!page || !$textLayer.value) return;
 
-    await page.renderTextLayer($textLayer.value);
+    const fragment = await page.createTextLayerFragment();
+    if (!fragment) return;
+
+    $textLayer.value.innerHTML = '';
+    $textLayer.value.appendChild(fragment);
     page.addTokenInfo($textLayer.value);
 }
 

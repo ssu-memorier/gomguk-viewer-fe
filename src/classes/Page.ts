@@ -40,8 +40,10 @@ export default class Page {
      * text layer를 랜더링하여 텍스트를 선택할 수 있게 합니다.
      * @param $layer 텍스트 요소(span,br)가 들어갈 컨테이너
      */
-    async renderTextLayer($layer: HTMLDivElement) {
-        $layer.innerHTML = '';
+    async renderTextLayer($layer: HTMLElement | DocumentFragment) {
+        if ($layer instanceof HTMLElement) {
+            $layer.innerHTML = '';
+        }
         if (!this.viewport.value) return;
 
         pdfjs.renderTextLayer({
@@ -106,5 +108,11 @@ export default class Page {
         await this.renderPdfLayer(canvas);
 
         return canvas;
+    }
+    async createTextLayerFragment() {
+        const fragment = document.createDocumentFragment();
+        await this.renderTextLayer(fragment);
+
+        return fragment;
     }
 }
