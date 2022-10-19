@@ -89,18 +89,16 @@ const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
 
 onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
-    if (!page || !page.viewport.value || !$highResolutionLayer.value) return;
+
+    if (!page) return;
 
     originalPageSize = page.size;
-
     setPageSize(originalPageSize);
     await drawHighResolutionLayer(originalPageSize);
     await renderTextLayer();
 
     watch(page.viewport, async (newViewport) => {
         if (!newViewport) return;
-
-        isChangingSize.value = true;
         const newPageSize: SizeType = {
             width: newViewport.width,
             height: newViewport.height,
@@ -121,6 +119,7 @@ async function changePageSize(newPageSize: SizeType) {
     )
         return;
 
+    isChangingSize.value = true;
     const originScaleCanvas = copyCanvas(highResolutionCtx.value);
     const { width, height } = newPageSize;
 
