@@ -52,7 +52,7 @@ const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const isScaleChanging = ref<boolean>(false);
 
 let page: Page | undefined;
-const ctx = computed<CanvasRenderingContext2D | null>(() => {
+const highResolutionctx = computed<CanvasRenderingContext2D | null>(() => {
     if (!$highResolutionLayer.value) return null;
     return $highResolutionLayer.value.getContext('2d');
 });
@@ -82,14 +82,14 @@ onMounted(async () => {
 async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
     if (
         !page ||
-        !ctx.value ||
+        !highResolutionctx.value ||
         !lowResolutionCtx.value ||
         !$highResolutionLayer.value ||
         !$textLayer.value
     )
         return;
 
-    const originScaleCanvas = copyCanvas(ctx.value);
+    const originScaleCanvas = copyCanvas(highResolutionctx.value);
 
     const { width, height } = viewport;
     setPageSize(width, height);
@@ -150,15 +150,14 @@ function drawLowResolutionLayer(
 }
 
 async function drawHighResolutionLayer(viewport: PageViewport) {
-    if (!page || !ctx.value) return;
+    if (!page || !highResolutionctx.value) return;
 
     const newCanvas = document.createElement('canvas');
     newCanvas.width = viewport.width;
     newCanvas.height = viewport.height;
     await page.renderPdfLayer(newCanvas);
 
-    // 고해상도 스케일 pdf 그림
-    ctx.value.drawImage(newCanvas, 0, 0);
+    highResolutionctx.value.drawImage(newCanvas, 0, 0);
 }
 
 async function renderTextLayer() {
