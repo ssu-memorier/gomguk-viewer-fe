@@ -70,83 +70,68 @@ let originalPageSize: SizeType = {
     height: 0,
 };
 
-const debouncedHighResolutionRender = createDebounce(
-    async (newPageSize: SizeType) => {
-        const page = await pdfStore.getPage(props.pageIndex);
-        if (!page) return;
-
-        resizeCanvas($highResolutionLayer.value, newPageSize);
-        resizeCanvas($selectionLayer.value, newPageSize);
-        resizeCanvas($highlightLayer.value, newPageSize);
-        resizeElement($textLayer.value, newPageSize);
-
-        originalPageSize = newPageSize;
-
-        const newPdfLayer = await page.createPdfLayer();
-        drawHighResolutionLayer(newPdfLayer);
-
-        await renderTextLayer();
-        if ($highResolutionLayer.value) {
-            isChangingSize.value = false;
-            drawLowResolutionLayer($highResolutionLayer.value);
-        }
-    },
-    500
-);
+const debouncedRenderPage = createDebounce(async (newPageSize: SizeType) => {
+    await renderPage(newPageSize);
+    // await renderHighResolutionLayer(newPageSize);
+    isChangingSize.value = false;
+    await renderTextLayer(newPageSize);
+}, 500);
 
 onMounted(async () => {
-    /**
-     * 페이지가 마운트되면
-     * 페이지 사이즈를 조절하고
-     * 고해상도 페이지를 랜더링하고
-     * 텍스트를 랜더링한다.
-     */
     const page = await pdfStore.getPage(props.pageIndex);
-
     if (!page) return;
 
     originalPageSize = page.size;
-    resizePage(originalPageSize);
+    await renderPage(page.size);
+    await renderTextLayer(page.size);
 
-    const pdfLayer = await page.createPdfLayer();
-    drawHighResolutionLayer(pdfLayer);
-    await renderTextLayer();
-
-    watch(page.viewport, async (newViewport) => {
-        if (!newViewport) return;
-        const newPageSize: SizeType = {
-            width: newViewport.width,
-            height: newViewport.height,
-        };
-        await changePageSize(newPageSize);
+    watch(page.viewport, async () => {
+        await changePageSize(page.size);
     });
 });
 /**
- * scaleChange는 PDF 페이지의 스케일을 변경하는 로직으로 아래의 과정을 거칩니다.
- * canvas확대/축소 (해상도가 낮아짐) -> 고해상도 canvas를 로딩
+ * changePageSize PDF 페이지의 크기를 변경하는 로직으로 아래의 과정을 거칩니다.
+ * canvas확대/축소 (해상도가 낮아짐) -> 고해상도 canvas를 랜더링
  * @param newPageSize
  */
 async function changePageSize(newPageSize: SizeType) {
     isChangingSize.value = true;
-    const originScaleCanvas = copyCanvas($highResolutionLayer.value);
-
     resizeElement($pdfPage.value, newPageSize);
-    resizeCanvas($lowResolutionLayer.value, newPageSize);
-    rescaleCanvas($lowResolutionLayer.value, newPageSize, originalPageSize);
-
-    if (originScaleCanvas) {
-        drawLowResolutionLayer(originScaleCanvas);
-    }
-
-    debouncedHighResolutionRender(newPageSize);
+    renderLowResolutionLayer(newPageSize);
+    debouncedRenderPage(newPageSize);
 }
-function resizePage(pageSize: SizeType) {
+
+async function renderPage(pageSize: SizeType) {
     resizeElement($pdfPage.value, pageSize);
-    resizeCanvas($highResolutionLayer.value, pageSize);
     resizeCanvas($selectionLayer.value.$el, pageSize);
-    resizeElement($textLayer.value, pageSize);
-    resizeCanvas($lowResolutionLayer.value, pageSize);
     resizeCanvas($highlightLayer.value.$el, pageSize);
+
+    await renderHighResolutionLayer(pageSize);
+}
+function renderLowResolutionLayer(pageSize: SizeType) {
+    const originCanvas = copyCanvas($highResolutionLayer.value);
+
+    resizeCanvas($lowResolutionLayer.value, pageSize);
+    rescaleCanvas($lowResolutionLayer.value, pageSize, originalPageSize);
+
+    if (originCanvas) {
+        drawLowResolutionLayer(originCanvas);
+    }
+}
+async function renderHighResolutionLayer(pageSize: SizeType) {
+    const page = await pdfStore.getPage(props.pageIndex);
+    if (!page) return;
+
+    resizeCanvas($highResolutionLayer.value, pageSize);
+
+    originalPageSize = pageSize;
+
+    const newPdfLayer = await page.createPdfLayer();
+    drawHighResolutionLayer(newPdfLayer);
+
+    if ($highResolutionLayer.value) {
+        drawLowResolutionLayer($highResolutionLayer.value);
+    }
 }
 
 function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
@@ -161,11 +146,12 @@ function drawHighResolutionLayer(highResolutionCanvas: HTMLCanvasElement) {
     highResolutionCtx.value.drawImage(highResolutionCanvas, 0, 0);
 }
 
-async function renderTextLayer() {
+async function renderTextLayer(pageSize: SizeType) {
     const page = await pdfStore.getPage(props.pageIndex);
 
     if (!page || !$textLayer.value) return;
 
+    resizeElement($textLayer.value, pageSize);
     const fragment = await page.createTextLayerFragment();
     $textLayer.value.innerHTML = '';
     $textLayer.value.appendChild(fragment);
