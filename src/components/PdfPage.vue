@@ -34,7 +34,6 @@ import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import copyCanvas from '@/utils/copyCanvas';
-import Page from '@/classes/Page';
 import createDebounce from '@/utils/createDebounce';
 import { SizeType } from '@/types/SizeType';
 import resizeCanvas from '@/utils/resizeCanvas';
@@ -55,6 +54,16 @@ const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
+
+const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
+    if (!$highResolutionLayer.value) return null;
+    return $highResolutionLayer.value.getContext('2d');
+});
+const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
+    if (!$lowResolutionLayer.value) return null;
+    return $lowResolutionLayer.value.getContext('2d');
+});
+
 let originalPageSize: SizeType = {
     width: 0,
     height: 0,
@@ -83,15 +92,6 @@ const debouncedHighResolutionRender = createDebounce(
     },
     500
 );
-
-const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
-    if (!$highResolutionLayer.value) return null;
-    return $highResolutionLayer.value.getContext('2d');
-});
-const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
-    if (!$lowResolutionLayer.value) return null;
-    return $lowResolutionLayer.value.getContext('2d');
-});
 
 onMounted(async () => {
     /**
