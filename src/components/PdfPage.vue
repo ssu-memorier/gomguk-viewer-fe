@@ -66,7 +66,7 @@ const debouncedHighResolutionRender = createDebounce(
         resizeElement($textLayer.value, newPageSize);
 
         originalPageSize = newPageSize;
-        await drawHighResolutionLayer(newPageSize);
+        await drawHighResolutionLayer();
         await renderTextLayer();
         if ($highResolutionLayer.value) {
             isChangingSize.value = false;
@@ -99,7 +99,7 @@ onMounted(async () => {
 
     originalPageSize = page.size;
     resizePage(originalPageSize);
-    await drawHighResolutionLayer(originalPageSize);
+    await drawHighResolutionLayer();
     await renderTextLayer();
 
     watch(page.viewport, async (newViewport) => {
@@ -157,11 +157,11 @@ function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
     lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
 }
 
-async function drawHighResolutionLayer(pageSize: SizeType) {
+async function drawHighResolutionLayer() {
     if (!page || !highResolutionCtx.value) return;
 
     const tempCanvas = document.createElement('canvas');
-    resizeCanvas(tempCanvas, pageSize);
+    resizeCanvas(tempCanvas, page.size);
     await page.renderPdfLayer(tempCanvas);
 
     highResolutionCtx.value.drawImage(tempCanvas, 0, 0);
