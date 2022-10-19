@@ -63,8 +63,7 @@ const debouncedHighResolutionRender = createDebounce(
         resizeCanvas($highResolutionLayer.value, newPageSize);
         resizeCanvas($selectionLayer.value, newPageSize);
         resizeCanvas($highlightLayer.value, newPageSize);
-        $textLayer.value.style.width = Math.floor(newPageSize.width) + 'px';
-        $textLayer.value.style.height = Math.floor(newPageSize.height) + 'px';
+        resizeElement($textLayer.value, newPageSize);
 
         originalPageSize = newPageSize;
         await drawHighResolutionLayer(newPageSize);
@@ -121,11 +120,10 @@ async function changePageSize(newPageSize: SizeType) {
 
     isChangingSize.value = true;
     const originScaleCanvas = copyCanvas(highResolutionCtx.value);
-    const { width, height } = newPageSize;
 
     resizeCanvas($lowResolutionLayer.value, newPageSize);
-    $pdfPage.value.style.width = Math.floor(width) + 'px';
-    $pdfPage.value.style.height = Math.floor(height) + 'px';
+    resizeElement($pdfPage.value, newPageSize);
+
     lowResolutionCtx.value.scale(
         newPageSize.width / originalPageSize.width,
         newPageSize.height / originalPageSize.height
@@ -143,14 +141,12 @@ function setPageSize(pageSize: SizeType) {
     )
         return;
 
-    $pdfPage.value.style.width = pageSize.width + 'px';
-    $pdfPage.value.style.height = pageSize.height + 'px';
+    resizeElement($pdfPage.value, pageSize);
     resizeCanvas($lowResolutionLayer.value, pageSize);
     resizeCanvas($highResolutionLayer.value, pageSize);
     resizeCanvas($selectionLayer.value.$el, pageSize);
     resizeCanvas($highlightLayer.value.$el, pageSize);
-    $textLayer.value.style.width = pageSize.width + 'px';
-    $textLayer.value.style.height = pageSize.height + 'px';
+    resizeElement($textLayer.value, pageSize);
 }
 
 function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
@@ -181,6 +177,13 @@ function resizeCanvas(canvas: HTMLCanvasElement | undefined, size: SizeType) {
 
     canvas.width = size.width;
     canvas.height = size.height;
+}
+
+function resizeElement(el: HTMLElement | undefined, size: SizeType) {
+    if (!el) return;
+
+    el.style.width = Math.floor(size.width) + 'px';
+    el.style.height = Math.floor(size.height) + 'px';
 }
 </script>
 
