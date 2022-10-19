@@ -38,6 +38,7 @@ import Page from '@/classes/Page';
 import createDebounce from '@/utils/createDebounce';
 import { SizeType } from '@/types/SizeType';
 import resizeCanvas from '@/utils/resizeCanvas';
+import resizeElement from '@/utils/resizeElement';
 
 const props = defineProps({
     pageIndex: {
@@ -191,12 +192,6 @@ function rescaleCanvas(
 
     const ctx = canvas.getContext('2d');
     ctx?.scale(newSize.width / oldSize.width, newSize.height / oldSize.height);
-}
-function resizeElement(el: HTMLElement | undefined, size: SizeType) {
-    if (!el) return;
-
-    el.style.width = Math.floor(size.width) + 'px';
-    el.style.height = Math.floor(size.height) + 'px';
 }
 </script>
 
