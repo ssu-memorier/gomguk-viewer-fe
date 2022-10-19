@@ -39,6 +39,7 @@ import resizeCanvas from '@/utils/resizeCanvas';
 import resizeElement from '@/utils/resizeElement';
 import rescaleCanvas from '@/utils/rescaleCanvas';
 import { SizeType } from '@/types/SizeType';
+import PDF from '@/constants/PDF';
 
 const props = defineProps({
     pageIndex: {
@@ -73,7 +74,7 @@ let originalPageSize: SizeType = {
 const debouncedRenderPage = createDebounce(async (newPageSize: SizeType) => {
     await renderPage(newPageSize);
     isChangingSize.value = false;
-}, 500);
+}, PDF.RENDER_LATENCY);
 
 onMounted(async () => {
     const page = await pdfStore.getPage(props.pageIndex);
