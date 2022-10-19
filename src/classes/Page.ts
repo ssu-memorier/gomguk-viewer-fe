@@ -1,14 +1,19 @@
+import { ref } from 'vue';
 import { IViewportOption } from '@/Interface/IViewportOption';
 import * as pdfjs from 'pdfjs-dist';
 import TOKEN from '@/constants/TOKEN';
+import { SizeType } from '@/types/SizeType';
+import resizeCanvas from '@/utils/resizeCanvas';
 
 export default class Page {
     #pageProxy: pdfjs.PDFPageProxy;
-    viewport: pdfjs.PageViewport;
+    viewport = ref<pdfjs.PageViewport>();
 
     constructor(pageProxy: pdfjs.PDFPageProxy, option: IViewportOption) {
         this.#pageProxy = pageProxy;
-        this.viewport = this.#pageProxy.getViewport(option);
+        this.viewport = ref<pdfjs.PageViewport>(
+            this.#pageProxy.getViewport(option)
+        );
     }
 
     /**
@@ -17,11 +22,15 @@ export default class Page {
      */
     async renderPdfLayer($layer: HTMLCanvasElement) {
         const ctx = $layer.getContext('2d');
+
         if (!ctx) return;
+        if (!this.viewport.value) return;
+
+        resizeCanvas($layer, this.size);
 
         const renderContext = {
             canvasContext: ctx,
-            viewport: this.viewport,
+            viewport: this.viewport.value,
         };
 
         await this.#pageProxy.render(renderContext).promise;
@@ -31,11 +40,16 @@ export default class Page {
      * text layer를 랜더링하여 텍스트를 선택할 수 있게 합니다.
      * @param $layer 텍스트 요소(span,br)가 들어갈 컨테이너
      */
-    async renderTextLayer($layer: HTMLDivElement) {
+    async renderTextLayer($layer: HTMLElement | DocumentFragment) {
+        if ($layer instanceof HTMLElement) {
+            $layer.innerHTML = '';
+        }
+        if (!this.viewport.value) return;
+
         pdfjs.renderTextLayer({
             textContent: await this.#pageProxy.getTextContent(),
             container: $layer,
-            viewport: this.viewport,
+            viewport: this.viewport.value,
         });
     }
     /**
@@ -78,9 +92,27 @@ export default class Page {
         });
     }
     updateViewport(option: IViewportOption) {
-        this.viewport = this.#pageProxy.getViewport(option);
+        this.viewport.value = this.#pageProxy.getViewport(option);
     }
     get pageNum() {
         return this.#pageProxy.pageNumber;
+    }
+    get size(): SizeType {
+        return {
+            width: this.viewport.value?.width || 0,
+            height: this.viewport.value?.height || 0,
+        };
+    }
+    async createPdfLayer() {
+        const canvas = document.createElement('canvas');
+        await this.renderPdfLayer(canvas);
+
+        return canvas;
+    }
+    async createTextLayerFragment() {
+        const fragment = document.createDocumentFragment();
+        await this.renderTextLayer(fragment);
+
+        return fragment;
     }
 }

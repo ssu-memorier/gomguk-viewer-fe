@@ -26,6 +26,10 @@ export const usePdfStore = defineStore('pdf', () => {
         numPages.value = doc.numPages;
     });
 
+    watch(viewportOption, (newOption) => {
+        pageMap.forEach((page) => page.updateViewport(newOption));
+    });
+
     async function getPage(pageNum: number) {
         return pageMap.get(pageNum);
     }
@@ -50,12 +54,21 @@ export const usePdfStore = defineStore('pdf', () => {
 
         return doc;
     }
+    function increaseScale() {
+        viewportOption.scale = Math.round(viewportOption.scale * 10 + 1) / 10;
+    }
+    function decreaseScale() {
+        viewportOption.scale = Math.round(viewportOption.scale * 10 - 1) / 10;
+    }
     return {
         setPdfFile,
         getPage,
+        increaseScale,
+        decreaseScale,
         pageMap,
         pdfFile,
         fileName,
         numPages,
+        viewportOption,
     };
 });

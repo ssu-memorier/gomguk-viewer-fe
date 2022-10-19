@@ -1,5 +1,10 @@
 <template>
     <div class="pdfView" ref="$pdfView">
+        <div class="header" v-show="pageNumList.length > 0">
+            <button @click="zoomOutHandler">-</button>
+            <span>{{ scalePercent }}%</span>
+            <button @click="zoomInHandler">+</button>
+        </div>
         <div
             class="pageContainer"
             ref="$pageContainer"
@@ -28,7 +33,7 @@
 import PdfPage from '@/components/PdfPage.vue';
 import { useSelectionStore } from '@/store/selection';
 import { usePdfStore } from '@/store/pdf';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
@@ -46,7 +51,9 @@ const $pdfView = ref();
 const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 const pageNumList = ref<number[]>([]);
-
+const scalePercent = computed(() => {
+    return Math.floor(pdfStore.viewportOption.scale * 100);
+});
 onMounted(() => {
     $pdfView.value.addEventListener('mousedown', selectionStartHandler);
     document.addEventListener('selectionchange', selectionChangeHandler);
@@ -138,14 +145,21 @@ function getPopupPosMax(
         y: pageContainerRect.height - popupRect.height,
     };
 }
+function zoomInHandler() {
+    pdfStore.increaseScale();
+}
+function zoomOutHandler() {
+    pdfStore.decreaseScale();
+}
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/theme';
+
 .pdfView {
     width: inherit;
     height: inherit;
     overflow: scroll;
-    padding-top: 1rem;
     padding-bottom: 10rem;
     .selectionPopup {
         position: absolute;
@@ -157,6 +171,12 @@ function getPopupPosMax(
             opacity: 1;
             z-index: 200;
         }
+    }
+    .header {
+        top: 0;
+        z-index: 10;
+        position: sticky;
+        background-color: $surface-color;
     }
 
     .pageContainer {

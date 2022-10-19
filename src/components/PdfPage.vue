@@ -1,6 +1,11 @@
 <template>
     <div ref="$pdfPage" class="pdfPage card">
-        <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
+        <canvas ref="$highResolutionLayer" class="highResolutionLayer"></canvas>
+        <canvas
+            ref="$lowResolutionLayer"
+            class="lowResolutionLayer"
+            :class="{ show: isChangingSize }"
+        ></canvas>
         <div
             ref="$textLayer"
             class="textLayer"
@@ -24,11 +29,17 @@
 /**
  * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
  */
-import { defineProps, ref, onMounted } from 'vue';
+import { defineProps, ref, onMounted, watch, computed } from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
-import Page from '@/classes/Page';
+import copyCanvas from '@/utils/copyCanvas';
+import createDebounce from '@/utils/createDebounce';
+import resizeCanvas from '@/utils/resizeCanvas';
+import resizeElement from '@/utils/resizeElement';
+import rescaleCanvas from '@/utils/rescaleCanvas';
+import { SizeType } from '@/types/SizeType';
+import PDF from '@/constants/PDF';
 
 const props = defineProps({
     pageIndex: {
@@ -36,56 +47,138 @@ const props = defineProps({
         required: true,
     },
 });
+
+const isChangingSize = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
-const $pdfLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
+const $highResolutionLayer = ref<HTMLCanvasElement>();
+const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
 
-let page: Page | undefined;
-
-onMounted(async () => {
-    page = await pdfStore.getPage(props.pageIndex);
-    if (!page || !$pdfLayer.value || !$textLayer.value) return;
-
-    const { width, height } = page.viewport;
-    setPageSize(width, height);
-    await page.renderPdfLayer($pdfLayer.value);
-    await page.renderTextLayer($textLayer.value);
-    page.addTokenInfo($textLayer.value);
+const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
+    if (!$highResolutionLayer.value) return null;
+    return $highResolutionLayer.value.getContext('2d');
+});
+const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
+    if (!$lowResolutionLayer.value) return null;
+    return $lowResolutionLayer.value.getContext('2d');
 });
 
-function setPageSize(width: number, height: number) {
-    if (
-        !$pdfPage.value ||
-        !$pdfLayer.value ||
-        !$selectionLayer.value ||
-        !$textLayer.value
-    )
-        return;
+let originalPageSize: SizeType = {
+    width: 0,
+    height: 0,
+};
 
-    $pdfPage.value.style.width = width + 'px';
-    $pdfPage.value.style.height = height + 'px';
-    $pdfLayer.value.width = width;
-    $pdfLayer.value.height = height;
-    $selectionLayer.value.$el.width = width;
-    $selectionLayer.value.$el.height = height;
-    $highlightLayer.value.$el.width = width;
-    $highlightLayer.value.$el.height = height;
-    $textLayer.value.style.width = width + 'px';
-    $textLayer.value.style.height = height + 'px';
+const debouncedRenderPage = createDebounce(async (newPageSize: SizeType) => {
+    await renderPage(newPageSize);
+    isChangingSize.value = false;
+}, PDF.RENDER_LATENCY);
+
+onMounted(async () => {
+    const page = await pdfStore.getPage(props.pageIndex);
+    if (!page) return;
+
+    await renderPage(page.size);
+
+    watch(page.viewport, async () => {
+        const newSize = page.size;
+        await changePageSize(newSize);
+    });
+});
+/**
+ * changePageSize PDF 페이지의 크기를 변경하는 로직으로 아래의 과정을 거칩니다.
+ * 1. 저해상도 레이어 로딩(캔버스 확대/축소로 해상도가 낮아짐)
+ * 2. 고해상도 canvas를 랜더링한 뒤 저해상도 레이어를 숨김
+ * @param newPageSize
+ */
+async function changePageSize(newPageSize: SizeType) {
+    isChangingSize.value = true;
+    resizeElement($pdfPage.value, newPageSize);
+    renderLowResolutionLayer(newPageSize);
+    debouncedRenderPage(newPageSize);
+}
+/**
+ * renderPage는 입력된 사이즈로 페이지를 랜더링합니다.
+ * 저해상도 레이어(lowResolutionLayer) 랜더링은 포함하지 않습니다.
+ * @param pageSize
+ */
+async function renderPage(pageSize: SizeType) {
+    originalPageSize = pageSize;
+    resizeElement($pdfPage.value, pageSize);
+    resizeCanvas($selectionLayer.value.$el, pageSize);
+    resizeCanvas($highlightLayer.value.$el, pageSize);
+
+    await renderHighResolutionLayer(pageSize);
+    await renderTextLayer(pageSize);
+}
+/**
+ * 저해상도 레이어를 랜더링합니다.
+ * @param pageSize
+ */
+function renderLowResolutionLayer(pageSize: SizeType) {
+    const originCanvas = copyCanvas($highResolutionLayer.value);
+
+    resizeCanvas($lowResolutionLayer.value, pageSize);
+    rescaleCanvas($lowResolutionLayer.value, pageSize, originalPageSize);
+
+    if (originCanvas) {
+        drawLowResolutionLayer(originCanvas);
+    }
+}
+/**
+ * 고해상도 레이어를 랜더링합니다.
+ * @param pageSize
+ */
+async function renderHighResolutionLayer(pageSize: SizeType) {
+    const page = await pdfStore.getPage(props.pageIndex);
+    if (!page) return;
+
+    resizeCanvas($highResolutionLayer.value, pageSize);
+
+    const newPdfLayer = await page.createPdfLayer();
+    drawHighResolutionLayer(newPdfLayer);
+}
+
+function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
+    if (!lowResolutionCtx.value) return;
+
+    lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
+}
+
+function drawHighResolutionLayer(highResolutionCanvas: HTMLCanvasElement) {
+    if (!highResolutionCtx.value) return;
+
+    highResolutionCtx.value.drawImage(highResolutionCanvas, 0, 0);
+}
+/**
+ * 텍스트 레이어를 랜더링합니다.
+ * @param pageSize
+ */
+async function renderTextLayer(pageSize: SizeType) {
+    const page = await pdfStore.getPage(props.pageIndex);
+
+    if (!page || !$textLayer.value) return;
+
+    resizeElement($textLayer.value, pageSize);
+    const fragment = await page.createTextLayerFragment();
+    $textLayer.value.innerHTML = '';
+    $textLayer.value.appendChild(fragment);
+    page.addTokenInfo($textLayer.value);
 }
 </script>
 
 <style lang="scss" scoped>
 .pdfPage {
+    overflow: hidden;
     position: relative;
     margin: 0 auto 1rem auto;
-    .pdfLayer,
     .textLayer,
     .selectionLayer,
-    .highlightLayer {
+    .highlightLayer,
+    .lowResolutionLayer,
+    .highResolutionLayer {
         position: absolute;
         left: 0;
         top: 0;
@@ -110,6 +203,12 @@ function setPageSize(width: number, height: number) {
             color: transparent;
             background: transparent;
         }
+    }
+    .lowResolutionLayer {
+        visibility: hidden;
+    }
+    .lowResolutionLayer.show {
+        visibility: visible;
     }
     .selectionLayer {
         z-index: 100;
