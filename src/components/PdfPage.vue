@@ -123,16 +123,15 @@ function setPageSize(width: number, height: number) {
 }
 
 function copyCanvas(ctx: CanvasRenderingContext2D) {
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-    const imgData = ctx.getImageData(0, 0, width, height);
-    const newCanvas = document.createElement('canvas');
+    const { width, height } = ctx.canvas;
+    const originImg = ctx.getImageData(0, 0, width, height);
+    const copiedCanvas = document.createElement('canvas');
 
-    newCanvas.width = width;
-    newCanvas.height = height;
-    newCanvas.getContext('2d')?.putImageData(imgData, 0, 0);
+    copiedCanvas.width = width;
+    copiedCanvas.height = height;
+    copiedCanvas.getContext('2d')?.putImageData(originImg, 0, 0);
 
-    return newCanvas;
+    return copiedCanvas;
 }
 
 function drawLowResolutionLayer(
