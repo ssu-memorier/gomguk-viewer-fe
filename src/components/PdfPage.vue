@@ -178,7 +178,7 @@ function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
     lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
 }
 
-async function drawHighResolutionLayer({ width, height }: PageViewport) {
+async function drawHighResolutionLayer({ width, height }: Size) {
     if (!page || !highResolutionCtx.value) return;
 
     const tempCanvas = document.createElement('canvas');
