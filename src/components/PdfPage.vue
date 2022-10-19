@@ -34,6 +34,7 @@ import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import Page from '@/classes/Page';
+import copyCanvas from '@/utils/copyCanvas';
 import { PageViewport } from 'pdfjs-dist';
 
 const props = defineProps({
@@ -120,18 +121,6 @@ function setPageSize(width: number, height: number) {
     $highlightLayer.value.$el.height = height;
     $textLayer.value.style.width = width + 'px';
     $textLayer.value.style.height = height + 'px';
-}
-
-function copyCanvas(ctx: CanvasRenderingContext2D) {
-    const { width, height } = ctx.canvas;
-    const originImg = ctx.getImageData(0, 0, width, height);
-    const copiedCanvas = document.createElement('canvas');
-
-    copiedCanvas.width = width;
-    copiedCanvas.height = height;
-    copiedCanvas.getContext('2d')?.putImageData(originImg, 0, 0);
-
-    return copiedCanvas;
 }
 
 function drawLowResolutionLayer(
