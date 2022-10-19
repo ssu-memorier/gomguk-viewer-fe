@@ -90,4 +90,10 @@ export default class Page {
     get pageNum() {
         return this.#pageProxy.pageNumber;
     }
+    get size() {
+        return {
+            width: this.viewport.value?.width || 0,
+            height: this.viewport.value?.height || 0,
+        };
+    }
 }

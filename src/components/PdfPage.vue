@@ -72,10 +72,7 @@ const debouncedHighResolutionRender = createDebounce(
         $textLayer.value.style.width = Math.floor(newPageSize.width) + 'px';
         $textLayer.value.style.height = Math.floor(newPageSize.height) + 'px';
 
-        originalPageSize = {
-            width: newPageSize.width,
-            height: newPageSize.height,
-        };
+        originalPageSize = newPageSize;
         await drawHighResolutionLayer(newPageSize);
         if ($highResolutionLayer.value) {
             isChangingSize.value = false;
@@ -100,10 +97,7 @@ onMounted(async () => {
     page = await pdfStore.getPage(props.pageIndex);
     if (!page || !page.viewport.value || !$highResolutionLayer.value) return;
 
-    originalPageSize = {
-        width: page.viewport.value.width,
-        height: page.viewport.value.height,
-    };
+    originalPageSize = page.size;
 
     setPageSize(originalPageSize);
     await drawHighResolutionLayer(originalPageSize);
