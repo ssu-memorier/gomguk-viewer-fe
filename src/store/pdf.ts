@@ -21,7 +21,7 @@ export const usePdfStore = defineStore('pdf', () => {
         if (!doc) return;
 
         await initPages(doc);
-        console.log(doc);
+
         fileName.value = newFile.name || '';
         numPages.value = doc.numPages;
     });
