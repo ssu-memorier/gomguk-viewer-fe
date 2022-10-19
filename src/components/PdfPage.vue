@@ -36,6 +36,7 @@ import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import copyCanvas from '@/utils/copyCanvas';
 import Page from '@/classes/Page';
 import createDebounce from '@/utils/createDebounce';
+import { SizeType } from '@/types/SizeType';
 
 const props = defineProps({
     pageIndex: {
@@ -44,10 +45,6 @@ const props = defineProps({
     },
 });
 
-type Size = {
-    width: number;
-    height: number;
-};
 const isChangingSize = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
@@ -56,13 +53,13 @@ const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
-let originalPageSize: Size = {
+let originalPageSize: SizeType = {
     width: 0,
     height: 0,
 };
 
 const debouncedHighResolutionRender = createDebounce(
-    async (newPageSize: Size) => {
+    async (newPageSize: SizeType) => {
         $highResolutionLayer.value.width = newPageSize.width;
         $highResolutionLayer.value.height = newPageSize.height;
         $selectionLayer.value.$el.width = newPageSize.width;
@@ -107,7 +104,7 @@ onMounted(async () => {
         if (!newViewport) return;
 
         isChangingSize.value = true;
-        const newPageSize: Size = {
+        const newPageSize: SizeType = {
             width: newViewport.width,
             height: newViewport.height,
         };
@@ -119,7 +116,7 @@ onMounted(async () => {
  * canvas확대/축소 (해상도가 낮아짐) -> 고해상도 canvas를 로딩
  * @param newPageSize
  */
-async function changePageSize(newPageSize: Size) {
+async function changePageSize(newPageSize: SizeType) {
     if (
         !highResolutionCtx.value ||
         !lowResolutionCtx.value ||
@@ -141,7 +138,7 @@ async function changePageSize(newPageSize: Size) {
     drawLowResolutionLayer(originScaleCanvas);
     debouncedHighResolutionRender(newPageSize);
 }
-function setPageSize({ width, height }: Size) {
+function setPageSize({ width, height }: SizeType) {
     if (
         !$pdfPage.value ||
         !$highResolutionLayer.value ||
@@ -171,7 +168,7 @@ function drawLowResolutionLayer(originScaleCanvas: HTMLCanvasElement) {
     lowResolutionCtx.value.drawImage(originScaleCanvas, 0, 0);
 }
 
-async function drawHighResolutionLayer({ width, height }: Size) {
+async function drawHighResolutionLayer({ width, height }: SizeType) {
     if (!page || !highResolutionCtx.value) return;
 
     const tempCanvas = document.createElement('canvas');

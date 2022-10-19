@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { IViewportOption } from '@/Interface/IViewportOption';
 import * as pdfjs from 'pdfjs-dist';
 import TOKEN from '@/constants/TOKEN';
-
+import { SizeType } from '@/types/SizeType';
 export default class Page {
     #pageProxy: pdfjs.PDFPageProxy;
     viewport = ref<pdfjs.PageViewport>();
@@ -90,7 +90,7 @@ export default class Page {
     get pageNum() {
         return this.#pageProxy.pageNumber;
     }
-    get size() {
+    get size(): SizeType {
         return {
             width: this.viewport.value?.width || 0,
             height: this.viewport.value?.height || 0,
