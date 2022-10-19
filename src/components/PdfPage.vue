@@ -1,10 +1,10 @@
 <template>
     <div ref="$pdfPage" class="pdfPage card">
-        <canvas ref="$pdfLayer" class="pdfLayer"></canvas>
+        <canvas ref="$highResolutionLayer" class="highResolutionLayer"></canvas>
         <canvas
             ref="$lowResolutionLayer"
             class="lowResolutionLayer"
-            :class="{ hide: !isRendering }"
+            :class="{ show: isScaleChanging }"
         ></canvas>
         <div
             ref="$textLayer"
@@ -44,17 +44,17 @@ const props = defineProps({
 });
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
-const $pdfLayer = ref<HTMLCanvasElement>();
+const $highResolutionLayer = ref<HTMLCanvasElement>();
 const $textLayer = ref<HTMLDivElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
 const $lowResolutionLayer = ref<HTMLCanvasElement>();
-const isRendering = ref<boolean>(false);
+const isScaleChanging = ref<boolean>(false);
 
 let page: Page | undefined;
 const ctx = computed<CanvasRenderingContext2D | null>(() => {
-    if (!$pdfLayer.value) return null;
-    return $pdfLayer.value.getContext('2d');
+    if (!$highResolutionLayer.value) return null;
+    return $highResolutionLayer.value.getContext('2d');
 });
 const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
     if (!$lowResolutionLayer.value) return null;
@@ -73,9 +73,9 @@ onMounted(async () => {
     watch(page.viewport, async (newViewport, oldViewport) => {
         if (!newViewport || !oldViewport) return;
 
-        isRendering.value = true;
+        isScaleChanging.value = true;
         await scaleChange(newViewport, oldViewport);
-        isRendering.value = false;
+        isScaleChanging.value = false;
     });
 });
 
@@ -84,7 +84,7 @@ async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
         !page ||
         !ctx.value ||
         !lowResolutionCtx.value ||
-        !$pdfLayer.value ||
+        !$highResolutionLayer.value ||
         !$textLayer.value
     )
         return;
@@ -101,7 +101,7 @@ async function scaleChange(viewport: PageViewport, oldViewport: PageViewport) {
 function setPageSize(width: number, height: number) {
     if (
         !$pdfPage.value ||
-        !$pdfLayer.value ||
+        !$highResolutionLayer.value ||
         !$selectionLayer.value ||
         !$textLayer.value ||
         !$lowResolutionLayer.value
@@ -110,8 +110,8 @@ function setPageSize(width: number, height: number) {
 
     $pdfPage.value.style.width = width + 'px';
     $pdfPage.value.style.height = height + 'px';
-    $pdfLayer.value.width = width;
-    $pdfLayer.value.height = height;
+    $highResolutionLayer.value.width = width;
+    $highResolutionLayer.value.height = height;
     $lowResolutionLayer.value.width = width;
     $lowResolutionLayer.value.height = height;
     $selectionLayer.value.$el.width = width;
@@ -170,17 +170,14 @@ async function renderTextLayer() {
 </script>
 
 <style lang="scss" scoped>
-.hide {
-    visibility: hidden;
-}
 .pdfPage {
     position: relative;
     margin: 0 auto 1rem auto;
-    .pdfLayer,
     .textLayer,
     .selectionLayer,
     .highlightLayer,
-    .tempLayer {
+    .lowResolutionLayer,
+    .highResolutionLayer {
         position: absolute;
         left: 0;
         top: 0;
@@ -205,6 +202,12 @@ async function renderTextLayer() {
             color: transparent;
             background: transparent;
         }
+    }
+    .lowResolutionLayer {
+        visibility: hidden;
+    }
+    .lowResolutionLayer.show {
+        visibility: visible;
     }
     .selectionLayer {
         z-index: 100;
