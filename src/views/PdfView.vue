@@ -1,5 +1,5 @@
 <template>
-    <div class="pdfView" ref="$pdfView">
+    <div id="pdfView" ref="$pdfView">
         <div class="header" v-show="pageNumList.length > 0">
             <button @click="zoomOutHandler">-</button>
             <span>{{ scalePercent }}%</span>
@@ -156,7 +156,7 @@ function zoomOutHandler() {
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
 
-.pdfView {
+#pdfView {
     width: inherit;
     height: inherit;
     overflow: scroll;

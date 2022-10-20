@@ -29,7 +29,14 @@
 /**
  * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
  */
-import { defineProps, ref, onMounted, watch, computed } from 'vue';
+import {
+    defineProps,
+    ref,
+    onMounted,
+    watch,
+    computed,
+    getCurrentInstance,
+} from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
@@ -88,8 +95,9 @@ onMounted(async () => {
             isIntersecting.value = entry.isIntersecting;
         },
         {
-            root: null,
+            root: document.getElementById('pdfView'),
             threshold: 0,
+            rootMargin: '100% 0%',
         }
     );
     if ($pdfPage.value) {
