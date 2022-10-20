@@ -89,7 +89,6 @@ onMounted(async () => {
 
     const observer = new IntersectionObserver(
         async ([entry]) => {
-            console.log(props.pageIndex, entry.isIntersecting);
             isIntersecting.value = entry.isIntersecting;
         },
         {
