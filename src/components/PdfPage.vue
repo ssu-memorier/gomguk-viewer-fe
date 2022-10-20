@@ -54,7 +54,6 @@ const props = defineProps({
 
 const isChangingSize = ref<boolean>(false);
 const isIntersecting = ref<boolean>(false);
-const isRendered = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $textLayer = ref<HTMLDivElement>();
@@ -122,9 +121,8 @@ watch(isIntersecting, async () => {
         page.size.height === originalPageSize.height
     )
         return;
-    // resizeElement($pdfPage.value, page.size);
+
     await renderPage(page.size);
-    isRendered.value = true;
 });
 /**
  * changePageSize PDF 페이지의 크기를 변경하는 로직으로 아래의 과정을 거칩니다.
@@ -134,7 +132,6 @@ watch(isIntersecting, async () => {
  */
 async function changePageSize(newPageSize: SizeType) {
     isChangingSize.value = true;
-    // resizeElement($pdfPage.value, newPageSize);
     renderLowResolutionLayer(newPageSize);
     debouncedRenderPage(newPageSize);
 }
