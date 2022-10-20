@@ -1,6 +1,6 @@
 import { PDFDocumentProxy, getDocument } from 'pdfjs-dist';
 import { defineStore } from 'pinia';
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import getBase64 from '@/utils/getBase64';
 import Page from '@/classes/Page';
 

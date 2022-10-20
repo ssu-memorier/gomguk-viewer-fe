@@ -46,9 +46,14 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+    viewportId: {
+        type: String,
+        required: false,
+    },
 });
 
 const isChangingSize = ref<boolean>(false);
+const isIntersecting = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $textLayer = ref<HTMLDivElement>();
@@ -79,13 +84,45 @@ const debouncedRenderPage = createDebounce(async (newPageSize: SizeType) => {
 onMounted(async () => {
     const page = await pdfStore.getPage(props.pageIndex);
     if (!page) return;
+    resizeElement($pdfPage.value, page.size);
 
-    await renderPage(page.size);
+    const observer = new IntersectionObserver(
+        async ([entry]) => {
+            isIntersecting.value = entry.isIntersecting;
+        },
+        {
+            root: props.viewportId
+                ? document.getElementById(props.viewportId)
+                : null,
+            threshold: 0,
+            rootMargin: PDF.ROOT_MARGIN,
+        }
+    );
+    if ($pdfPage.value) {
+        observer.observe($pdfPage.value);
+    }
 
     watch(page.viewport, async () => {
+        if (!isIntersecting.value) return;
+
         const newSize = page.size;
+        resizeElement($pdfPage.value, newSize);
         await changePageSize(newSize);
     });
+});
+
+watch(isIntersecting, async () => {
+    if (!isIntersecting.value) return;
+
+    const page = await pdfStore.getPage(props.pageIndex);
+    if (!page) return;
+    if (
+        page.size.width === originalPageSize.width &&
+        page.size.height === originalPageSize.height
+    )
+        return;
+
+    await renderPage(page.size);
 });
 /**
  * changePageSize PDF 페이지의 크기를 변경하는 로직으로 아래의 과정을 거칩니다.
@@ -95,7 +132,6 @@ onMounted(async () => {
  */
 async function changePageSize(newPageSize: SizeType) {
     isChangingSize.value = true;
-    resizeElement($pdfPage.value, newPageSize);
     renderLowResolutionLayer(newPageSize);
     debouncedRenderPage(newPageSize);
 }
@@ -173,7 +209,7 @@ async function renderTextLayer(pageSize: SizeType) {
 .pdfPage {
     overflow: hidden;
     position: relative;
-    margin: 0 auto 1rem auto;
+    margin: 1rem auto 2rem auto;
     .textLayer,
     .selectionLayer,
     .highlightLayer,

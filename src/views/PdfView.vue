@@ -1,5 +1,5 @@
 <template>
-    <div class="pdfView" ref="$pdfView">
+    <div id="pdfView" ref="$pdfView">
         <div class="header" v-show="pageNumList.length > 0">
             <button @click="zoomOutHandler">-</button>
             <span>{{ scalePercent }}%</span>
@@ -15,6 +15,7 @@
                 v-for="num in pageNumList"
                 :key="pdfStore.fileName + num"
                 :page-index="num"
+                viewport-id="pdfView"
             >
             </PdfPage>
             <SelectionPopup
@@ -156,7 +157,7 @@ function zoomOutHandler() {
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
 
-.pdfView {
+#pdfView {
     width: inherit;
     height: inherit;
     overflow: scroll;
