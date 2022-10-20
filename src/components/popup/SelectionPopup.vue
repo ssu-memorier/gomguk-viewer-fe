@@ -22,7 +22,6 @@ import { useHighlightStore } from '@/store/highlight';
 import POPUP from '@/constants/POPUP';
 import writeToClipboard from '@/utils/writeToClipboard';
 import Highlight from '@/classes/Highlight';
-import Line from '@/classes/Line';
 
 const translatorStore = useTranslatorStore();
 const selectionStore = useSelectionStore();
@@ -58,9 +57,10 @@ function copyHandler() {
     writeToClipboard(originText);
 }
 function highlightHandler() {
-    const { selectedLines, selectedPageIndex } = selectionStore;
-    const highlight = new Highlight(selectedPageIndex, selectedLines as Line[]);
+    const { range, selectedPageIndex } = selectionStore;
+    if (!range) return;
 
+    const highlight = new Highlight(selectedPageIndex, range);
     highlightStore.addHighlight(highlight);
 }
 </script>
