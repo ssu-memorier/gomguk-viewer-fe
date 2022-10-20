@@ -20,6 +20,9 @@
             class="highlightLayer"
             ref="$highlightLayer"
             :pageIndex="pageIndex"
+            :width="originalPageSize.width"
+            :height="originalPageSize.height"
+            :class="{ hide: isChangingSize }"
         >
         </highlight-layer>
     </div>
@@ -71,10 +74,10 @@ const lowResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
     return $lowResolutionLayer.value.getContext('2d');
 });
 
-let originalPageSize: SizeType = {
+const originalPageSize = ref<SizeType>({
     width: 0,
     height: 0,
-};
+});
 
 const debouncedRenderPage = createDebounce(async (newPageSize: SizeType) => {
     await renderPage(newPageSize);
@@ -117,8 +120,8 @@ watch(isIntersecting, async () => {
     const page = await pdfStore.getPage(props.pageIndex);
     if (!page) return;
     if (
-        page.size.width === originalPageSize.width &&
-        page.size.height === originalPageSize.height
+        page.size.width === originalPageSize.value.width &&
+        page.size.height === originalPageSize.value.height
     )
         return;
 
@@ -132,6 +135,7 @@ watch(isIntersecting, async () => {
  */
 async function changePageSize(newPageSize: SizeType) {
     isChangingSize.value = true;
+
     renderLowResolutionLayer(newPageSize);
     debouncedRenderPage(newPageSize);
 }
@@ -141,13 +145,13 @@ async function changePageSize(newPageSize: SizeType) {
  * @param pageSize
  */
 async function renderPage(pageSize: SizeType) {
-    originalPageSize = pageSize;
     resizeElement($pdfPage.value, pageSize);
     resizeCanvas($selectionLayer.value.$el, pageSize);
-    resizeCanvas($highlightLayer.value.$el, pageSize);
 
     await renderHighResolutionLayer(pageSize);
     await renderTextLayer(pageSize);
+
+    originalPageSize.value = pageSize;
 }
 /**
  * 저해상도 레이어를 랜더링합니다.
@@ -157,7 +161,7 @@ function renderLowResolutionLayer(pageSize: SizeType) {
     const originCanvas = copyCanvas($highResolutionLayer.value);
 
     resizeCanvas($lowResolutionLayer.value, pageSize);
-    rescaleCanvas($lowResolutionLayer.value, pageSize, originalPageSize);
+    rescaleCanvas($lowResolutionLayer.value, pageSize, originalPageSize.value);
 
     if (originCanvas) {
         drawLowResolutionLayer(originCanvas);
@@ -245,6 +249,9 @@ async function renderTextLayer(pageSize: SizeType) {
     }
     .lowResolutionLayer.show {
         visibility: visible;
+    }
+    .highlightLayer.hide {
+        visibility: hidden;
     }
     .selectionLayer {
         z-index: 100;
