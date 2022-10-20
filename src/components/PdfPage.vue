@@ -105,11 +105,10 @@ onMounted(async () => {
     }
 
     watch(page.viewport, async () => {
-        const newSize = page.size;
-        resizeElement($pdfPage.value, newSize);
-
         if (!isIntersecting.value) return;
 
+        const newSize = page.size;
+        resizeElement($pdfPage.value, newSize);
         await changePageSize(newSize);
     });
 });
