@@ -15,6 +15,7 @@
                 v-for="num in pageNumList"
                 :key="pdfStore.fileName + num"
                 :page-index="num"
+                viewport-id="pdfView"
             >
             </PdfPage>
             <SelectionPopup

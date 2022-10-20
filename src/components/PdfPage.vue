@@ -46,6 +46,10 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+    viewportId: {
+        type: String,
+        required: false,
+    },
 });
 
 const isChangingSize = ref<boolean>(false);
@@ -85,12 +89,15 @@ onMounted(async () => {
 
     const observer = new IntersectionObserver(
         async ([entry]) => {
+            console.log(props.pageIndex, entry.isIntersecting);
             isIntersecting.value = entry.isIntersecting;
         },
         {
-            root: document.getElementById('pdfView'),
+            root: props.viewportId
+                ? document.getElementById(props.viewportId)
+                : null,
             threshold: 0,
-            rootMargin: '100% 0%',
+            rootMargin: PDF.ROOT_MARGIN,
         }
     );
     if ($pdfPage.value) {
