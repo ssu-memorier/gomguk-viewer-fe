@@ -29,14 +29,7 @@
 /**
  * pdfPage.vue는 pdf의 각 페이지를 나타내는 파일입니다.
  */
-import {
-    defineProps,
-    ref,
-    onMounted,
-    watch,
-    computed,
-    getCurrentInstance,
-} from 'vue';
+import { defineProps, ref, onMounted, watch, computed } from 'vue';
 import { usePdfStore } from '@/store/pdf';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
