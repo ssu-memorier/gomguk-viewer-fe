@@ -1,12 +1,18 @@
 <template>
     <div class="translatorTextarea">
-        <textarea
-            class="origin"
-            :placeholder="TRANSLATOR.VIEW.PLACEHOLDER"
-            v-model="translatorStore.originalText"
-        ></textarea>
+        <button @click="toggleShowOriginText">
+            {{
+                isShowOriginText
+                    ? TRANSLATOR.VIEW.SHOW_TRANSLATED
+                    : TRANSLATOR.VIEW.SHOW_ORIGIN
+            }}
+        </button>
         <div class="translated" disabled>
-            {{ translatorStore.translatedText }}
+            {{
+                isShowOriginText
+                    ? translatorStore.originalText
+                    : translatorStore.translatedText
+            }}
         </div>
     </div>
 </template>
@@ -15,45 +21,43 @@
 /**
  * LanguageTranslator는 텍스트를 입력하면 번역된 결과를 보여주는 컴포넌트 입니다.
  */
-import TRANSLATOR from '@/constants/TRANSLATOR';
+import { ref } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
-
+import TRANSLATOR from '@/constants/TRANSLATOR';
 const translatorStore = useTranslatorStore();
+const isShowOriginText = ref<boolean>(false);
+
+function toggleShowOriginText() {
+    isShowOriginText.value = !isShowOriginText.value;
+}
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/translator';
 div.translatorTextarea {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     textarea.origin,
     div.translated {
-        color: #333;
-        font-size: 1.4rem;
+        color: $translator-color;
+        font-size: $translator-font-size;
         border: none;
-        padding: 1rem;
+        padding: $translator-padding;
         box-sizing: border-box;
-        background-color: #fff;
+        background-color: $translator-bg-color;
         text-align: left;
         margin: 0;
         flex-grow: 1;
-        height: 50%;
     }
     textarea.origin {
         resize: none;
-        border-bottom: 1px solid #ddd;
     }
     textarea:focus {
         outline: none;
     }
     div.translated {
         overflow: scroll;
-    }
-    hr {
-        margin: 0;
-        border-color: #eee;
-        background-color: #eee;
     }
 }
 </style>

@@ -6,47 +6,63 @@
 /**
  * HighlightLayer는 pdf의 Highlight 영역을 그리는 레이어 컴포넌트 입니다.
  */
-import { defineProps, ref, onMounted, computed, watchEffect } from 'vue';
+import { defineProps, ref, onMounted, computed, watch } from 'vue';
 import { useHighlightStore } from '@/store/highlight';
 import Line from '@/classes/Line';
 import Color from '@/classes/Color';
+import getSelectedLines from '@/utils/getSelectedLines';
+import resizeCanvas from '@/utils/resizeCanvas';
+import Highlight from '@/classes/Highlight';
 
 const props = defineProps({
     pageIndex: {
         type: Number,
         required: true,
     },
+    width: {
+        type: Number,
+        required: true,
+    },
+    height: {
+        type: Number,
+        required: true,
+    },
 });
 const highlightStore = useHighlightStore();
 const $highlightLayer = ref<HTMLCanvasElement>();
-const ctx = ref<CanvasRenderingContext2D | null>(null);
+const ctx = computed(() => {
+    if (!$highlightLayer.value) return null;
+    return $highlightLayer.value.getContext('2d');
+});
 const highlightsInPage = computed(() => {
     return highlightStore.highlightList.filter(
         (h) => h.pageNum === props.pageIndex
     );
 });
-onMounted(async () => {
+
+watch(highlightsInPage, () => {
+    drawHighlight(highlightsInPage.value);
+});
+watch(props, () => {
     if (!$highlightLayer.value) return;
 
-    ctx.value = $highlightLayer.value.getContext('2d');
+    const newSize = {
+        width: props.width,
+        height: props.height,
+    };
 
-    watchEffect(() => {
-        clearSelectionLayer();
-        highlightsInPage.value.forEach((h) => {
-            drawLines(h.lines as Line[], h.color);
-        });
-    });
+    resizeCanvas($highlightLayer.value, newSize);
+    drawHighlight(highlightsInPage.value);
 });
 
-function clearSelectionLayer() {
-    if (!ctx.value || !$highlightLayer.value) return;
+function drawHighlight(highlights: Highlight[]) {
+    highlights.forEach((h) => {
+        const range = h.getRange();
+        if (!range) return;
 
-    ctx.value.clearRect(
-        0,
-        0,
-        $highlightLayer.value.width,
-        $highlightLayer.value.height
-    );
+        const lines = getSelectedLines(range);
+        drawLines(lines, h.color);
+    });
 }
 
 function drawLines(lines: Line[], color: Color) {

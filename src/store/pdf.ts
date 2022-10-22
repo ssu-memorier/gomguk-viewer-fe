@@ -1,6 +1,6 @@
 import { PDFDocumentProxy, getDocument } from 'pdfjs-dist';
 import { defineStore } from 'pinia';
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import getBase64 from '@/utils/getBase64';
 import Page from '@/classes/Page';
 
@@ -10,13 +10,10 @@ export const usePdfStore = defineStore('pdf', () => {
     const viewportOption = reactive({
         scale: 1.6,
     });
-    const fileName = computed(() => {
-        if (!pdfFile.value) return '';
-        else return pdfFile.value.name;
-    });
     const numPages = ref<number>(0);
+    const fileName = ref<string>('');
 
-    watch(pdfFile, async (newFile) => {
+    watch(pdfFile, async (newFile: File | undefined) => {
         pageMap.clear();
         if (!newFile) return;
 
@@ -24,7 +21,13 @@ export const usePdfStore = defineStore('pdf', () => {
         if (!doc) return;
 
         await initPages(doc);
+
+        fileName.value = newFile.name || '';
         numPages.value = doc.numPages;
+    });
+
+    watch(viewportOption, (newOption) => {
+        pageMap.forEach((page) => page.updateViewport(newOption));
     });
 
     async function getPage(pageNum: number) {
@@ -43,6 +46,7 @@ export const usePdfStore = defineStore('pdf', () => {
     }
     async function getDoc(file: File) {
         const base64 = await getBase64(file);
+
         if (!base64) return;
 
         const loadingTask = getDocument(base64);
@@ -50,12 +54,21 @@ export const usePdfStore = defineStore('pdf', () => {
 
         return doc;
     }
+    function increaseScale() {
+        viewportOption.scale = Math.round(viewportOption.scale * 10 + 1) / 10;
+    }
+    function decreaseScale() {
+        viewportOption.scale = Math.round(viewportOption.scale * 10 - 1) / 10;
+    }
     return {
         setPdfFile,
         getPage,
+        increaseScale,
+        decreaseScale,
         pageMap,
         pdfFile,
         fileName,
         numPages,
+        viewportOption,
     };
 });

@@ -1,25 +1,33 @@
 <template>
-    <div class="pdfView" ref="$pdfView">
-        <div
-            class="pageContainer"
-            ref="$pageContainer"
-            v-if="pageNumList.length > 0"
-            @copy="copyHandler"
-        >
-            <PdfPage
-                v-for="num in pageNumList"
-                :key="pdfStore.fileName + num"
-                :page-index="num"
-            >
-            </PdfPage>
-            <SelectionPopup
-                class="selectionPopup"
-                :class="{ show: isPopupShow }"
-                ref="$selectionPopup"
-            ></SelectionPopup>
+    <div id="pdfView" ref="$pdfView">
+        <div class="header" v-show="pageNumList.length > 0">
+            <button @click="zoomOutHandler">-</button>
+            <span>{{ scalePercent }}%</span>
+            <button @click="zoomInHandler">+</button>
         </div>
-        <div class="noPdf" v-else>
-            <p>파일을 불러와주세요</p>
+        <div class="pageView">
+            <div
+                class="pageContainer"
+                ref="$pageContainer"
+                v-if="pageNumList.length > 0"
+                @copy="copyHandler"
+            >
+                <PdfPage
+                    v-for="num in pageNumList"
+                    :key="pdfStore.fileName + num"
+                    :page-index="num"
+                    viewport-id="pdfView"
+                >
+                </PdfPage>
+                <SelectionPopup
+                    class="selectionPopup"
+                    :class="{ show: isPopupShow }"
+                    ref="$selectionPopup"
+                ></SelectionPopup>
+            </div>
+            <div class="noPdf" v-else>
+                <p>파일을 불러와주세요</p>
+            </div>
         </div>
     </div>
 </template>
@@ -28,7 +36,7 @@
 import PdfPage from '@/components/PdfPage.vue';
 import { useSelectionStore } from '@/store/selection';
 import { usePdfStore } from '@/store/pdf';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import POPUP from '@/constants/POPUP';
 import SelectionPopup from '@/components/popup/SelectionPopup.vue';
@@ -46,7 +54,9 @@ const $pdfView = ref();
 const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 const pageNumList = ref<number[]>([]);
-
+const scalePercent = computed(() => {
+    return Math.floor(pdfStore.viewportOption.scale * 100);
+});
 onMounted(() => {
     $pdfView.value.addEventListener('mousedown', selectionStartHandler);
     document.addEventListener('selectionchange', selectionChangeHandler);
@@ -138,15 +148,21 @@ function getPopupPosMax(
         y: pageContainerRect.height - popupRect.height,
     };
 }
+function zoomInHandler() {
+    pdfStore.increaseScale();
+}
+function zoomOutHandler() {
+    pdfStore.decreaseScale();
+}
 </script>
 
 <style lang="scss" scoped>
-.pdfView {
+@import '@/assets/scss/theme';
+
+#pdfView {
     width: inherit;
     height: inherit;
-    overflow: scroll;
-    padding-top: 1rem;
-    padding-bottom: 10rem;
+    overflow: hidden;
     .selectionPopup {
         position: absolute;
         left: 0;
@@ -158,15 +174,26 @@ function getPopupPosMax(
             z-index: 200;
         }
     }
-
+    .header {
+        height: 2rem;
+        top: 0;
+        z-index: 10;
+        position: sticky;
+        background-color: $surface-color;
+    }
+    .pageView {
+        width: 100%;
+        height: calc(100% - 2rem);
+        overflow: scroll;
+    }
     .pageContainer {
         margin: 0 auto;
         position: relative;
-        width: fit-content;
         height: fit-content;
         display: flex;
         flex-direction: column;
         z-index: 1;
+        padding-bottom: 10rem;
     }
     .noPdf {
         position: relative;
