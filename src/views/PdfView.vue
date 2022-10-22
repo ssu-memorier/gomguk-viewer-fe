@@ -5,27 +5,29 @@
             <span>{{ scalePercent }}%</span>
             <button @click="zoomInHandler">+</button>
         </div>
-        <div
-            class="pageContainer"
-            ref="$pageContainer"
-            v-if="pageNumList.length > 0"
-            @copy="copyHandler"
-        >
-            <PdfPage
-                v-for="num in pageNumList"
-                :key="pdfStore.fileName + num"
-                :page-index="num"
-                viewport-id="pdfView"
+        <div class="pageView">
+            <div
+                class="pageContainer"
+                ref="$pageContainer"
+                v-if="pageNumList.length > 0"
+                @copy="copyHandler"
             >
-            </PdfPage>
-            <SelectionPopup
-                class="selectionPopup"
-                :class="{ show: isPopupShow }"
-                ref="$selectionPopup"
-            ></SelectionPopup>
-        </div>
-        <div class="noPdf" v-else>
-            <p>파일을 불러와주세요</p>
+                <PdfPage
+                    v-for="num in pageNumList"
+                    :key="pdfStore.fileName + num"
+                    :page-index="num"
+                    viewport-id="pdfView"
+                >
+                </PdfPage>
+                <SelectionPopup
+                    class="selectionPopup"
+                    :class="{ show: isPopupShow }"
+                    ref="$selectionPopup"
+                ></SelectionPopup>
+            </div>
+            <div class="noPdf" v-else>
+                <p>파일을 불러와주세요</p>
+            </div>
         </div>
     </div>
 </template>
@@ -160,8 +162,7 @@ function zoomOutHandler() {
 #pdfView {
     width: inherit;
     height: inherit;
-    overflow: scroll;
-    padding-bottom: 10rem;
+    overflow: hidden;
     .selectionPopup {
         position: absolute;
         left: 0;
@@ -174,20 +175,25 @@ function zoomOutHandler() {
         }
     }
     .header {
+        height: 2rem;
         top: 0;
         z-index: 10;
         position: sticky;
         background-color: $surface-color;
     }
-
+    .pageView {
+        width: 100%;
+        height: calc(100% - 2rem);
+        overflow: scroll;
+    }
     .pageContainer {
         margin: 0 auto;
         position: relative;
-        width: fit-content;
         height: fit-content;
         display: flex;
         flex-direction: column;
         z-index: 1;
+        padding-bottom: 10rem;
     }
     .noPdf {
         position: relative;
