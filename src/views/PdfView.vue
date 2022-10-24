@@ -1,17 +1,15 @@
 <template>
     <div id="pdfView" ref="$pdfView">
-        <div class="header" v-show="pageNumList.length > 0">
+        <div class="noPdf" v-if="pageNumList.length <= 0">
+            <p>파일을 불러와주세요</p>
+        </div>
+        <div class="header" v-else>
             <button @click="zoomOutHandler">-</button>
             <span>{{ scalePercent }}%</span>
             <button @click="zoomInHandler">+</button>
         </div>
-        <div class="pageView">
-            <div
-                class="pageContainer"
-                ref="$pageContainer"
-                v-if="pageNumList.length > 0"
-                @copy="copyHandler"
-            >
+        <div class="pageView" ref="$pageView">
+            <div class="pageContainer" ref="$pageContainer" @copy="copyHandler">
                 <PdfPage
                     v-for="num in pageNumList"
                     :key="pdfStore.fileName + num"
@@ -24,9 +22,6 @@
                     :class="{ show: isPopupShow }"
                     ref="$selectionPopup"
                 ></SelectionPopup>
-            </div>
-            <div class="noPdf" v-else>
-                <p>파일을 불러와주세요</p>
             </div>
         </div>
     </div>
@@ -51,6 +46,7 @@ const pdfStore = usePdfStore();
 const selectionStore = useSelectionStore();
 const $selectionPopup = ref();
 const $pdfView = ref();
+const $pageView = ref();
 const $pageContainer = ref();
 const isPopupShow = ref<boolean>(false);
 const pageNumList = ref<number[]>([]);
@@ -60,7 +56,7 @@ const scalePercent = computed(() => {
 onMounted(() => {
     $pdfView.value.addEventListener('mousedown', selectionStartHandler);
     document.addEventListener('selectionchange', selectionChangeHandler);
-    document.addEventListener('mouseup', selectionEndHandler);
+    $pdfView.value.addEventListener('mouseup', selectionEndHandler);
 });
 
 pdfStore.$subscribe((_, { numPages }) => {
@@ -88,11 +84,13 @@ function selectionEndHandler(evt: MouseEvent) {
     }
 
     const { clientX, clientY } = evt;
-    const { scrollLeft, scrollTop } = $pdfView.value;
+    const { scrollLeft, scrollTop } = $pageView.value;
+
     const mousePos: IPos = {
         x: clientX + scrollLeft,
         y: clientY + scrollTop,
     };
+
     setPopupPosition(mousePos);
     isPopupShow.value = true;
 
@@ -158,6 +156,7 @@ function zoomOutHandler() {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
+@import '@/assets/scss/constants/PDF_VIEW';
 
 #pdfView {
     width: inherit;
@@ -165,8 +164,6 @@ function zoomOutHandler() {
     overflow: hidden;
     .selectionPopup {
         position: absolute;
-        left: 0;
-        top: 0;
         opacity: 0;
         z-index: -1;
         &.show {
@@ -174,38 +171,28 @@ function zoomOutHandler() {
             z-index: 200;
         }
     }
+    .noPdf {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        p {
+            font-size: $NO_PDF_FONTSIZE;
+        }
+    }
     .header {
-        height: 2rem;
-        top: 0;
-        z-index: 10;
+        height: $HEADER_HEIGHT;
         position: sticky;
+        top: 0;
         background-color: $surface-color;
     }
     .pageView {
-        width: 100%;
-        height: calc(100% - 2rem);
+        height: $PAGE_CONTAINER_HEIGHT;
         overflow: scroll;
-    }
-    .pageContainer {
-        margin: 0 auto;
-        position: relative;
-        height: fit-content;
-        display: flex;
-        flex-direction: column;
-        z-index: 1;
-        padding-bottom: 10rem;
-    }
-    .noPdf {
-        position: relative;
-        height: 500px;
-        p {
-            position: absolute;
-            width: 200px;
-            top: 50%;
-            margin-top: -100px;
-            left: 50%;
-            margin-left: -100px;
-            user-select: none;
+        .pageContainer {
+            position: relative;
+            margin: 0 auto;
+            padding: $PAGE_CONTAINER_PADDING;
         }
     }
 }
