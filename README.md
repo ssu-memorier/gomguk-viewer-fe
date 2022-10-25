@@ -4,6 +4,9 @@
 
 **PDF Viewer, 번역기, 메모장으로 구성된 웹앱을 제공합니다** 
 
+## 개발자
+@dev2820
+
 ## 사용 스택
 - Vue3 (with Composition API)
 - Typescript
