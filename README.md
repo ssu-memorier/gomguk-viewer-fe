@@ -1,37 +1,16 @@
 # gomguk-viewer-fe
 
-곰국 뷰어 웹 프론트엔드
+곰국 뷰어 웹 프론트엔드 레포입니다.
 
-## Project setup
+**PDF Viewer, 번역기, 메모장으로 구성된 웹앱을 제공합니다** 
 
-```
-npm install
-```
+## 사용 스택
+- Vue3 (with Composition API)
+- Typescript
+- Pinia
+- pdfjs-dist
+- SCSS
 
-### Compiles and hot-reloads for development
+## 테스트 서버
 
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Run your unit tests
-
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+http://gomguk-fe-development.s3-website.ap-northeast-2.amazonaws.com/
