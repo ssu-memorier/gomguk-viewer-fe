@@ -7,17 +7,15 @@
                     : TRANSLATOR.VIEW.SHOW_ORIGIN
             }}
         </button>
-        <div class="translatorTextarea">
-            <div class="translated" disabled>
-                {{
-                    isShowOriginText
-                        ? translatorStore.originalText
-                        : translatorStore.translatedText
-                }}
-            </div>
+        <div class="translated">
+            {{
+                isShowOriginText
+                    ? translatorStore.originalText
+                    : translatorStore.translatedText
+            }}
         </div>
         <hr v-show="otherMeansExist" />
-        <div class="translatorOtherMeans" v-show="otherMeansExist">
+        <div v-show="otherMeansExist">
             <other-means
                 v-for="(kind, idx) in allKinds"
                 :key="kind"
@@ -64,29 +62,24 @@ div.translator {
         width: 100%;
     }
 }
-div.translatorTextarea {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    textarea.origin,
-    div.translated {
-        color: $TRANSLATOR-COLOR;
-        font-size: $TRANSLATOR-FONT-SIZE;
-        border: none;
-        padding: $TRANSLATOR-PADDING;
-        box-sizing: border-box;
-        text-align: left;
-        margin: 0;
-        flex-grow: 1;
-    }
-    textarea.origin {
-        resize: none;
-    }
-    textarea:focus {
-        outline: none;
-    }
-    div.translated {
-        overflow: scroll;
-    }
+
+div.translated {
+    color: $TRANSLATOR-COLOR;
+    font-size: $TRANSLATOR-FONT-SIZE;
+    border: none;
+    padding: $TRANSLATOR-PADDING;
+    box-sizing: border-box;
+    text-align: left;
+    margin: 0;
+    flex-grow: 1;
+}
+textarea.origin {
+    resize: none;
+}
+textarea:focus {
+    outline: none;
+}
+div.translated {
+    overflow: scroll;
 }
 </style>
