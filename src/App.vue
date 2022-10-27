@@ -28,7 +28,7 @@ function loadPdfHandler(pdf: File) {
 <style lang="scss">
 @import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
-@import '@/assets/scss/translator';
+@import '@/assets/scss/constants/TRANSLATOR';
 
 * {
     box-sizing: border-box;
@@ -87,8 +87,8 @@ main {
         }
         .translatorView {
             flex-shrink: 0;
-            width: $translator-col-mode-width;
-            height: $translator-col-mode-height;
+            width: $TRANSLATOR-COL-MODE-WIDTH;
+            height: $TRANSLATOR-COL-MODE-HEIGHT;
         }
     }
 }
@@ -98,8 +98,8 @@ main {
         section {
             flex-direction: row;
             .translatorView {
-                width: $translator-row-mode-width;
-                height: $translator-row-mode-height;
+                width: $TRANSLATOR-ROW-MODE-WIDTH;
+                height: $TRANSLATOR-ROW-MODE-HEIGHT;
             }
         }
     }
