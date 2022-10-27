@@ -37,7 +37,7 @@
  */
 import { ref } from 'vue';
 import LANGUAGES from '@/constants/TRANSLATOR/LANGUAGES';
-import LanguageTranslator from '@/components/LanguageTranslator.vue';
+import LanguageTranslator from '@/components/translator/LanguageTranslator.vue';
 import { useTranslatorStore } from '@/store/translator';
 import { LanguageType } from '@/types/LanguageType';
 
@@ -56,14 +56,14 @@ function targetLanguageHandler(evt: Event) {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/translator';
+@import '@/assets/scss/constants/TRANSLATOR';
 div.translatorView {
     background-color: #ccc;
     display: flex;
     flex-direction: column;
     div.translatorHeader {
         flex-shrink: 0;
-        padding: $translator-header-padding;
+        padding: $TRANSLATOR-HEADER-PADDING;
         button {
             cursor: pointer;
         }
