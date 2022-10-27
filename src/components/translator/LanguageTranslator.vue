@@ -33,7 +33,7 @@
 import { ref, computed } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
 import TRANSLATOR from '@/constants/TRANSLATOR';
-import OtherMeans from '@/components/OtherMeans.vue';
+import OtherMeans from '@/components/translator/OtherMeans.vue';
 const translatorStore = useTranslatorStore();
 const isShowOriginText = ref<boolean>(false);
 const otherMeansExist = computed(() => !!translatorStore.allTranslations);
