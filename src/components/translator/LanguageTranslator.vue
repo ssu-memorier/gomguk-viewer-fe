@@ -1,12 +1,12 @@
 <template>
-    <button @click="toggleShowOriginText">
-        {{
-            isShowOriginText
-                ? TRANSLATOR.VIEW.SHOW_TRANSLATED
-                : TRANSLATOR.VIEW.SHOW_ORIGIN
-        }}
-    </button>
     <div class="translator">
+        <button class="toggle" @click="toggleShowOriginText">
+            {{
+                isShowOriginText
+                    ? TRANSLATOR.VIEW.SHOW_TRANSLATED
+                    : TRANSLATOR.VIEW.SHOW_ORIGIN
+            }}
+        </button>
         <div class="translatorTextarea">
             <div class="translated" disabled>
                 {{
@@ -56,9 +56,13 @@ function toggleShowOriginText() {
 <style lang="scss" scoped>
 @import '@/assets/scss/constants/TRANSLATOR';
 div.translator {
+    position: relative;
     background-color: $TRANSLATOR-BG-COLOR;
     overflow: auto;
     height: 100%;
+    .toggle {
+        width: 100%;
+    }
 }
 div.translatorTextarea {
     width: 100%;
