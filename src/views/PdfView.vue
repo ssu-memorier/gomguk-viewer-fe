@@ -141,9 +141,16 @@ function getPopupPosMax(
     const pageContainerRect = $pageContainer.getBoundingClientRect();
     const popupRect = $selectionPopup.getBoundingClientRect();
 
+    const scrollLeft = -pageContainerRect.x;
+    const scrollTop = -pageContainerRect.y;
+    const pageWidth = pageContainerRect.width;
+    const pageHeight = pageContainerRect.height;
+    const popupWidth = popupRect.width;
+    const popupHeight = popupRect.height;
+
     return {
-        x: pageContainerRect.width - popupRect.width,
-        y: pageContainerRect.height - popupRect.height,
+        x: scrollLeft + pageWidth - popupWidth,
+        y: scrollTop + pageHeight - popupHeight,
     };
 }
 function zoomInHandler() {
