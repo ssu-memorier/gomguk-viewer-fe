@@ -10,7 +10,7 @@ permissions:
 jobs:
     build:
         runs-on: ubuntu-latest
-        container: pandoc/latex
+        # container: pandoc/latex
 
         steps:
             - uses: actions/checkout@v3
