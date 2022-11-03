@@ -16,6 +16,8 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16.14.2
+            - name: Install mustache (to update the date in build.sh)
+              run: apk add ruby && gem install mustache
 
             - name: Cache node modules
               uses: actions/cache@v1
@@ -48,8 +50,6 @@ jobs:
                     --region ap-northeast-2 \
                     dist s3://gomguk-fe-development
 
-            - name: Install mustache (to update the date in build.sh)
-              run: apk add ruby && gem install mustache
             - name: Pushes to another repository
               id: push_directory
               uses: cpina/github-action-push-to-another-repository@main
