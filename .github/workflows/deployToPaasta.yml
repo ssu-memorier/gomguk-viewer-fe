@@ -1,4 +1,4 @@
-name: Development CI
+name: Development CI to Paasta
 
 on:
     push:
@@ -50,6 +50,3 @@ jobs:
                       commit-message: build by ORIGIN_COMMIT 
                       target-branch: development
                       target-directory: dist
-
-            - name: Test get variable exported by push-to-another-repository
-              run: echo $DESTINATION_CLONED_DIRECTORY
