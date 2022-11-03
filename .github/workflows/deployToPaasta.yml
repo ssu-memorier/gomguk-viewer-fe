@@ -1,0 +1,55 @@
+name: Development CI
+
+on:
+    push:
+        branches: ['development']
+
+permissions:
+    contents: read
+
+jobs:
+    build:
+        runs-on: ubuntu-20.04
+
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16.14.2
+
+            - name: Cache node modules
+              uses: actions/cache@v1
+              with:
+                  path: node_modules
+                  key: ${{ runner.OS }}
+
+            - name: Make ENV file
+              run: |
+                  echo "VUE_APP_TRANSLATE_DOMAIN=$TRANSLATE_DOMAIN" >> .env.local
+              env:
+                  TRANSLATE_DOMAIN: ${{ secrets.TRANSLATE_DOMAIN }}
+
+            - name: Install Dependencies
+              run: npm install
+
+            - name: Run Unit Test
+              run: npm run test:unit
+
+            - name: Build
+              run: npm run build
+
+            - name: Pushes to another repository
+                id: push_directory
+                uses: cpina/github-action-push-to-another-repository@main
+                env:
+                    SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+                with:
+                    source-directory: dist/
+                    destination-github-username: "ssu-memorier"
+                    destination-repository-name: "gomguk-web-server"
+                    commit-message: build by ORIGIN_COMMIT 
+                    target-branch: development
+                    target-directory: dist
+
+            - name: Test get variable exported by push-to-another-repository
+                run: echo $DESTINATION_CLONED_DIRECTORY
