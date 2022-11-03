@@ -10,15 +10,12 @@ permissions:
 jobs:
     build:
         runs-on: ubuntu-latest
-        # container: pandoc/latex
 
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
                   node-version: 16.14.2
-            - name: Install mustache (to update the date in build.sh)
-              run: apk add ruby && gem install mustache
 
             - name: Cache node modules
               uses: actions/cache@v1
