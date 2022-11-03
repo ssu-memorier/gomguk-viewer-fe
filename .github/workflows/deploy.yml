@@ -47,3 +47,21 @@ jobs:
                     --recursive \
                     --region ap-northeast-2 \
                     dist s3://gomguk-fe-development
+                    
+           - name: Install mustache (to update the date in build.sh)
+              run: apk add ruby && gem install mustache
+            - name: Pushes to another repository
+              id: push_directory
+              uses: cpina/github-action-push-to-another-repository@main
+              env:
+                SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+              with:
+                source-directory: dist/
+                destination-github-username: "ssu-memorier"
+                destination-repository-name: "testto"
+                user-email: ydw5210@gmail.com
+                commit-message: build by ORIGIN_COMMIT 
+                target-branch: main
+            - name: Test get variable exported by push-to-another-repository
+              run: echo $DESTINATION_CLONED_DIRECTORY
+
