@@ -39,14 +39,14 @@ jobs:
               run: npm run build
 
             - name: Pushes to another repository
-                  id: push_directory
-                  uses: cpina/github-action-push-to-another-repository@main
-                  env:
-                      SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-                  with:
-                      source-directory: dist/
-                      destination-github-username: "ssu-memorier"
-                      destination-repository-name: "gomguk-web-server"
-                      commit-message: build by ORIGIN_COMMIT 
-                      target-branch: development
-                      target-directory: dist
+              id: push_directory
+              uses: cpina/github-action-push-to-another-repository@main
+              env:
+                  SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+              with:
+                  source-directory: dist/
+                  destination-github-username: 'ssu-memorier'
+                  destination-repository-name: 'gomguk-web-server'
+                  commit-message: build by ORIGIN_COMMIT
+                  target-branch: development
+                  target-directory: dist
