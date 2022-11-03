@@ -47,7 +47,7 @@ jobs:
                     --recursive \
                     --region ap-northeast-2 \
                     dist s3://gomguk-fe-development
-
+                    
            - name: Install mustache (to update the date in build.sh)
               run: apk add ruby && gem install mustache
             - name: Pushes to another repository
@@ -59,6 +59,7 @@ jobs:
                 source-directory: dist/
                 destination-github-username: "ssu-memorier"
                 destination-repository-name: "testto"
+                user-email: ydw5210@gmail.com
                 commit-message: build by ORIGIN_COMMIT 
                 target-branch: main
             - name: Test get variable exported by push-to-another-repository
