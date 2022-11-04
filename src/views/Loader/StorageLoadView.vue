@@ -34,6 +34,17 @@ onMounted(async () => {
     fileList.value = await getFileList();
 });
 
+/**
+ * TODO: id 제거하기
+ *
+ * 현재는 로그인 기능이 구현되어 있지 않아 유저를 식별할 수 없기 때문에
+ * test_id 라는 값을 입력하고 있습니다.
+ *
+ * 추후 로그인 기능이 구현되면서 id 입력을 제거하도록하고
+ * 세션을 통해 유저를 식별해 유저에 맞는 file list를 불러오도록 수정할
+ * 예정입니다.
+ *
+ */
 async function getFileList() {
     const response = await requestFileList({ id: 'test_id' });
     if (!response.isSuccess) {
