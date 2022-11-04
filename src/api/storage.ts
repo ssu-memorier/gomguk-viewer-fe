@@ -27,11 +27,11 @@ export async function requestFile(
     params: IRequestFileParams
 ): Promise<Response> {
     try {
-        const { id, key } = params;
-        const response = await model.get(`${STORAGE.URL.FILE}/${key}`, {
+        const { dir, key } = params;
+        const response = await model.get(`${STORAGE.URL.FILE}/${dir}/${key}`, {
             responseType: 'blob',
         });
-        const file = new File([response.data], 'temp.pdf', {
+        const file = new File([response.data], key, {
             type: 'application/pdf',
         });
 
@@ -45,11 +45,11 @@ export async function requestFileUpload(
     params: IRequestFileUploadParams
 ): Promise<Response> {
     try {
-        const { id, file, key } = params;
+        const { dir, file, key } = params;
         const formData = new FormData();
 
         formData.append('data', file);
-        await model.post(`${STORAGE.URL.FILE}/${id}/${key}`, formData, {
+        await model.post(`${STORAGE.URL.FILE}/${dir}/${key}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -65,8 +65,8 @@ export async function requestDeleteFile(
     params: IRequestFileDeleteParams
 ): Promise<Response> {
     try {
-        const { id, key } = params;
-        const response = await model.delete(`${STORAGE.URL.FILE}/${id}/${key}`);
+        const { dir, key } = params;
+        await model.delete(`${STORAGE.URL.FILE}/${dir}/${key}`);
 
         return createResponse(true);
     } catch (err) {

@@ -3,10 +3,10 @@
         <li
             class="item"
             v-for="file in fileList"
-            :key="file.Key"
+            :key="file.key"
             @dblclick="loadFile(file)"
         >
-            {{ file.Key }}
+            {{ file.key }}
             <button @click.stop="deleteFile(file)">x</button>
         </li>
     </ul>
@@ -22,28 +22,32 @@ import { usePdfStore } from '@/store/pdf';
 import { ref, onMounted } from 'vue';
 
 interface IFileInfo {
-    ETag: string;
-    Key: string;
-    LastModified: string;
-    Size: number;
-    StorageClass: string;
+    dir: string;
+    key: string;
+    lastModified: string;
+    sze: number;
 }
 const pdfStore = usePdfStore();
 const fileList = ref<IFileInfo[]>([]);
 const $files = ref();
 onMounted(async () => {
+    fileList.value = await getFileList();
+});
+
+async function getFileList() {
     const response = await requestFileList({ id: 'test_id' });
     if (!response.isSuccess) {
         console.error(`request failed`);
         return;
     }
 
-    fileList.value = response.data;
-});
-
+    return response.data;
+}
 async function loadFile(file: IFileInfo) {
-    const response = await requestFile({ id: 'test_id', key: file.Key });
-
+    const response = await requestFile({
+        dir: file.dir,
+        key: file.key,
+    });
     if (!response.isSuccess) return;
 
     const fileLoadEvent = new Event('loadfile', { bubbles: true });
@@ -53,7 +57,9 @@ async function loadFile(file: IFileInfo) {
 }
 
 async function deleteFile(file: IFileInfo) {
-    const response = await requestDeleteFile({ id: 'test_id', key: file.Key });
+    const response = await requestDeleteFile({ dir: file.dir, key: file.key });
+
+    fileList.value = await getFileList();
 }
 </script>
 <style lang="scss" scoped>

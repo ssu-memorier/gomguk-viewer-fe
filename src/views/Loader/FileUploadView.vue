@@ -16,7 +16,7 @@ const $loadButton = ref();
 const pdfStore = usePdfStore();
 async function loadPdfHandler(pdf: File) {
     const response = await requestFileUpload({
-        id: 'test_id',
+        dir: 'test_id',
         key: pdf.name,
         file: pdf,
     });
