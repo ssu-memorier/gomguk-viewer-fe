@@ -5,6 +5,6 @@ const storageModel = axios.create({
     baseURL: STORAGE.DOMAIN,
 });
 
-export default function getTranslateModel() {
+export default function getStorageModel() {
     return storageModel;
 }
