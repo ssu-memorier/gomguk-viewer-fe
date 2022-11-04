@@ -18,6 +18,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { requestFileList, requestFile, requestDeleteFile } from '@/api/storage';
+import MESSAGE from '@/constants/MESSAGE';
 import { usePdfStore } from '@/store/pdf';
 import { ref, onMounted } from 'vue';
 
@@ -48,7 +49,8 @@ onMounted(async () => {
 async function getFileList() {
     const response = await requestFileList({ id: 'test_id' });
     if (!response.isSuccess) {
-        console.error(`request failed`);
+        alert(MESSAGE.STORAGE.GET_LIST_FAILED);
+
         return;
     }
 
@@ -59,7 +61,11 @@ async function loadFile(file: IFileInfo) {
         dir: file.dir,
         key: file.key,
     });
-    if (!response.isSuccess) return;
+    if (!response.isSuccess) {
+        alert(MESSAGE.STORAGE.LOAD_FAILED);
+
+        return;
+    }
 
     const fileLoadEvent = new Event('loadfile', { bubbles: true });
     $files.value.dispatchEvent(fileLoadEvent);
@@ -69,7 +75,11 @@ async function loadFile(file: IFileInfo) {
 
 async function deleteFile(file: IFileInfo) {
     const response = await requestDeleteFile({ dir: file.dir, key: file.key });
+    if (!response.isSuccess) {
+        alert(MESSAGE.STORAGE.DELETE_FAILED);
 
+        return;
+    }
     fileList.value = await getFileList();
 }
 </script>
