@@ -3,6 +3,7 @@ import createResponse from '@/utils/createResponse';
 import getStorageModel from '@/utils/getStorageModel';
 import { IRequestFileListParams } from '@/Interface/api/IRequestFileListParams';
 import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
+import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
 import { IRequestFileParams } from '@/Interface/api/IRequestFileParams';
 import { Response } from '@/Interface/Response';
 
@@ -53,6 +54,19 @@ export async function requestFileUpload(
                 'Content-Type': 'multipart/form-data',
             },
         });
+
+        return createResponse(true);
+    } catch (err) {
+        return createResponse(false);
+    }
+}
+
+export async function requestDeleteFile(
+    params: IRequestFileDeleteParams
+): Promise<Response> {
+    try {
+        const { id, key } = params;
+        const response = await model.delete(`${STORAGE.URL.FILE}/${id}/${key}`);
 
         return createResponse(true);
     } catch (err) {

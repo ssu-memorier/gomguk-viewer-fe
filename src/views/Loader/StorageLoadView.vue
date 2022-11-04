@@ -7,6 +7,7 @@
             @dblclick="loadFile(file)"
         >
             {{ file.Key }}
+            <button @click.stop="deleteFile(file)">x</button>
         </li>
     </ul>
 </template>
@@ -16,7 +17,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { requestFileList, requestFile } from '@/api/storage';
+import { requestFileList, requestFile, requestDeleteFile } from '@/api/storage';
 import { usePdfStore } from '@/store/pdf';
 import { ref, onMounted } from 'vue';
 
@@ -49,6 +50,10 @@ async function loadFile(file: IFileInfo) {
     $files.value.dispatchEvent(fileLoadEvent);
 
     pdfStore.setPdfFile(response.data);
+}
+
+async function deleteFile(file: IFileInfo) {
+    const response = await requestDeleteFile({ id: 'test_id', key: file.Key });
 }
 </script>
 <style lang="scss" scoped>
