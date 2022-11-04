@@ -1,5 +1,5 @@
 <template>
-    <h2>파일 선택</h2>
+    <h2>{{ LOADER.VIEW.TITLE }}</h2>
     <menu>
         <button
             class="item"
