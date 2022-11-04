@@ -12,7 +12,7 @@ export async function requestFileList(
 ): Promise<Response> {
     try {
         const { id } = params;
-        const response = await model.get(STORAGE.URL.LIST + id);
+        const response = await model.get(`${STORAGE.URL.LIST}/${id}`);
         const result = response.data.contents;
 
         return createResponse(true, result);
@@ -26,10 +26,14 @@ export async function requestFile(
 ): Promise<Response> {
     try {
         const { id, key } = params;
-        const response = await model.get(`${STORAGE.URL.FILE}/${id}/${key}`);
-        const result = response.data.contents;
+        const response = await model.get(`${STORAGE.URL.FILE}/${key}`, {
+            responseType: 'blob',
+        });
+        const file = new File([response.data], 'temp.pdf', {
+            type: 'application/pdf',
+        });
 
-        return createResponse(true, result);
+        return createResponse(true, file);
     } catch (err) {
         return createResponse(false);
     }
