@@ -2,7 +2,7 @@
     <header class="card">
         <div class="center">
             <b class="appName">곰국 뷰어</b>
-            <pdf-load-button @load="loadPdfHandler"></pdf-load-button>
+            <button @click="modalStore.showModal">파일 불러오기</button>
         </div>
     </header>
     <main>
@@ -11,18 +11,19 @@
             <translator-view class="translatorView"></translator-view>
         </section>
     </main>
+    <center-modal :show="modalStore.isShow">
+        <file-loaders-view></file-loaders-view>
+    </center-modal>
 </template>
 
 <script setup lang="ts">
 import PdfView from '@/views/PdfView.vue';
-import { usePdfStore } from '@/store/pdf';
-import PdfLoadButton from '@/components/button/PdfLoadButton.vue';
 import TranslatorView from '@/views/TranslatorView.vue';
+import CenterModal from '@/components/CenterModal.vue';
+import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
+import { useModalStore } from '@/store/modal';
 
-const pdfStore = usePdfStore();
-function loadPdfHandler(pdf: File) {
-    pdfStore.setPdfFile(pdf);
-}
+const modalStore = useModalStore();
 </script>
 
 <style lang="scss">
