@@ -20,9 +20,9 @@ export async function requestTranslatedText(
             target: params.target,
         };
         const response = await model.post(TRANSLATOR.TRANSLATE_URL, body);
-        const translatedText = response.data.body.text.translated;
+        const translateResult = response.data.body;
 
-        return createResponse(true, translatedText);
+        return createResponse(true, translateResult);
     } catch (err) {
         return createResponse(false);
     }

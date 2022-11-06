@@ -10,6 +10,7 @@ export const useTranslatorStore = defineStore('translator', () => {
     const target = ref<LanguageType>('ko');
     const originalText = ref<string>('');
     const translatedText = ref<string>('');
+    const allTranslations = ref<object | null>(null);
     const debouncedFetchTranslatedText = createDebounce(
         fetchTranslatedText,
         TRANSLATOR.LATENCY
@@ -46,7 +47,8 @@ export const useTranslatorStore = defineStore('translator', () => {
             translatedText.value = '';
             return;
         }
-        translatedText.value = response.data;
+        translatedText.value = response.data.text.translated;
+        allTranslations.value = response.data.allTranslations || {};
     }
 
     return {
@@ -54,6 +56,7 @@ export const useTranslatorStore = defineStore('translator', () => {
         target,
         originalText,
         translatedText,
+        allTranslations,
         setOriginalText,
         setSourceLanguage,
         setTargetLanguage,

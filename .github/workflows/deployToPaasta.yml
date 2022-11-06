@@ -1,8 +1,8 @@
-name: Development CI
+name: Development CI to Paasta
 
 on:
     push:
-        branches: ['development']
+        branches: ['main']
 
 permissions:
     contents: read
@@ -40,12 +40,15 @@ jobs:
             - name: Build
               run: npm run build
 
-            - name: Deploy
+            - name: Pushes to another repository
+              id: push_directory
+              uses: cpina/github-action-push-to-another-repository@main
               env:
-                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              run: |
-                  aws s3 cp \
-                    --recursive \
-                    --region ap-northeast-2 \
-                    dist ${{ secrets.AWS_BUCKET_NAME }}
+                  SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+              with:
+                  source-directory: dist/
+                  destination-github-username: 'ssu-memorier'
+                  destination-repository-name: 'gomguk-web-server'
+                  commit-message: build by ORIGIN_COMMIT
+                  target-branch: development
+                  target-directory: dist

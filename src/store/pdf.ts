@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { ref, reactive, watch } from 'vue';
 import getBase64 from '@/utils/getBase64';
 import Page from '@/classes/Page';
+import PDF from '@/constants/PDF';
 
 export const usePdfStore = defineStore('pdf', () => {
     const pdfFile = ref<File>();
@@ -55,10 +56,20 @@ export const usePdfStore = defineStore('pdf', () => {
         return doc;
     }
     function increaseScale() {
-        viewportOption.scale = Math.round(viewportOption.scale * 10 + 1) / 10;
+        const newScale = Math.round(viewportOption.scale * 10 + 1) / 10;
+        if (newScale > PDF.SCALE_MAX) {
+            return;
+        }
+
+        viewportOption.scale = newScale;
     }
     function decreaseScale() {
-        viewportOption.scale = Math.round(viewportOption.scale * 10 - 1) / 10;
+        const newScale = Math.round(viewportOption.scale * 10 - 1) / 10;
+        if (newScale < PDF.SCALE_MIN) {
+            return;
+        }
+
+        viewportOption.scale = newScale;
     }
     return {
         setPdfFile,

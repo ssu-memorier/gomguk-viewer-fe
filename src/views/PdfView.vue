@@ -1,7 +1,7 @@
 <template>
     <div id="pdfView" ref="$pdfView">
         <div class="noPdf" v-if="pageNumList.length <= 0">
-            <p>파일을 불러와주세요</p>
+            <p>파일을 불러와주세요😀</p>
         </div>
         <div class="header" v-else>
             <button @click="zoomOutHandler">-</button>
@@ -141,9 +141,16 @@ function getPopupPosMax(
     const pageContainerRect = $pageContainer.getBoundingClientRect();
     const popupRect = $selectionPopup.getBoundingClientRect();
 
+    const scrollLeft = -pageContainerRect.x;
+    const scrollTop = -pageContainerRect.y;
+    const pageWidth = pageContainerRect.width;
+    const pageHeight = pageContainerRect.height;
+    const popupWidth = popupRect.width;
+    const popupHeight = popupRect.height;
+
     return {
-        x: pageContainerRect.width - popupRect.width,
-        y: pageContainerRect.height - popupRect.height,
+        x: scrollLeft + pageWidth - popupWidth,
+        y: scrollTop + pageHeight - popupHeight,
     };
 }
 function zoomInHandler() {
