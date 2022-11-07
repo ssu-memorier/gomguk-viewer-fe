@@ -5,9 +5,12 @@
 </template>
 <script setup lang="ts">
 import { useEditorStore } from '@/store/editor';
+import { onMounted } from 'vue';
 
-const editorStore = useEditorStore();
-const editorJs = editorStore.renderEditor('editorjs');
+onMounted(() => {
+    const editorStore = useEditorStore();
+    const editorJs = editorStore.renderEditor('editorjs');
+});
 </script>
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
@@ -15,11 +18,11 @@ const editorJs = editorStore.renderEditor('editorjs');
     width: 100%;
     height: 100%;
     background-color: $SURFACE-COLOR;
-    padding: 1rem 1rem 1rem 5rem;
     text-align: left;
 
     #editorjs {
         max-width: calc(650px + 8rem);
+        padding: 1rem 4rem 1rem 4rem;
         width: 100%;
         height: 100%;
         overflow: auto;
