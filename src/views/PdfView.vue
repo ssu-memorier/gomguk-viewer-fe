@@ -166,7 +166,7 @@ function zoomOutHandler() {
 @import '@/assets/scss/constants/PDF_VIEW';
 
 #pdfView {
-    width: inherit;
+    width: 100%;
     height: inherit;
     overflow: hidden;
     .selectionPopup {
@@ -191,7 +191,7 @@ function zoomOutHandler() {
         height: $HEADER_HEIGHT;
         position: sticky;
         top: 0;
-        background-color: $surface-color;
+        background-color: $SURFACE-COLOR;
     }
     .pageView {
         height: $PAGE_CONTAINER_HEIGHT;
