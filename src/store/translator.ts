@@ -37,7 +37,7 @@ export const useTranslatorStore = defineStore('translator', () => {
     }
     async function fetchTranslatedText(originText: string) {
         const option = {
-            text: originText,
+            text: originText.trim(),
             source: source.value,
             target: target.value,
         };
