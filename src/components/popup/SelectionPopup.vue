@@ -65,11 +65,13 @@ function highlightHandler() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '@/assets/scss/constants/POPUP';
 div.selectionPopup {
     background-color: #fff;
-    width: fit-content;
+    width: $POPUP-WIDTH;
     ul {
+        width: 100%;
         padding: 0;
         display: inline-flex;
         flex-direction: row;
@@ -77,8 +79,9 @@ div.selectionPopup {
     }
     li.menu {
         list-style: none;
-        padding: 0.5rem 1rem;
+        padding: $POPUP-ITEM-PADDING;
         cursor: pointer;
+        flex-grow: 1;
     }
 }
 </style>
