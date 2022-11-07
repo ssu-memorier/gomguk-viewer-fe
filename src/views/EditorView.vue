@@ -4,9 +4,10 @@
     </div>
 </template>
 <script setup lang="ts">
-import editor from '@/store/editor';
+import { useEditorStore } from '@/store/editor';
 
-const editorJs = editor.createEditor('editorjs');
+const editorStore = useEditorStore();
+const editorJs = editorStore.renderEditor('editorjs');
 </script>
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
