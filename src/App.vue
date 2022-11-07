@@ -10,6 +10,9 @@
             <pdf-view class="pdfView"></pdf-view>
             <translator-view class="translatorView"></translator-view>
         </section>
+        <section>
+            <editor-view></editor-view>
+        </section>
     </main>
     <center-modal :show="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
@@ -19,8 +22,9 @@
 <script setup lang="ts">
 import PdfView from '@/views/PdfView.vue';
 import TranslatorView from '@/views/TranslatorView.vue';
-import CenterModal from '@/components/CenterModal.vue';
+import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
+import CenterModal from '@/components/CenterModal.vue';
 import { useModalStore } from '@/store/modal';
 
 const modalStore = useModalStore();
@@ -55,7 +59,7 @@ header {
     position: relative;
     box-sizing: border-box;
     height: $header-height;
-    background-color: $surface-color;
+    background-color: $SURFACE-COLOR;
     padding: 0.5rem 2rem;
     z-index: 200;
     .center {
@@ -78,9 +82,11 @@ main {
     width: 100%;
     margin: 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
     section {
         height: 100%;
-        width: 100%;
+        width: 50%;
         display: flex;
         flex-direction: column;
         .pdfView {
@@ -90,18 +96,6 @@ main {
             flex-shrink: 0;
             width: $TRANSLATOR-COL-MODE-WIDTH;
             height: $TRANSLATOR-COL-MODE-HEIGHT;
-        }
-    }
-}
-
-@include desktop {
-    main {
-        section {
-            flex-direction: row;
-            .translatorView {
-                width: $TRANSLATOR-ROW-MODE-WIDTH;
-                height: $TRANSLATOR-ROW-MODE-HEIGHT;
-            }
         }
     }
 }
