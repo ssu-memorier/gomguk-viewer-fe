@@ -68,7 +68,7 @@ function highlightHandler() {
 <style lang="scss">
 div.selectionPopup {
     background-color: #fff;
-    width: 240px;
+    width: fit-content;
     ul {
         padding: 0;
         display: inline-flex;
