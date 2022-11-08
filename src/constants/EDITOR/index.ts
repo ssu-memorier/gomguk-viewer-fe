@@ -2,6 +2,7 @@ import NestedList from '@editorjs/nested-list';
 import Header from '@editorjs/header';
 import ToggleBlock from 'editorjs-toggle-block';
 import SimpleImage from '@editorjs/simple-image';
+import LaTeX from 'editorjs-simple-latex';
 
 const HEADER_OPS = {
     class: Header,
@@ -26,11 +27,16 @@ const SIMPLE_IMAGE_OPS = {
     class: SimpleImage,
 };
 
+const LATEX_OPS = {
+    class: LaTeX,
+};
+
 const TOOL_CONFIG = {
     header: HEADER_OPS,
     list: NESTED_LIST_OPS,
     toggle: TOGGLE_BLOCK_OPS,
     image: SIMPLE_IMAGE_OPS,
+    latex: LATEX_OPS,
 };
 
 export default {
@@ -38,5 +44,6 @@ export default {
     NESTED_LIST_OPS,
     TOGGLE_BLOCK_OPS,
     SIMPLE_IMAGE_OPS,
+    LATEX_OPS,
     TOOL_CONFIG,
 };

@@ -24,3 +24,8 @@ declare module '@editorjs/simple-image' {
     import SimpleImage from '@editorjs/simple-image';
     export = SimpleImage;
 }
+
+declare module 'editorjs-simple-latex' {
+    import LaTeX from 'editorjs-simple-latex';
+    export = LaTeX;
+}
