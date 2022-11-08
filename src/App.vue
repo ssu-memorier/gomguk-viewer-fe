@@ -2,7 +2,10 @@
     <header class="card">
         <div class="center">
             <b class="appName">곰국 뷰어</b>
-            <button @click="modalStore.showModal">파일 불러오기</button>
+            <menu>
+                <button @click="modalStore.showModal">파일 불러오기</button>
+                <button @click="save">파일 저장</button>
+            </menu>
         </div>
     </header>
     <main>
@@ -26,8 +29,15 @@ import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import { useModalStore } from '@/store/modal';
+import { useEditorStore } from '@/store/editor';
 
 const modalStore = useModalStore();
+const editorStore = useEditorStore();
+
+async function save() {
+    const result = await editorStore.toJSON();
+    console.log(result);
+}
 </script>
 
 <style lang="scss">
