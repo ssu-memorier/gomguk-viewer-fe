@@ -56,23 +56,23 @@ export const useFileStore = defineStore('file', () => {
         return true;
     }
 
-    async function loadFile(file: IFileInfo): Promise<boolean> {
+    async function loadFile(fileInfo: IFileInfo): Promise<boolean> {
         const response = await requestFile({
-            dir: file.dir,
-            key: file.key,
+            dir: fileInfo.dir,
+            key: fileInfo.key,
         });
         if (!response.isSuccess) return false;
 
-        currentFileInfo.value = file;
+        currentFileInfo.value = fileInfo;
         pdfStore.setPdfFile(response.data);
 
         return true;
     }
 
-    async function deleteFile(file: IFileInfo) {
+    async function deleteFile(fileInfo: IFileInfo) {
         const response = await requestDeleteFile({
-            dir: file.dir,
-            key: file.key,
+            dir: fileInfo.dir,
+            key: fileInfo.key,
         });
         return response.isSuccess;
     }
