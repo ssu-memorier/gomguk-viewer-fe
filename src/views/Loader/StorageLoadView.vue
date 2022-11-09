@@ -17,9 +17,10 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { requestFileList, requestFile, requestDeleteFile } from '@/api/storage';
+import { requestFile, requestDeleteFile } from '@/api/storage';
 import MESSAGE from '@/constants/MESSAGE';
 import { usePdfStore } from '@/store/file/pdf';
+import { useFileStore } from '@/store/file';
 import { ref, onMounted } from 'vue';
 
 interface IFileInfo {
@@ -29,33 +30,13 @@ interface IFileInfo {
     sze: number;
 }
 const pdfStore = usePdfStore();
+const fileStore = useFileStore();
 const fileList = ref<IFileInfo[]>([]);
 const $files = ref();
 onMounted(async () => {
-    fileList.value = await getFileList();
+    fileList.value = await fileStore.fetchFileList();
 });
 
-/**
- * TODO: id 제거하기
- *
- * 현재는 로그인 기능이 구현되어 있지 않아 유저를 식별할 수 없기 때문에
- * test_id 라는 값을 입력하고 있습니다.
- *
- * 추후 로그인 기능이 구현되면서 id 입력을 제거하도록하고
- * 세션을 통해 유저를 식별해 유저에 맞는 file list를 불러오도록 수정할
- * 예정입니다.
- *
- */
-async function getFileList() {
-    const response = await requestFileList({ id: 'test_id' });
-    if (!response.isSuccess) {
-        alert(MESSAGE.STORAGE.GET_LIST_FAILED);
-
-        return;
-    }
-
-    return response.data;
-}
 async function loadFile(file: IFileInfo) {
     const response = await requestFile({
         dir: file.dir,
@@ -80,7 +61,7 @@ async function deleteFile(file: IFileInfo) {
 
         return;
     }
-    fileList.value = await getFileList();
+    fileList.value = await fileStore.fetchFileList();
 }
 </script>
 <style lang="scss" scoped>
