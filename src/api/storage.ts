@@ -45,8 +45,10 @@ export async function requestUploadFile(
         const { dir, file, key } = params;
         const formData = new FormData();
 
+        formData.append('dir', dir);
+        formData.append('key', key);
         formData.append('data', file);
-        await model.post(`${STORAGE.URL.FILE}/${dir}/${key}`, formData, {
+        await model.post(STORAGE.URL.FILE, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -69,7 +71,7 @@ export async function requestUpdateFile(
             data,
         });
 
-        await model.put(`${STORAGE.URL.FILE}`, sendData, {
+        await model.put(STORAGE.URL.FILE, sendData, {
             headers: { 'Content-Type': 'application/json' },
         });
 
@@ -84,7 +86,12 @@ export async function requestDeleteFile(
 ): Promise<Response> {
     try {
         const { dir, key } = params;
-        await model.delete(`${STORAGE.URL.FILE}/${dir}/${key}`);
+        const data = {
+            dir,
+            key,
+        };
+
+        await model.delete(STORAGE.URL.FILE, { data });
 
         return createResponse(true);
     } catch (err) {
