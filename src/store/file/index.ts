@@ -6,6 +6,7 @@ import {
     requestFileUpload,
     requestFileList,
     requestDeleteFile,
+    requestFile,
 } from '@/api/storage';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import MESSAGE from '@/constants/MESSAGE';
@@ -43,8 +44,17 @@ export const useFileStore = defineStore('file', () => {
         }
     }
 
-    function fetchFile() {
-        //TODO: 파일 불러오기 로직
+    async function loadFile(file: IFileInfo) {
+        const response = await requestFile({
+            dir: file.dir,
+            key: file.key,
+        });
+        if (!response.isSuccess) {
+            alert(MESSAGE.STORAGE.LOAD_FAILED);
+
+            return;
+        }
+        pdfStore.setPdfFile(response.data);
     }
 
     async function deleteFile(file: IFileInfo) {
@@ -63,5 +73,6 @@ export const useFileStore = defineStore('file', () => {
     return {
         fetchFileList,
         uploadFile,
+        loadFile,
     };
 });
