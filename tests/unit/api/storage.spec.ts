@@ -1,7 +1,8 @@
 import {
-    requestFileUpload,
+    requestUploadFile,
     requestFileList,
     requestDeleteFile,
+    requestUpdateFile,
     requestFile,
 } from '@/api/storage';
 
@@ -9,6 +10,7 @@ import { IRequestFileListParams } from '@/Interface/api/IRequestFileListParams';
 import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
 import { IRequestFileParams } from '@/Interface/api/IRequestFileParams';
 import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
+import { IRequestFileUpdateParams } from '@/Interface/api/IRequestFileUpdateParams';
 import { IFileInfo } from '@/Interface/IFileInfo';
 
 describe('파일 관련 API 테스트', () => {
@@ -42,7 +44,7 @@ describe('파일 관련 API 테스트', () => {
             key: 'test',
             file: file,
         };
-        const response = await requestFileUpload(params);
+        const response = await requestUploadFile(params);
 
         expect(response.isSuccess).toBe(true);
 
@@ -73,11 +75,23 @@ describe('파일 관련 API 테스트', () => {
         expect(response.data).toBeInstanceOf(File);
     });
 
-    test('메모장 업데이트', () => {
+    test('메모장 업데이트', async () => {
         /**
          * TODO:
          * 새 메모장 JSON 정보를 업로드합니다.
          */
+        const params: IRequestFileUpdateParams = {
+            dir: 'test_id',
+            key: 'test',
+            data: {
+                editor: {
+                    content: 'memo content',
+                },
+                highlights: [],
+            },
+        };
+        const response = await requestUpdateFile(params);
+        expect(response.isSuccess).toBe(true);
     });
 
     test('파일 삭제', async () => {
