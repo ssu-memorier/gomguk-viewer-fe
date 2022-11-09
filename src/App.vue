@@ -91,6 +91,7 @@ main {
     height: calc(100% - $header-height);
     width: 100%;
     margin: 0;
+    z-index: 10;
     overflow: hidden;
     display: flex;
     flex-direction: row;
