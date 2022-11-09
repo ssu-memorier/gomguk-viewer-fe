@@ -3,7 +3,7 @@
         <div class="center">
             <b class="appName">{{ HEADER.VIEW.TITLE }}</b>
             <menu>
-                <button @click="modalStore.showModal">
+                <button @click="load">
                     {{ HEADER.VIEW.MENU.LOAD }}
                 </button>
                 <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
@@ -31,15 +31,20 @@ import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import { useModalStore } from '@/store/modal';
-import { useEditorStore } from '@/store/file/editor';
+import { useFileStore } from '@/store/file';
 import HEADER from '@/constants/HEADER';
+import MESSAGE from '@/constants/MESSAGE';
 
 const modalStore = useModalStore();
-const editorStore = useEditorStore();
-
+const fileStore = useFileStore();
+function load() {
+    modalStore.showModal;
+}
 async function save() {
-    const result = await editorStore.toJSON();
-    console.log(result);
+    const isSuccess = await fileStore.updateFile();
+    if (!isSuccess) {
+        alert(MESSAGE.STORAGE.UPDATE_FAILED);
+    }
 }
 </script>
 
