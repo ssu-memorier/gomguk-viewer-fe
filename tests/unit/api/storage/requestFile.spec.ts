@@ -8,11 +8,10 @@ test('파일 불러오기', async () => {
      * 파일은 메모의 정보가 담긴 JSON와 PDF 파일이 zip으로 압축되어 전달됩니다.
      */
     const params: IRequestFileParams = {
-        dir: 'test_id',
+        dir: '',
         key: 'test',
     };
     const response = await requestFile(params);
     expect(response.isSuccess).toBe(true);
-
     expect(response.data).toBeInstanceOf(File);
 });
