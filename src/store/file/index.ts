@@ -72,5 +72,6 @@ export const useFileStore = defineStore('file', () => {
         fetchFileList,
         uploadFile,
         loadFile,
+        deleteFile,
     };
 });
