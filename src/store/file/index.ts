@@ -11,10 +11,9 @@ import { IFileInfo } from '@/Interface/IFileInfo';
 import MESSAGE from '@/constants/MESSAGE';
 import { ref } from 'vue';
 
-const editorStore = useEditorStore();
-const pdfStore = usePdfStore();
-
 export const useFileStore = defineStore('file', () => {
+    const editorStore = useEditorStore();
+    const pdfStore = usePdfStore();
     const fileList = ref<IFileInfo[]>([]);
 
     async function fetchFileList() {
@@ -38,8 +37,9 @@ export const useFileStore = defineStore('file', () => {
         if (!response.isSuccess) {
             alert(MESSAGE.STORAGE.UPLOAD_FAILED);
 
-            return;
+            return false;
         }
+        return true;
     }
 
     async function loadFile(file: IFileInfo) {

@@ -8,29 +8,29 @@ export default {
 </script>
 <script setup lang="ts">
 import PdfLoadButton from '@/components/button/PdfLoadButton.vue';
-import { requestFileUpload } from '@/api/storage';
+import { useFileStore } from '@/store/file';
 import { usePdfStore } from '@/store/file/pdf';
 import { ref } from 'vue';
-import MESSAGE from '@/constants/MESSAGE';
 
 const $loadButton = ref();
+const fileStore = useFileStore();
 const pdfStore = usePdfStore();
+
 async function loadPdfHandler(pdf: File) {
-    const response = await requestFileUpload({
-        dir: 'test_id',
-        key: pdf.name,
-        file: pdf,
-    });
+    const isSuccess = await fileStore.uploadFile(pdf);
 
-    if (!response.isSuccess) {
-        alert(MESSAGE.STORAGE.UPLOAD_FAILED);
+    if (!isSuccess) return;
 
-        return;
-    }
+    setPdf(pdf);
+    notifyFileLoad();
+}
 
-    const fileLoadEvent = new Event('loadfile', { bubbles: true });
-
-    $loadButton.value.$el.dispatchEvent(fileLoadEvent);
+function setPdf(pdf: File) {
     pdfStore.setPdfFile(pdf);
+}
+
+function notifyFileLoad() {
+    const fileLoadEvent = new Event('loadfile', { bubbles: true });
+    $loadButton.value.$el.dispatchEvent(fileLoadEvent);
 }
 </script>
