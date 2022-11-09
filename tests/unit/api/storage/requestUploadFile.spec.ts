@@ -1,5 +1,10 @@
 import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
-import { requestUploadFile, requestFileList } from '@/api/storage';
+import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
+import {
+    requestUploadFile,
+    requestFileList,
+    requestDeleteFile,
+} from '@/api/storage';
 
 test('파일 업로드', async () => {
     /**
@@ -17,19 +22,29 @@ test('파일 업로드', async () => {
     /**
      * 파일 업로드
      */
-    const file = new File([''], 'test.pdf');
-    const params: IRequestFileUploadParams = {
-        dir: 'test_id',
-        key: 'test',
+    const file = new File([''], 'test123454321.pdf');
+    const uploadParams: IRequestFileUploadParams = {
+        dir: '',
+        key: file.name,
         file: file,
     };
-    const response = await requestUploadFile(params);
+    const uploadResponse = await requestUploadFile(uploadParams);
 
-    expect(response.isSuccess).toBe(true);
+    expect(uploadResponse.isSuccess).toBe(true);
 
     /**
      * 파일의 개수가 1개 증가해있어야함
      */
     const fileListResponse = await requestFileList();
     expect(fileListResponse.data.length).toBe(listLength + 1);
+
+    /**
+     * 파일 삭제
+     */
+    const params: IRequestFileDeleteParams = {
+        dir: '',
+        key: file.name,
+    };
+    const response = await requestDeleteFile(params);
+    expect(response.isSuccess).toBe(true);
 });

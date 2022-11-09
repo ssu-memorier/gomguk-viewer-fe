@@ -1,5 +1,10 @@
 import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
-import { requestDeleteFile, requestFileList } from '@/api/storage';
+import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
+import {
+    requestDeleteFile,
+    requestFileList,
+    requestUploadFile,
+} from '@/api/storage';
 
 test('파일 삭제', async () => {
     /**
@@ -7,14 +12,27 @@ test('파일 삭제', async () => {
      * 지정한 파일을 삭제합니다.
      */
     /**
-     * 원래 파일 개수
+     * 임의의 파일 생성
+     */
+    const file = new File([''], 'test.pdf');
+    const uploadParams: IRequestFileUploadParams = {
+        dir: '',
+        key: 'test12321',
+        file: file,
+    };
+    await requestUploadFile(uploadParams);
+    /**
+     * 원래 파일 개수 저장
      */
     const beforeResponse = await requestFileList();
     const listLength = beforeResponse.data.length;
 
+    /**
+     * 파일 삭제
+     */
     const params: IRequestFileDeleteParams = {
-        dir: 'test_id',
-        key: 'test',
+        dir: '',
+        key: 'test12321',
     };
     const response = await requestDeleteFile(params);
     expect(response.isSuccess).toBe(true);
