@@ -29,7 +29,7 @@ import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import { useModalStore } from '@/store/modal';
-import { useEditorStore } from '@/store/editor';
+import { useEditorStore } from '@/store/file/editor';
 
 const modalStore = useModalStore();
 const editorStore = useEditorStore();

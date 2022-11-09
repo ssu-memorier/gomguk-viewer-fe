@@ -19,7 +19,7 @@ export default {
 <script setup lang="ts">
 import { requestFileList, requestFile, requestDeleteFile } from '@/api/storage';
 import MESSAGE from '@/constants/MESSAGE';
-import { usePdfStore } from '@/store/pdf';
+import { usePdfStore } from '@/store/file/pdf';
 import { ref, onMounted } from 'vue';
 
 interface IFileInfo {

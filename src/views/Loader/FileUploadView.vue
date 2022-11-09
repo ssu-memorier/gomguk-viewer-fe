@@ -9,7 +9,7 @@ export default {
 <script setup lang="ts">
 import PdfLoadButton from '@/components/button/PdfLoadButton.vue';
 import { requestFileUpload } from '@/api/storage';
-import { usePdfStore } from '@/store/pdf';
+import { usePdfStore } from '@/store/file/pdf';
 import { ref } from 'vue';
 import MESSAGE from '@/constants/MESSAGE';
 

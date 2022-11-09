@@ -4,7 +4,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useEditorStore } from '@/store/editor';
+import { useEditorStore } from '@/store/file/editor';
 import { onMounted } from 'vue';
 
 onMounted(() => {
