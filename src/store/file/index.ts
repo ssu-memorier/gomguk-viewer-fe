@@ -14,9 +14,8 @@ import { ref } from 'vue';
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
     const pdfStore = usePdfStore();
-    const fileList = ref<IFileInfo[]>([]);
 
-    async function fetchFileList() {
+    async function fetchFileList(): Promise<IFileInfo[] | undefined> {
         const response = await requestFileList({ id: 'test_id' });
         if (!response.isSuccess) {
             alert(MESSAGE.STORAGE.GET_LIST_FAILED);
@@ -65,7 +64,6 @@ export const useFileStore = defineStore('file', () => {
 
             return;
         }
-        fileList.value = await fetchFileList();
     }
 
     return {
