@@ -1,10 +1,12 @@
 <template>
     <header class="card">
         <div class="center">
-            <b class="appName">곰국 뷰어</b>
+            <b class="appName">{{ HEADER.VIEW.TITLE }}</b>
             <menu>
-                <button @click="modalStore.showModal">파일 불러오기</button>
-                <button @click="save">파일 저장</button>
+                <button @click="modalStore.showModal">
+                    {{ HEADER.VIEW.MENU.LOAD }}
+                </button>
+                <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
             </menu>
         </div>
     </header>
@@ -30,6 +32,7 @@ import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import { useModalStore } from '@/store/modal';
 import { useEditorStore } from '@/store/file/editor';
+import HEADER from '@/constants/HEADER';
 
 const modalStore = useModalStore();
 const editorStore = useEditorStore();
