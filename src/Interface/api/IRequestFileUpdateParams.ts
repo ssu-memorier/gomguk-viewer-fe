@@ -9,6 +9,6 @@ export interface IRequestFileUpdateParams {
     key: string;
     data: {
         editor: object;
-        highlights: '';
+        highlights: [];
     };
 }
