@@ -53,11 +53,7 @@ export const useFileStore = defineStore('file', () => {
             dir: file.dir,
             key: file.key,
         });
-        if (!response.isSuccess) {
-            alert(MESSAGE.STORAGE.DELETE_FAILED);
-
-            return;
-        }
+        return response.isSuccess;
     }
 
     return {

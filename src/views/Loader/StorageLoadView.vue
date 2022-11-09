@@ -45,9 +45,9 @@ async function loadFile(fileInfo: IFileInfo) {
     notifyFileLoad();
 }
 
-async function deleteFile(file: IFileInfo) {
-    const response = await requestDeleteFile({ dir: file.dir, key: file.key });
-    if (!response.isSuccess) {
+async function deleteFile(fileInfo: IFileInfo) {
+    const isSuccess = await fileStore.deleteFile(fileInfo);
+    if (!isSuccess) {
         alert(MESSAGE.STORAGE.DELETE_FAILED);
 
         return;
