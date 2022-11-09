@@ -1,4 +1,3 @@
-import { IRequestFileListParams } from '@/Interface/api/IRequestFileListParams';
 import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
 import { requestUploadFile, requestFileList } from '@/api/storage';
 
@@ -12,10 +11,7 @@ test('파일 업로드', async () => {
     /**
      * 파일의 개수를 불러옴
      */
-    const beforeParams: IRequestFileListParams = {
-        id: 'test_id',
-    };
-    const beforeResponse = await requestFileList(beforeParams);
+    const beforeResponse = await requestFileList();
     const listLength = beforeResponse.data.length;
 
     /**
@@ -34,9 +30,6 @@ test('파일 업로드', async () => {
     /**
      * 파일의 개수가 1개 증가해있어야함
      */
-    const listParams: IRequestFileListParams = {
-        id: 'test_id',
-    };
-    const fileListResponse = await requestFileList(listParams);
+    const fileListResponse = await requestFileList();
     expect(fileListResponse.data.length).toBe(listLength + 1);
 });

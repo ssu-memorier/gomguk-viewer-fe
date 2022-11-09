@@ -17,7 +17,7 @@ export const useFileStore = defineStore('file', () => {
     const currentFileInfo = ref<IFileInfo | undefined>();
 
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
-        const response = await requestFileList({ id: 'test_id' });
+        const response = await requestFileList();
         if (!response.isSuccess) {
             return;
         }

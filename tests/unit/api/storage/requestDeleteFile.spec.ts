@@ -1,5 +1,4 @@
 import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
-import { IRequestFileListParams } from '@/Interface/api/IRequestFileListParams';
 import { requestDeleteFile, requestFileList } from '@/api/storage';
 
 test('파일 삭제', async () => {
@@ -10,10 +9,7 @@ test('파일 삭제', async () => {
     /**
      * 원래 파일 개수
      */
-    const beforeParams: IRequestFileListParams = {
-        id: 'test_id',
-    };
-    const beforeResponse = await requestFileList(beforeParams);
+    const beforeResponse = await requestFileList();
     const listLength = beforeResponse.data.length;
 
     const params: IRequestFileDeleteParams = {
@@ -26,9 +22,6 @@ test('파일 삭제', async () => {
     /**
      * 파일의 개수가 1개 감소해야함
      */
-    const listParams: IRequestFileListParams = {
-        id: 'test_id',
-    };
-    const fileListResponse = await requestFileList(listParams);
+    const fileListResponse = await requestFileList();
     expect(fileListResponse.data.length).toBe(listLength - 1);
 });
