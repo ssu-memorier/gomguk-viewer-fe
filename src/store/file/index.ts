@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { useEditorStore } from '@/store/file/editor';
 import { usePdfStore } from '@/store/file/pdf';
 import {
-    requestFileUpload,
+    requestUploadFile,
     requestFileList,
     requestDeleteFile,
     requestFile,
@@ -23,7 +23,7 @@ export const useFileStore = defineStore('file', () => {
     }
 
     async function uploadFile(pdf: File): Promise<boolean> {
-        const response = await requestFileUpload({
+        const response = await requestUploadFile({
             dir: 'test_id',
             key: pdf.name,
             file: pdf,

@@ -4,6 +4,7 @@ import getStorageModel from '@/utils/getStorageModel';
 import { IRequestFileListParams } from '@/Interface/api/IRequestFileListParams';
 import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
 import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
+import { IRequestFileUpdateParams } from '@/Interface/api/IRequestFileUpdateParams';
 import { IRequestFileParams } from '@/Interface/api/IRequestFileParams';
 import { Response } from '@/Interface/Response';
 
@@ -41,7 +42,7 @@ export async function requestFile(
     }
 }
 
-export async function requestFileUpload(
+export async function requestUploadFile(
     params: IRequestFileUploadParams
 ): Promise<Response> {
     try {
@@ -53,6 +54,27 @@ export async function requestFileUpload(
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
+        });
+
+        return createResponse(true);
+    } catch (err) {
+        return createResponse(false);
+    }
+}
+export async function requestUpdateFile(
+    params: IRequestFileUpdateParams
+): Promise<Response> {
+    try {
+        const { dir, key, data } = params;
+
+        const sendData = JSON.stringify({
+            key,
+            dir,
+            data,
+        });
+
+        await model.put(`${STORAGE.URL.FILE}`, sendData, {
+            headers: { 'Content-Type': 'application/json' },
         });
 
         return createResponse(true);
