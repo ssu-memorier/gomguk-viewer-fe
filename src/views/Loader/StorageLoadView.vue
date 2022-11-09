@@ -18,23 +18,19 @@ export default {
 </script>
 <script setup lang="ts">
 import { requestFile, requestDeleteFile } from '@/api/storage';
-import MESSAGE from '@/constants/MESSAGE';
 import { usePdfStore } from '@/store/file/pdf';
 import { useFileStore } from '@/store/file';
 import { ref, onMounted } from 'vue';
+import { IFileInfo } from '@/Interface/IFileInfo';
+import MESSAGE from '@/constants/MESSAGE';
 
-interface IFileInfo {
-    dir: string;
-    key: string;
-    lastModified: string;
-    sze: number;
-}
 const pdfStore = usePdfStore();
 const fileStore = useFileStore();
 const fileList = ref<IFileInfo[]>([]);
 const $files = ref();
+
 onMounted(async () => {
-    fileList.value = await fileStore.fetchFileList();
+    updateFileList();
 });
 
 async function loadFile(file: IFileInfo) {
@@ -61,7 +57,14 @@ async function deleteFile(file: IFileInfo) {
 
         return;
     }
-    fileList.value = await fileStore.fetchFileList();
+    updateFileList();
+}
+
+async function updateFileList() {
+    const list = await fileStore.fetchFileList();
+    if (!list) return;
+
+    fileList.value = list;
 }
 </script>
 <style lang="scss" scoped>
