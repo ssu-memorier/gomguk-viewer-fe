@@ -34,14 +34,13 @@ onMounted(async () => {
 });
 
 async function loadFile(fileInfo: IFileInfo) {
-    const file = await fileStore.loadFile(fileInfo);
-    if (!file) {
+    const isSuccess = await fileStore.loadFile(fileInfo);
+    if (!isSuccess) {
         alert(MESSAGE.STORAGE.LOAD_FAILED);
 
         return;
     }
 
-    pdfStore.setPdfFile(file);
     notifyFileLoad();
 }
 

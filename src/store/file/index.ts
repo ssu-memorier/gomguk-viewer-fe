@@ -8,8 +8,6 @@ import {
     requestFile,
 } from '@/api/storage';
 import { IFileInfo } from '@/Interface/IFileInfo';
-import MESSAGE from '@/constants/MESSAGE';
-import { ref } from 'vue';
 
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
@@ -37,15 +35,15 @@ export const useFileStore = defineStore('file', () => {
         return true;
     }
 
-    async function loadFile(file: IFileInfo): Promise<File | undefined> {
+    async function loadFile(file: IFileInfo): Promise<boolean> {
         const response = await requestFile({
             dir: file.dir,
             key: file.key,
         });
-        if (!response.isSuccess) {
-            return;
-        }
-        return response.data as File;
+        if (!response.isSuccess) return false;
+        pdfStore.setPdfFile(response.data);
+
+        return true;
     }
 
     async function deleteFile(file: IFileInfo) {
