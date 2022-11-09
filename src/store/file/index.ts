@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { useEditorStore } from '@/store/file/editor';
-import { useHighlightStore } from '@/store/file/highlight';
 import { usePdfStore } from '@/store/file/pdf';
 import {
     requestFileUpload,
@@ -13,7 +12,6 @@ import MESSAGE from '@/constants/MESSAGE';
 import { ref } from 'vue';
 
 const editorStore = useEditorStore();
-const HighlightStore = useHighlightStore();
 const pdfStore = usePdfStore();
 
 export const useFileStore = defineStore('file', () => {
