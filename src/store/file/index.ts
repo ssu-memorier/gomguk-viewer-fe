@@ -37,17 +37,15 @@ export const useFileStore = defineStore('file', () => {
         return true;
     }
 
-    async function loadFile(file: IFileInfo) {
+    async function loadFile(file: IFileInfo): Promise<File | undefined> {
         const response = await requestFile({
             dir: file.dir,
             key: file.key,
         });
         if (!response.isSuccess) {
-            alert(MESSAGE.STORAGE.LOAD_FAILED);
-
             return;
         }
-        pdfStore.setPdfFile(response.data);
+        return response.data as File;
     }
 
     async function deleteFile(file: IFileInfo) {

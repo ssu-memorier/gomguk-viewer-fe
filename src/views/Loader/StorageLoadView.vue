@@ -33,21 +33,16 @@ onMounted(async () => {
     updateFileList();
 });
 
-async function loadFile(file: IFileInfo) {
-    const response = await requestFile({
-        dir: file.dir,
-        key: file.key,
-    });
-    if (!response.isSuccess) {
+async function loadFile(fileInfo: IFileInfo) {
+    const file = await fileStore.loadFile(fileInfo);
+    if (!file) {
         alert(MESSAGE.STORAGE.LOAD_FAILED);
 
         return;
     }
 
-    const fileLoadEvent = new Event('loadfile', { bubbles: true });
-    $files.value.dispatchEvent(fileLoadEvent);
-
-    pdfStore.setPdfFile(response.data);
+    pdfStore.setPdfFile(file);
+    notifyFileLoad();
 }
 
 async function deleteFile(file: IFileInfo) {
@@ -68,6 +63,11 @@ async function updateFileList() {
     }
 
     fileList.value = list;
+}
+
+function notifyFileLoad() {
+    const fileLoadEvent = new Event('loadfile', { bubbles: true });
+    $files.value.dispatchEvent(fileLoadEvent);
 }
 </script>
 <style lang="scss" scoped>
