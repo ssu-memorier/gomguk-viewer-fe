@@ -17,14 +17,11 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { requestFile, requestDeleteFile } from '@/api/storage';
-import { usePdfStore } from '@/store/file/pdf';
 import { useFileStore } from '@/store/file';
 import { ref, onMounted } from 'vue';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import MESSAGE from '@/constants/MESSAGE';
 
-const pdfStore = usePdfStore();
 const fileStore = useFileStore();
 const fileList = ref<IFileInfo[]>([]);
 const $files = ref();
