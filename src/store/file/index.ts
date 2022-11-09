@@ -6,12 +6,15 @@ import {
     requestFileList,
     requestDeleteFile,
     requestFile,
+    requestUpdateFile,
 } from '@/api/storage';
 import { IFileInfo } from '@/Interface/IFileInfo';
+import { ref } from 'vue';
 
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
     const pdfStore = usePdfStore();
+    const currentFileInfo = ref<IFileInfo | undefined>();
 
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
         const response = await requestFileList({ id: 'test_id' });
@@ -35,12 +38,32 @@ export const useFileStore = defineStore('file', () => {
         return true;
     }
 
+    async function updateFile(): Promise<boolean> {
+        if (!currentFileInfo.value) return false;
+
+        const response = await requestUpdateFile({
+            dir: currentFileInfo.value.dir,
+            key: currentFileInfo.value.key,
+            data: {
+                editor: editorStore.toJSON(),
+                highlights: [],
+            },
+        });
+
+        if (!response.isSuccess) {
+            return false;
+        }
+        return true;
+    }
+
     async function loadFile(file: IFileInfo): Promise<boolean> {
         const response = await requestFile({
             dir: file.dir,
             key: file.key,
         });
         if (!response.isSuccess) return false;
+
+        currentFileInfo.value = file;
         pdfStore.setPdfFile(response.data);
 
         return true;
@@ -59,5 +82,6 @@ export const useFileStore = defineStore('file', () => {
         uploadFile,
         loadFile,
         deleteFile,
+        updateFile,
     };
 });
