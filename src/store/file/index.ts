@@ -18,8 +18,6 @@ export const useFileStore = defineStore('file', () => {
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
         const response = await requestFileList({ id: 'test_id' });
         if (!response.isSuccess) {
-            alert(MESSAGE.STORAGE.GET_LIST_FAILED);
-
             return;
         }
 
