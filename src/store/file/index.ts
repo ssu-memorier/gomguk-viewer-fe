@@ -32,8 +32,6 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
-            alert(MESSAGE.STORAGE.UPLOAD_FAILED);
-
             return false;
         }
         return true;

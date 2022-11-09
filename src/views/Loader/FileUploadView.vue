@@ -11,6 +11,7 @@ import PdfLoadButton from '@/components/button/PdfLoadButton.vue';
 import { useFileStore } from '@/store/file';
 import { usePdfStore } from '@/store/file/pdf';
 import { ref } from 'vue';
+import MESSAGE from '@/constants/MESSAGE';
 
 const $loadButton = ref();
 const fileStore = useFileStore();
@@ -19,7 +20,10 @@ const pdfStore = usePdfStore();
 async function loadPdfHandler(pdf: File) {
     const isSuccess = await fileStore.uploadFile(pdf);
 
-    if (!isSuccess) return;
+    if (!isSuccess) {
+        alert(MESSAGE.STORAGE.UPLOAD_FAILED);
+        return;
+    }
 
     setPdf(pdf);
     notifyFileLoad();
