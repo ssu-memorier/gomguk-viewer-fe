@@ -3,7 +3,6 @@ import { requestFileList } from '@/api/storage';
 
 test('파일 리스트 불러오기', async () => {
     /**
-     * TODO:
      * 저장소의 파일 정보 리스트를 불러옵니다.
      * 파일 정보는 @/Interface/IFileInfo를 참고하세요
      */
