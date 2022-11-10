@@ -40,7 +40,6 @@ export async function requestFile(
 
         return createResponse(true, { pdf: pdfFile, metaData: metaData });
     } catch (err) {
-        console.log(err);
         return createResponse(false);
     }
 }
@@ -71,7 +70,6 @@ export async function requestUpdateFile(
 ): Promise<Response> {
     try {
         const { dir, key, data } = params;
-
         const sendData = JSON.stringify({
             key,
             dir,
