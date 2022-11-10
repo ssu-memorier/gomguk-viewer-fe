@@ -38,7 +38,7 @@ import MESSAGE from '@/constants/MESSAGE';
 const modalStore = useModalStore();
 const fileStore = useFileStore();
 function load() {
-    modalStore.showModal;
+    modalStore.showModal();
 }
 async function save() {
     const isSuccess = await fileStore.updateFile();
