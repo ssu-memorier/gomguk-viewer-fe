@@ -7,7 +7,7 @@ test('메모장 업데이트', async () => {
      * 새 메모장 JSON 정보를 업로드합니다.
      */
     const params: IRequestFileUpdateParams = {
-        dir: 'test_id',
+        dir: '',
         key: 'test',
         data: {
             editor: {

@@ -9,7 +9,7 @@ test('파일 불러오기', async () => {
      */
     const params: IRequestFileParams = {
         dir: '',
-        key: 'test',
+        key: 'test3',
     };
     const response = await requestFile(params);
     expect(response.isSuccess).toBe(true);

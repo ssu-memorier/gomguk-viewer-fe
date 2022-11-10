@@ -24,8 +24,9 @@ export async function requestFile(
     params: IRequestFileParams
 ): Promise<Response> {
     try {
-        const { dir, key } = params;
-        const response = await model.get(`${STORAGE.URL.FILE}/${dir}/${key}`, {
+        const { key } = params;
+        const response = await model.get(STORAGE.URL.FILE, {
+            params,
             responseType: 'blob',
         });
         const file = new File([response.data], key, {
@@ -34,6 +35,7 @@ export async function requestFile(
 
         return createResponse(true, file);
     } catch (err) {
+        console.log(err);
         return createResponse(false);
     }
 }
@@ -91,7 +93,9 @@ export async function requestDeleteFile(
             key,
         };
 
-        await model.delete(STORAGE.URL.FILE, { data });
+        await model.delete(STORAGE.URL.FILE, {
+            data,
+        });
 
         return createResponse(true);
     } catch (err) {

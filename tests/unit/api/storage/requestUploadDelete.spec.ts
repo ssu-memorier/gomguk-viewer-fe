@@ -22,10 +22,10 @@ test('파일 업로드', async () => {
     /**
      * 파일 업로드
      */
-    const file = new File([''], 'test123454321.pdf');
+    const file = new File(['123'], 'test123454321.pdf');
     const uploadParams: IRequestFileUploadParams = {
         dir: '',
-        key: file.name,
+        key: 'test123454321',
         file: file,
     };
     const uploadResponse = await requestUploadFile(uploadParams);
@@ -35,16 +35,21 @@ test('파일 업로드', async () => {
     /**
      * 파일의 개수가 1개 증가해있어야함
      */
-    const fileListResponse = await requestFileList();
-    expect(fileListResponse.data.length).toBe(listLength + 1);
+    const fileListResponse1 = await requestFileList();
+    expect(fileListResponse1.data.length).toBe(listLength + 1);
 
     /**
      * 파일 삭제
      */
     const params: IRequestFileDeleteParams = {
         dir: '',
-        key: file.name,
+        key: 'test123454321',
     };
     const response = await requestDeleteFile(params);
     expect(response.isSuccess).toBe(true);
+
+    /**
+     * 파일의 개수가 원래대로 돌아와야함    */
+    const fileListResponse2 = await requestFileList();
+    expect(fileListResponse2.data.length).toBe(listLength);
 });
