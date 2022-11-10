@@ -27,7 +27,7 @@ export const useFileStore = defineStore('file', () => {
 
     async function uploadFile(pdf: File): Promise<boolean> {
         const response = await requestUploadFile({
-            dir: 'test_id',
+            dir: '',
             key: pdf.name,
             file: pdf,
         });
