@@ -6,7 +6,7 @@ import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeletePara
 import { IRequestFileUpdateParams } from '@/Interface/api/IRequestFileUpdateParams';
 import { IRequestFileParams } from '@/Interface/api/IRequestFileParams';
 import { Response } from '@/Interface/Response';
-
+import JSZip from 'jszip';
 const model = getStorageModel();
 
 export async function requestFileList(): Promise<Response> {
@@ -29,11 +29,16 @@ export async function requestFile(
             params,
             responseType: 'blob',
         });
-        const file = new File([response.data], key, {
-            type: 'application/pdf',
-        });
+        const blob = new Blob([response.data], { type: 'application/zip' });
+        const zip = new JSZip();
+        const zipObj = await zip.loadAsync(blob);
+        const files = zipObj.files;
+        const pdfBlob = await files[`${key}.pdf`].async('blob');
+        const jsonStr = await files[`${key}.json`].async('text');
+        const pdfFile = new File([pdfBlob], `${key}.pdf`);
+        const metaData = JSON.parse(jsonStr);
 
-        return createResponse(true, file);
+        return createResponse(true, { pdf: pdfFile, metaData: metaData });
     } catch (err) {
         console.log(err);
         return createResponse(false);

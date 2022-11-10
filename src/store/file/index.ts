@@ -64,7 +64,8 @@ export const useFileStore = defineStore('file', () => {
         if (!response.isSuccess) return false;
 
         currentFileInfo.value = fileInfo;
-        pdfStore.setPdfFile(response.data);
+        pdfStore.setPdfFile(response.data.pdf);
+        editorStore.fromJSON(response.data.metaData);
 
         return true;
     }
