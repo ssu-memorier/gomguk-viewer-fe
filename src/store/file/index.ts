@@ -28,7 +28,7 @@ export const useFileStore = defineStore('file', () => {
     async function uploadFile(pdf: File): Promise<boolean> {
         const response = await requestUploadFile({
             dir: '',
-            key: pdf.name,
+            key: pdf.name.replace(/\.[^/.]+$/, ''),
             file: pdf,
         });
 
@@ -41,11 +41,14 @@ export const useFileStore = defineStore('file', () => {
     async function updateFile(): Promise<boolean> {
         if (!currentFileInfo.value) return false;
 
+        const cleanJSON = await editorStore.toJSON();
+        if (!cleanJSON) return false;
+
         const response = await requestUpdateFile({
             dir: currentFileInfo.value.dir,
             key: currentFileInfo.value.key,
             data: {
-                editor: editorStore.toJSON(),
+                editor: cleanJSON,
                 highlights: [],
             },
         });
