@@ -13,5 +13,6 @@ test('파일 불러오기', async () => {
     };
     const response = await requestFile(params);
     expect(response.isSuccess).toBe(true);
-    expect(response.data).toBeInstanceOf(File);
+    expect(response.data.pdf).toBeInstanceOf(File);
+    expect(response.data.metaData).toBeInstanceOf(Object);
 });
