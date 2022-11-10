@@ -10,12 +10,23 @@
             </menu>
         </div>
     </header>
-    <main>
-        <section>
+    <main ref="$main" @mousemove="resize" @mouseup="resizeEnd">
+        <section ref="$viewerSection" :style="{ width: editorWidth + 'px' }">
             <pdf-view class="pdfView"></pdf-view>
             <translator-view class="translatorView"></translator-view>
         </section>
-        <section>
+        <div
+            ref="$resizer"
+            class="resizer"
+            :style="{ transform: `translateX(${editorWidth - 4}px)` }"
+            @mousedown="resizeStart"
+        >
+            <div class="line"></div>
+        </div>
+        <section
+            ref="$editorSection"
+            :style="{ width: mainWidth - editorWidth + 'px' }"
+        >
             <editor-view></editor-view>
         </section>
     </main>
@@ -34,7 +45,12 @@ import { useModalStore } from '@/store/modal';
 import { useFileStore } from '@/store/file';
 import HEADER from '@/constants/HEADER';
 import MESSAGE from '@/constants/MESSAGE';
+import { ref, onMounted } from 'vue';
 
+const $viewerSelection = ref();
+const $editorSelection = ref();
+const $main = ref();
+const $resizer = ref();
 const modalStore = useModalStore();
 const fileStore = useFileStore();
 function load() {
@@ -45,6 +61,24 @@ async function save() {
     if (!isSuccess) {
         alert(MESSAGE.STORAGE.UPDATE_FAILED);
     }
+}
+const isResizing = ref<boolean>(false);
+const editorWidth = ref<number>(0);
+const mainWidth = ref<number>(0);
+onMounted(() => {
+    mainWidth.value = $main.value.getBoundingClientRect().width;
+    editorWidth.value = mainWidth.value / 2;
+});
+function resizeStart() {
+    isResizing.value = true;
+}
+function resizeEnd() {
+    isResizing.value = false;
+}
+function resize(evt: MouseEvent) {
+    if (!isResizing.value) return;
+
+    editorWidth.value = evt.clientX;
 }
 </script>
 
@@ -105,7 +139,6 @@ main {
     flex-direction: row;
     section {
         height: 100%;
-        width: 50%;
         display: flex;
         flex-direction: column;
         .pdfView {
@@ -115,6 +148,27 @@ main {
             flex-shrink: 0;
             width: $TRANSLATOR-COL-MODE-WIDTH;
             height: $TRANSLATOR-COL-MODE-HEIGHT;
+        }
+    }
+    div.resizer {
+        position: absolute;
+        z-index: 100;
+        width: 8px;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        cursor: e-resize;
+        div.line {
+            width: 2px;
+            height: 100%;
+            background-color: lightgray;
+            transition: 0.3s;
+        }
+        &:hover {
+            div.line {
+                width: 8px;
+            }
         }
     }
 }
