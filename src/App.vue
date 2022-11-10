@@ -47,8 +47,6 @@ import HEADER from '@/constants/HEADER';
 import MESSAGE from '@/constants/MESSAGE';
 import { ref, onMounted } from 'vue';
 
-const $viewerSelection = ref();
-const $editorSelection = ref();
 const $main = ref();
 const $resizer = ref();
 const modalStore = useModalStore();
@@ -68,6 +66,10 @@ const mainWidth = ref<number>(0);
 onMounted(() => {
     mainWidth.value = $main.value.getBoundingClientRect().width;
     editorWidth.value = mainWidth.value / 2;
+});
+
+window.addEventListener('resize', () => {
+    mainWidth.value = $main.value.getBoundingClientRect().width;
 });
 function resizeStart() {
     isResizing.value = true;
