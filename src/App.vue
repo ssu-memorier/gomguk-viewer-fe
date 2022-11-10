@@ -18,7 +18,7 @@
         <div
             ref="$resizer"
             class="resizer"
-            :style="{ transform: `translateX(${editorWidth - 4}px)` }"
+            :style="{ transform: `translate(${editorWidth - 4}px)` }"
             @mousedown="resizeStart"
         >
             <div class="line"></div>
@@ -45,7 +45,7 @@ import { useModalStore } from '@/store/modal';
 import { useFileStore } from '@/store/file';
 import HEADER from '@/constants/HEADER';
 import MESSAGE from '@/constants/MESSAGE';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const $main = ref();
 const $resizer = ref();
@@ -61,11 +61,11 @@ async function save() {
     }
 }
 const isResizing = ref<boolean>(false);
-const editorWidth = ref<number>(0);
+const editorPercent = ref<number>(0.5);
 const mainWidth = ref<number>(0);
+const editorWidth = computed(() => mainWidth.value * editorPercent.value);
 onMounted(() => {
     mainWidth.value = $main.value.getBoundingClientRect().width;
-    editorWidth.value = mainWidth.value / 2;
 });
 
 window.addEventListener('resize', () => {
@@ -80,7 +80,7 @@ function resizeEnd() {
 function resize(evt: MouseEvent) {
     if (!isResizing.value) return;
 
-    editorWidth.value = evt.clientX;
+    editorPercent.value = evt.clientX / mainWidth.value;
 }
 </script>
 
