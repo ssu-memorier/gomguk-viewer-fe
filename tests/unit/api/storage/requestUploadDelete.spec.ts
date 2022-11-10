@@ -6,7 +6,7 @@ import {
     requestDeleteFile,
 } from '@/api/storage';
 
-test('파일 업로드', async () => {
+test('파일 업로드&삭제 요청', async () => {
     /**
      * TODO:
      * 유저로부터 PDF를 받아 업로드를 요청합니다.
