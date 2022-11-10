@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { useTranslatorStore } from '@/store/translator';
 import { useSelectionStore } from '@/store/selection';
-import { useHighlightStore } from '@/store/highlight';
+import { useHighlightStore } from '@/store/file/highlight';
 
 import POPUP from '@/constants/POPUP';
 import writeToClipboard from '@/utils/writeToClipboard';

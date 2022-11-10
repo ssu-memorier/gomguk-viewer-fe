@@ -1,8 +1,13 @@
 <template>
     <header class="card">
         <div class="center">
-            <b class="appName">곰국 뷰어</b>
-            <button @click="modalStore.showModal">파일 불러오기</button>
+            <b class="appName">{{ HEADER.VIEW.TITLE }}</b>
+            <menu>
+                <button @click="load">
+                    {{ HEADER.VIEW.MENU.LOAD }}
+                </button>
+                <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
+            </menu>
         </div>
     </header>
     <main>
@@ -26,8 +31,21 @@ import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import { useModalStore } from '@/store/modal';
+import { useFileStore } from '@/store/file';
+import HEADER from '@/constants/HEADER';
+import MESSAGE from '@/constants/MESSAGE';
 
 const modalStore = useModalStore();
+const fileStore = useFileStore();
+function load() {
+    modalStore.showModal();
+}
+async function save() {
+    const isSuccess = await fileStore.updateFile();
+    if (!isSuccess) {
+        alert(MESSAGE.STORAGE.UPDATE_FAILED);
+    }
+}
 </script>
 
 <style lang="scss">
@@ -81,6 +99,7 @@ main {
     height: calc(100% - $header-height);
     width: 100%;
     margin: 0;
+    z-index: 10;
     overflow: hidden;
     display: flex;
     flex-direction: row;

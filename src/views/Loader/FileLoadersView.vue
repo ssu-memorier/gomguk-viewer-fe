@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import CloudLoadView from '@/views/Loader/StorageLoadView.vue';
+import StorageLoadView from '@/views/Loader/StorageLoadView.vue';
 import FileUploadView from '@/views/Loader/FileUploadView.vue';
 import LOADER from '@/constants/LOADER';
 import { LoaderTabType } from '@/types/LoaderTabType';
@@ -26,7 +26,7 @@ import { useModalStore } from '@/store/modal';
 
 const modalStore = useModalStore();
 const currentTab = ref<number>(0);
-const tabs = ref([CloudLoadView, FileUploadView]);
+const tabs = ref([StorageLoadView, FileUploadView]);
 
 function changeCurrentTab(tabName: LoaderTabType) {
     const idx = tabs.value.findIndex((tab) => tab.name === tabName);

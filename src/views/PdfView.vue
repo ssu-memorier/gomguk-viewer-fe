@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import PdfPage from '@/components/PdfPage.vue';
 import { useSelectionStore } from '@/store/selection';
-import { usePdfStore } from '@/store/pdf';
+import { usePdfStore } from '@/store/file/pdf';
 import { ref, onMounted, computed } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import POPUP from '@/constants/POPUP';
