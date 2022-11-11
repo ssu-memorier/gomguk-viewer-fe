@@ -1,7 +1,7 @@
 <template>
-    <div class="editorView">
+    <section class="editorView">
         <div id="editorjs"></div>
-    </div>
+    </section>
 </template>
 <script setup lang="ts">
 import { useEditorStore } from '@/store/file/editor';

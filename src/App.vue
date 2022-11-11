@@ -10,22 +10,15 @@
             </menu>
         </div>
     </header>
-    <main ref="$main" @mousemove="resize" @mouseup="resizeEnd">
-        <paper-view :style="{ width: editorWidth + 'px' }"></paper-view>
-        <div
-            ref="$resizer"
-            class="resizer"
-            :style="{ transform: `translate(${editorWidth - 8}px)` }"
-            @mousedown="resizeStart"
-        >
-            <div class="line"></div>
-        </div>
-        <section
-            ref="$editorSection"
-            :style="{ width: mainWidth - editorWidth + 'px' }"
-        >
-            <editor-view></editor-view>
-        </section>
+    <main ref="$main">
+        <row-resizer class="resizeBox" :left-percent="0.5">
+            <template v-slot:left>
+                <paper-view></paper-view>
+            </template>
+            <template v-slot:right>
+                <editor-view></editor-view>
+            </template>
+        </row-resizer>
     </main>
     <center-modal :show="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
@@ -33,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import RowResizer from './components/resizer/RowResizer.vue';
 import PaperView from '@/views/Paper/PaperView.vue';
 import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
@@ -41,24 +35,13 @@ import { useModalStore } from '@/store/modal';
 import { useFileStore } from '@/store/file';
 import HEADER from '@/constants/HEADER';
 import MESSAGE from '@/constants/MESSAGE';
-import { ref, onMounted, computed } from 'vue';
+import { ref } from 'vue';
 
 const $main = ref();
-const $resizer = ref();
+
 const modalStore = useModalStore();
 const fileStore = useFileStore();
-const isResizing = ref<boolean>(false);
-const editorPercent = ref<number>(0.5);
-const mainWidth = ref<number>(0);
-const editorWidth = computed(() => mainWidth.value * editorPercent.value);
 
-onMounted(() => {
-    mainWidth.value = $main.value.getBoundingClientRect().width;
-});
-
-window.addEventListener('resize', () => {
-    mainWidth.value = $main.value.getBoundingClientRect().width;
-});
 function load() {
     modalStore.showModal();
 }
@@ -67,17 +50,6 @@ async function save() {
     if (!isSuccess) {
         alert(MESSAGE.STORAGE.UPDATE_FAILED);
     }
-}
-function resizeStart() {
-    isResizing.value = true;
-}
-function resizeEnd() {
-    isResizing.value = false;
-}
-function resize(evt: MouseEvent) {
-    if (!isResizing.value) return;
-
-    editorPercent.value = evt.clientX / mainWidth.value;
 }
 </script>
 
@@ -140,26 +112,11 @@ main {
         display: flex;
         flex-direction: column;
     }
-    div.resizer {
+    div.resizeBox {
         position: absolute;
         z-index: 100;
-        width: 16px;
+        width: 100%;
         height: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        cursor: ew-resize;
-        div.line {
-            width: 2px;
-            height: 100%;
-            background-color: lightgray;
-            transition: 0.3s;
-        }
-        &:hover {
-            div.line {
-                width: 16px;
-            }
-        }
     }
 }
 </style>
