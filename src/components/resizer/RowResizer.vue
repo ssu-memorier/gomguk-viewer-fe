@@ -12,7 +12,7 @@
             ref="$resizer"
             class="resizer"
             :style="{
-                transform: `translate(${leftWidth - RESIZER.LEN / 2}px)`,
+                transform: `translateX(${leftWidth - RESIZER.LEN / 2}px)`,
             }"
             @mousedown="resizeStart"
         >
@@ -69,13 +69,9 @@ function resize(evt: MouseEvent) {
 <style scoped lang="scss">
 @import '@/assets/scss/constants/RESIZER';
 .rowResizer {
+    position: relative;
     display: flex;
     flex-direction: row;
-
-    & > :first-child,
-    & > :last-child {
-        width: 50%;
-    }
 }
 div.resizer {
     position: absolute;
