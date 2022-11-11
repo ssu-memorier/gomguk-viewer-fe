@@ -1,5 +1,5 @@
 <template>
-    <div id="pdfView" ref="$pdfView">
+    <div id="pdfView" ref="$pdfView" class="view">
         <div class="noPdf" v-if="pageNumList.length <= 0">
             <p>파일을 불러와주세요😀</p>
         </div>
@@ -166,7 +166,6 @@ function zoomOutHandler() {
 @import '@/assets/scss/constants/PDF_VIEW';
 
 #pdfView {
-    width: 100%;
     height: inherit;
     overflow: hidden;
     .selectionPopup {

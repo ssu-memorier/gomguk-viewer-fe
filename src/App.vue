@@ -13,7 +13,14 @@
     <main ref="$main">
         <row-resizer class="resizeBox" :left-percent="0.5">
             <template v-slot:left>
-                <paper-view></paper-view>
+                <column-resizer class="resizeBox" :top-percent="0.75">
+                    <template v-slot:top>
+                        <pdf-view></pdf-view>
+                    </template>
+                    <template v-slot:bottom>
+                        <translator-view></translator-view>
+                    </template>
+                </column-resizer>
             </template>
             <template v-slot:right>
                 <editor-view></editor-view>
@@ -26,8 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import RowResizer from './components/resizer/RowResizer.vue';
-import PaperView from '@/views/Paper/PaperView.vue';
+import RowResizer from '@/components/resizer/RowResizer.vue';
+import ColumnResizer from '@/components/resizer/ColumnResizer.vue';
+import PdfView from '@/views/Paper/PdfView.vue';
+import TranslatorView from '@/views/Paper/TranslatorView.vue';
 import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
@@ -108,6 +117,7 @@ main {
     display: flex;
     flex-direction: row;
     section {
+        width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -118,5 +128,9 @@ main {
         width: 100%;
         height: 100%;
     }
+}
+.view {
+    width: 100%;
+    height: 100%;
 }
 </style>
