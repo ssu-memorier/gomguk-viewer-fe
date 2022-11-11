@@ -12,17 +12,17 @@
     </header>
     <main ref="$main">
         <row-resizer class="resizeBox" :left-percent="0.5">
-            <template v-slot:left>
+            <template #left>
                 <column-resizer class="resizeBox" :top-percent="0.75">
-                    <template v-slot:top>
+                    <template #top>
                         <pdf-view></pdf-view>
                     </template>
-                    <template v-slot:bottom>
+                    <template #bottom>
                         <translator-view></translator-view>
                     </template>
                 </column-resizer>
             </template>
-            <template v-slot:right>
+            <template #right>
                 <editor-view></editor-view>
             </template>
         </row-resizer>
