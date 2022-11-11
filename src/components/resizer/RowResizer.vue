@@ -5,7 +5,7 @@
         @mouseup="resizeEnd"
         ref="$rowResizer"
     >
-        <div :style="{ width: leftWidth + 'px' }">
+        <div class="left" :style="{ width: leftWidth + 'px' }">
             <slot name="left"></slot>
         </div>
         <div
@@ -18,7 +18,7 @@
         >
             <div class="line"></div>
         </div>
-        <div :style="{ width: rightWidth + 'px' }">
+        <div class="right" :style="{ width: rightWidth + 'px' }">
             <slot name="right"></slot>
         </div>
     </div>
@@ -72,6 +72,11 @@ function resize(evt: MouseEvent) {
     position: relative;
     display: flex;
     flex-direction: row;
+
+    .left,
+    .right {
+        position: relative;
+    }
 }
 div.resizer {
     position: absolute;
@@ -81,6 +86,7 @@ div.resizer {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    will-change: transform;
     cursor: ew-resize;
     div.line {
         width: $RESIZER_LINE_LEN;

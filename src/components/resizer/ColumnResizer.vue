@@ -5,7 +5,7 @@
         @mouseup="resizeEnd"
         ref="$columnResizer"
     >
-        <div :style="{ height: topHeight + 'px' }">
+        <div class="top" :style="{ height: topHeight + 'px' }">
             <slot name="top"></slot>
         </div>
         <div
@@ -18,7 +18,7 @@
         >
             <div class="line"></div>
         </div>
-        <div :style="{ height: bottomHeight + 'px' }">
+        <div class="bottom" :style="{ height: bottomHeight + 'px' }">
             <slot name="bottom"></slot>
         </div>
     </div>
@@ -72,6 +72,11 @@ function resize(evt: MouseEvent) {
     position: relative;
     display: flex;
     flex-direction: column;
+
+    .top,
+    .bottom {
+        position: relative;
+    }
 }
 div.resizer {
     position: absolute;
@@ -81,6 +86,7 @@ div.resizer {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    will-change: transform;
     cursor: ns-resize;
     div.line {
         height: $RESIZER_LINE_LEN;
