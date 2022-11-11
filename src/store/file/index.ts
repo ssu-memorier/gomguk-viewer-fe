@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { useEditorStore } from '@/store/file/editor';
 import { usePdfStore } from '@/store/file/pdf';
+import { useHighlightStore } from '@/store/file/highlight';
 import {
     requestUploadFile,
     requestFileList,
@@ -13,6 +14,7 @@ import { ref } from 'vue';
 
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
+    const highlightStore = useHighlightStore();
     const pdfStore = usePdfStore();
     const currentFileInfo = ref<IFileInfo | undefined>();
 
@@ -44,12 +46,14 @@ export const useFileStore = defineStore('file', () => {
         const cleanJSON = await editorStore.toJSON();
         if (!cleanJSON) return false;
 
+        const highlightList = highlightStore.toJSON();
+
         const response = await requestUpdateFile({
             dir: currentFileInfo.value.dir,
             key: currentFileInfo.value.key,
             data: {
                 editor: cleanJSON,
-                highlights: [],
+                highlights: highlightList,
             },
         });
 
@@ -69,6 +73,7 @@ export const useFileStore = defineStore('file', () => {
         currentFileInfo.value = fileInfo;
         pdfStore.setPdfFile(response.data.pdf);
         editorStore.fromJSON(response.data.metaData.editor);
+        highlightStore.fromArray(response.data.metaData.highlights);
 
         return true;
     }
