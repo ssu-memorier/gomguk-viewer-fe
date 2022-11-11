@@ -1,19 +1,21 @@
 <template>
-    <h2>{{ LOADER.VIEW.TITLE }}</h2>
-    <menu>
-        <button
-            class="item"
-            v-for="(tab, idx) in tabs"
-            :key="tab.name"
-            @click="changeCurrentTab(tab.name as LoaderTabType)"
-        >
-            {{ LOADER.TABS[idx].NAME }}
-        </button>
-    </menu>
-    <component
-        :is="tabs[currentTab]"
-        @loadfile="modalStore.hideModal"
-    ></component>
+    <div class="view">
+        <h2>{{ LOADER.VIEW.TITLE }}</h2>
+        <menu>
+            <button
+                class="item"
+                v-for="(tab, idx) in tabs"
+                :key="tab.name"
+                @click="changeCurrentTab(tab.name as LoaderTabType)"
+            >
+                {{ LOADER.TABS[idx].NAME }}
+            </button>
+        </menu>
+        <component
+            :is="tabs[currentTab]"
+            @loadfile="modalStore.hideModal"
+        ></component>
+    </div>
 </template>
 
 <script setup lang="ts">

@@ -1,7 +1,7 @@
 <template>
-    <div class="editorView">
+    <section class="editorView view">
         <div id="editorjs"></div>
-    </div>
+    </section>
 </template>
 <script setup lang="ts">
 import { useEditorStore } from '@/store/file/editor';
@@ -15,8 +15,6 @@ onMounted(() => {
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
 .editorView {
-    width: 100%;
-    height: 100%;
     background-color: $SURFACE-COLOR;
     text-align: left;
 

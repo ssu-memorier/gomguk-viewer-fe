@@ -1,5 +1,5 @@
 <template>
-    <div class="translatorView card">
+    <div class="translatorView card view">
         <div class="translatorHeader">
             <div class="translatorLanguageSelect">
                 <select @change="sourceLanguageHandler">
