@@ -11,14 +11,11 @@
         </div>
     </header>
     <main ref="$main" @mousemove="resize" @mouseup="resizeEnd">
-        <section ref="$viewerSection" :style="{ width: editorWidth + 'px' }">
-            <pdf-view class="pdfView"></pdf-view>
-            <translator-view class="translatorView"></translator-view>
-        </section>
+        <paper-view :style="{ width: editorWidth + 'px' }"></paper-view>
         <div
             ref="$resizer"
             class="resizer"
-            :style="{ transform: `translate(${editorWidth - 4}px)` }"
+            :style="{ transform: `translate(${editorWidth - 8}px)` }"
             @mousedown="resizeStart"
         >
             <div class="line"></div>
@@ -36,8 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import PdfView from '@/views/PdfView.vue';
-import TranslatorView from '@/views/TranslatorView.vue';
+import PaperView from '@/views/Paper/PaperView.vue';
 import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
@@ -51,6 +47,18 @@ const $main = ref();
 const $resizer = ref();
 const modalStore = useModalStore();
 const fileStore = useFileStore();
+const isResizing = ref<boolean>(false);
+const editorPercent = ref<number>(0.5);
+const mainWidth = ref<number>(0);
+const editorWidth = computed(() => mainWidth.value * editorPercent.value);
+
+onMounted(() => {
+    mainWidth.value = $main.value.getBoundingClientRect().width;
+});
+
+window.addEventListener('resize', () => {
+    mainWidth.value = $main.value.getBoundingClientRect().width;
+});
 function load() {
     modalStore.showModal();
 }
@@ -60,17 +68,6 @@ async function save() {
         alert(MESSAGE.STORAGE.UPDATE_FAILED);
     }
 }
-const isResizing = ref<boolean>(false);
-const editorPercent = ref<number>(0.5);
-const mainWidth = ref<number>(0);
-const editorWidth = computed(() => mainWidth.value * editorPercent.value);
-onMounted(() => {
-    mainWidth.value = $main.value.getBoundingClientRect().width;
-});
-
-window.addEventListener('resize', () => {
-    mainWidth.value = $main.value.getBoundingClientRect().width;
-});
 function resizeStart() {
     isResizing.value = true;
 }
@@ -87,7 +84,6 @@ function resize(evt: MouseEvent) {
 <style lang="scss">
 @import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
-@import '@/assets/scss/constants/TRANSLATOR';
 
 * {
     box-sizing: border-box;
@@ -143,24 +139,16 @@ main {
         height: 100%;
         display: flex;
         flex-direction: column;
-        .pdfView {
-            flex-grow: 1;
-        }
-        .translatorView {
-            flex-shrink: 0;
-            width: $TRANSLATOR-COL-MODE-WIDTH;
-            height: $TRANSLATOR-COL-MODE-HEIGHT;
-        }
     }
     div.resizer {
         position: absolute;
         z-index: 100;
-        width: 8px;
+        width: 16px;
         height: 100%;
         display: flex;
         flex-direction: row;
         justify-content: center;
-        cursor: e-resize;
+        cursor: ew-resize;
         div.line {
             width: 2px;
             height: 100%;
@@ -169,7 +157,7 @@ main {
         }
         &:hover {
             div.line {
-                width: 8px;
+                width: 16px;
             }
         }
     }
