@@ -1,6 +1,16 @@
 import Color from '@/classes/Color';
 import getSelectedTokens from '@/utils/getSelectedTokens';
 
+export interface IHighlight {
+    pageNum: number | undefined;
+    startLine: number | undefined;
+    startToken: number | undefined;
+    startOffset: number | undefined;
+    endLine: number | undefined;
+    endToken: number | undefined;
+    endOffset: number | undefined;
+    color: string | undefined;
+}
 export default class Highlight {
     pageNum: number | undefined;
     startLine: number | undefined;
@@ -9,9 +19,11 @@ export default class Highlight {
     endLine: number | undefined;
     endToken: number | undefined;
     endOffset: number | undefined;
-    color: Color = Color.YELLOW;
+    color: Color | undefined = Color.YELLOW;
 
-    constructor(pageNum: number, range: Range) {
+    constructor(pageNum?: number, range?: Range) {
+        if (!pageNum || !range) return;
+
         this.pageNum = pageNum;
         this.startLine = 0;
         this.endLine = 0;
@@ -47,5 +59,31 @@ export default class Highlight {
         range.setEnd(endToken.firstChild, this.endOffset || 0);
 
         return range;
+    }
+
+    toJSON() {
+        return {
+            pageNum: this.pageNum,
+            startLine: this.startLine,
+            startToken: this.startToken,
+            startOffset: this.startOffset,
+            endLine: this.endLine,
+            endToken: this.endToken,
+            endOffset: this.endOffset,
+            color: this.color ? this.color.code : Color.YELLOW.code,
+        };
+    }
+    static fromJSON(json: IHighlight) {
+        const highlight = new Highlight();
+        highlight.pageNum = json.pageNum;
+        highlight.startLine = json.startLine;
+        highlight.startToken = json.startToken;
+        highlight.startOffset = json.startOffset;
+        highlight.endLine = json.endLine;
+        highlight.endToken = json.endToken;
+        highlight.endOffset = json.endOffset;
+        highlight.color = json.color ? Color.fromHex(json.color) : undefined;
+
+        return highlight;
     }
 }
