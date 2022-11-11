@@ -213,6 +213,7 @@ async function renderTextLayer(pageSize: SizeType) {
 .pdfPage {
     overflow: hidden;
     position: relative;
+    content-visibility: auto;
     margin: 1rem auto 2rem auto;
     .textLayer,
     .selectionLayer,
