@@ -7,7 +7,7 @@
  * HighlightLayer는 pdf의 Highlight 영역을 그리는 레이어 컴포넌트 입니다.
  */
 import { defineProps, ref, onMounted, computed, watch } from 'vue';
-import { useHighlightStore } from '@/store/highlight';
+import { useHighlightStore } from '@/store/file/highlight';
 import Line from '@/classes/Line';
 import Color from '@/classes/Color';
 import getSelectedLines from '@/utils/getSelectedLines';

@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { useTranslatorStore } from '@/store/translator';
 import { useSelectionStore } from '@/store/selection';
-import { useHighlightStore } from '@/store/highlight';
+import { useHighlightStore } from '@/store/file/highlight';
 
 import POPUP from '@/constants/POPUP';
 import writeToClipboard from '@/utils/writeToClipboard';
@@ -65,11 +65,13 @@ function highlightHandler() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '@/assets/scss/constants/POPUP';
 div.selectionPopup {
     background-color: #fff;
-    width: 240px;
+    width: $POPUP-WIDTH;
     ul {
+        width: 100%;
         padding: 0;
         display: inline-flex;
         flex-direction: row;
@@ -77,8 +79,9 @@ div.selectionPopup {
     }
     li.menu {
         list-style: none;
-        padding: 0.5rem 1rem;
+        padding: $POPUP-ITEM-PADDING;
         cursor: pointer;
+        flex-grow: 1;
     }
 }
 </style>

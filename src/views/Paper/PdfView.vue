@@ -1,5 +1,5 @@
 <template>
-    <div id="pdfView" ref="$pdfView">
+    <div id="pdfView" ref="$pdfView" class="view">
         <div class="noPdf" v-if="pageNumList.length <= 0">
             <p>파일을 불러와주세요😀</p>
         </div>
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import PdfPage from '@/components/PdfPage.vue';
 import { useSelectionStore } from '@/store/selection';
-import { usePdfStore } from '@/store/pdf';
+import { usePdfStore } from '@/store/file/pdf';
 import { ref, onMounted, computed } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import POPUP from '@/constants/POPUP';
@@ -166,9 +166,10 @@ function zoomOutHandler() {
 @import '@/assets/scss/constants/PDF_VIEW';
 
 #pdfView {
-    width: inherit;
     height: inherit;
     overflow: hidden;
+
+    padding: 0 16px 16px 0;
     .selectionPopup {
         position: absolute;
         opacity: 0;
@@ -191,7 +192,7 @@ function zoomOutHandler() {
         height: $HEADER_HEIGHT;
         position: sticky;
         top: 0;
-        background-color: $surface-color;
+        background-color: $SURFACE-COLOR;
     }
     .pageView {
         height: $PAGE_CONTAINER_HEIGHT;

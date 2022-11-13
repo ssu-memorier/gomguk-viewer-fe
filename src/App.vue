@@ -1,15 +1,31 @@
 <template>
     <header class="card">
         <div class="center">
-            <b class="appName">곰국 뷰어</b>
-            <button @click="modalStore.showModal">파일 불러오기</button>
+            <b class="appName">{{ HEADER.VIEW.TITLE }}</b>
+            <menu>
+                <button @click="load">
+                    {{ HEADER.VIEW.MENU.LOAD }}
+                </button>
+                <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
+            </menu>
         </div>
     </header>
-    <main>
-        <section>
-            <pdf-view class="pdfView"></pdf-view>
-            <translator-view class="translatorView"></translator-view>
-        </section>
+    <main ref="$main">
+        <row-resizer class="resizeBox" :left-percent="0.5">
+            <template #left>
+                <column-resizer class="resizeBox" :top-percent="0.75">
+                    <template #top>
+                        <pdf-view></pdf-view>
+                    </template>
+                    <template #bottom>
+                        <translator-view></translator-view>
+                    </template>
+                </column-resizer>
+            </template>
+            <template #right>
+                <editor-view></editor-view>
+            </template>
+        </row-resizer>
     </main>
     <center-modal :show="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
@@ -17,19 +33,38 @@
 </template>
 
 <script setup lang="ts">
-import PdfView from '@/views/PdfView.vue';
-import TranslatorView from '@/views/TranslatorView.vue';
-import CenterModal from '@/components/CenterModal.vue';
+import RowResizer from '@/components/resizer/RowResizer.vue';
+import ColumnResizer from '@/components/resizer/ColumnResizer.vue';
+import PdfView from '@/views/Paper/PdfView.vue';
+import TranslatorView from '@/views/Paper/TranslatorView.vue';
+import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
+import CenterModal from '@/components/CenterModal.vue';
 import { useModalStore } from '@/store/modal';
+import { useFileStore } from '@/store/file';
+import HEADER from '@/constants/HEADER';
+import MESSAGE from '@/constants/MESSAGE';
+import { ref } from 'vue';
+
+const $main = ref();
 
 const modalStore = useModalStore();
+const fileStore = useFileStore();
+
+function load() {
+    modalStore.showModal();
+}
+async function save() {
+    const isSuccess = await fileStore.updateFile();
+    if (!isSuccess) {
+        alert(MESSAGE.STORAGE.UPDATE_FAILED);
+    }
+}
 </script>
 
 <style lang="scss">
 @import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
-@import '@/assets/scss/constants/TRANSLATOR';
 
 * {
     box-sizing: border-box;
@@ -55,7 +90,7 @@ header {
     position: relative;
     box-sizing: border-box;
     height: $header-height;
-    background-color: $surface-color;
+    background-color: $SURFACE-COLOR;
     padding: 0.5rem 2rem;
     z-index: 200;
     .center {
@@ -77,32 +112,25 @@ main {
     height: calc(100% - $header-height);
     width: 100%;
     margin: 0;
+    z-index: 10;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
     section {
-        height: 100%;
         width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        .pdfView {
-            flex-grow: 1;
-        }
-        .translatorView {
-            flex-shrink: 0;
-            width: $TRANSLATOR-COL-MODE-WIDTH;
-            height: $TRANSLATOR-COL-MODE-HEIGHT;
-        }
+    }
+    div.resizeBox {
+        position: absolute;
+        z-index: 100;
+        width: 100%;
+        height: 100%;
     }
 }
-
-@include desktop {
-    main {
-        section {
-            flex-direction: row;
-            .translatorView {
-                width: $TRANSLATOR-ROW-MODE-WIDTH;
-                height: $TRANSLATOR-ROW-MODE-HEIGHT;
-            }
-        }
-    }
+.view {
+    width: 100%;
+    height: 100%;
 }
 </style>
