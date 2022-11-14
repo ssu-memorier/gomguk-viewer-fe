@@ -31,7 +31,10 @@ function loadFileHandler(e: Event) {
     if (!fileList || fileList.length <= 0) return;
 
     const file = fileList[0];
-    if (!isPdfFile(file)) return;
+    if (!isPdfFile(file)) {
+        window.alert(MESSAGE.PDF.IS_NOT_PDF);
+        return;
+    }
     if (isExceedLimit(file)) {
         window.alert(MESSAGE.PDF.EXCEED_LIMIT);
         return;
