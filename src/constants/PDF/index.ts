@@ -5,4 +5,5 @@ export default {
     ROOT_MARGIN: '100% 0%',
     SCALE_MAX: 5,
     SCALE_MIN: 1,
+    MAX_FILE_SIZE: 20 * 1024 * 1024,
 };

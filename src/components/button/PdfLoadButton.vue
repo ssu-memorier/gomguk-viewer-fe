@@ -29,13 +29,22 @@ function loadFileHandler(e: Event) {
     const fileList = $input.files;
 
     if (!fileList || fileList.length <= 0) return;
-    if (!isPdfFile(fileList[0])) return;
 
-    emit('load', fileList[0]);
+    const file = fileList[0];
+    if (!isPdfFile(file)) return;
+    if (isExceedLimit(file)) {
+        return;
+    }
+
+    emit('load', file);
 }
 
 function isPdfFile(file: File): boolean {
     return file.type === PDF.TYPE;
+}
+
+function isExceedLimit(file: File): boolean {
+    return file.size > PDF.MAX_FILE_SIZE;
 }
 </script>
 
