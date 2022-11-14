@@ -6,4 +6,7 @@ export default {
         DELETE_FAILED: '파일을 삭제하는데 실패했습니다.',
         UPDATE_FAILED: '파일을 저장하는데 실패했습니다.',
     },
+    PDF: {
+        EXCEED_LIMIT: '파일은 최대 20MB 까지만 올릴 수 있습니다',
+    },
 };

@@ -17,7 +17,7 @@
  */
 import { defineEmits } from 'vue';
 import PDF from '@/constants/PDF';
-
+import MESSAGE from '@/constants/MESSAGE';
 const emit = defineEmits<{
     (e: 'load', file: File): void;
 }>();
@@ -33,6 +33,7 @@ function loadFileHandler(e: Event) {
     const file = fileList[0];
     if (!isPdfFile(file)) return;
     if (isExceedLimit(file)) {
+        window.alert(MESSAGE.PDF.EXCEED_LIMIT);
         return;
     }
 
