@@ -7,6 +7,7 @@
                     {{ HEADER.VIEW.MENU.LOAD }}
                 </button>
                 <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
+                <button @click="login">{{ HEADER.VIEW.MENU.LOGIN }}</button>
             </menu>
         </div>
     </header>
@@ -59,6 +60,14 @@ async function save() {
     if (!isSuccess) {
         alert(MESSAGE.STORAGE.UPDATE_FAILED);
     }
+}
+
+function login() {
+    /**
+     * TODO: 로그인 View 생성 및 로그인 연결
+     * 로그인 버튼 클릭 시 카카오 구글 버튼이 보이는 modal이 나타나고
+     * 클릭시 로그인 페이지로 이어진다.
+     */
 }
 </script>
 
