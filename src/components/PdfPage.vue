@@ -53,8 +53,6 @@ import { SizeType } from '@/types/SizeType';
 import PDF from '@/constants/PDF';
 import TOOL from '@/constants/TOOL';
 import { IPos } from '@/Interface/IPos';
-import Highlight from '@/classes/Highlight';
-import getSelectedLines from '@/utils/getSelectedLines';
 
 const props = defineProps({
     pageIndex: {
@@ -239,23 +237,11 @@ function eraseHandler(evt: MouseEvent) {
         y: evt.y - rect.y,
     };
 
-    const target = findOverlappedHighlight(pos);
+    const target = highlightStore.findOverlappedHighlight(pos, props.pageIndex);
 
     if (!target) return;
 
     highlightStore.deleteHighlight(target);
-}
-
-function findOverlappedHighlight(pos: IPos): Highlight | undefined {
-    const highlights = highlightStore.getHiglightsInPage(props.pageIndex);
-
-    return highlights.find((h) => {
-        const range = h.getRange();
-        if (!range) return;
-
-        const lines = getSelectedLines(range);
-        return lines.some((line) => line.rect.isOverlap(pos.x, pos.y));
-    });
 }
 </script>
 
