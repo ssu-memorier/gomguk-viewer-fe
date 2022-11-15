@@ -41,6 +41,7 @@ const highlightsInPage = computed(() => {
 });
 
 watch(highlightsInPage, () => {
+    clearCanvas();
     drawHighlight(highlightsInPage.value);
 });
 watch(props, () => {
@@ -52,6 +53,7 @@ watch(props, () => {
     };
 
     resizeCanvas($highlightLayer.value, newSize);
+    clearCanvas();
     drawHighlight(highlightsInPage.value);
 });
 
@@ -75,6 +77,10 @@ function drawLines(lines: Line[], color: Color) {
         ctx.value.fillStyle = color.code;
         ctx.value.fill();
     });
+}
+
+function clearCanvas() {
+    ctx.value?.clearRect(0, 0, props.width, props.height);
 }
 </script>
 <style>

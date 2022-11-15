@@ -7,7 +7,12 @@ export const useHighlightStore = defineStore('highlight', () => {
     function getHiglightsInPage(page: number) {
         return highlightList.value.filter((h) => h.pageNum === page);
     }
+    function deleteHighlight(highlight: Highlight) {
+        const idx = highlightList.value.indexOf(highlight);
 
+        if (idx < 0) return;
+        highlightList.value.splice(idx, 1);
+    }
     function addHighlight(highlight: Highlight) {
         highlightList.value.push(highlight);
     }
@@ -20,6 +25,7 @@ export const useHighlightStore = defineStore('highlight', () => {
     return {
         highlightList,
         getHiglightsInPage,
+        deleteHighlight,
         addHighlight,
         toJSON,
         fromArray,

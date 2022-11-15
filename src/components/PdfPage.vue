@@ -243,7 +243,7 @@ function eraseHandler(evt: MouseEvent) {
 
     if (!target) return;
 
-    // deleteHighlight(target);
+    highlightStore.deleteHighlight(target);
 }
 
 function findOverlappedHighlight(pos: IPos): Highlight | undefined {
