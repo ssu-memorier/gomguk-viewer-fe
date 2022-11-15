@@ -2,7 +2,9 @@
     <button @click="toggleAuthMethod">
         <slot></slot>
     </button>
-    <component :is="LoginView" v-show="isShow"></component>
+    <div class="viewBox card" v-show="isShow">
+        <component :is="LoginView" class="loginView"></component>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -16,4 +18,17 @@ function toggleAuthMethod() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.viewBox {
+    margin-top: 20px;
+    left: 100%;
+    margin-left: -200px;
+    position: relative;
+    width: 200px;
+    height: 100px;
+    .loginView {
+        position: absolute;
+        right: 0px;
+    }
+}
+</style>
