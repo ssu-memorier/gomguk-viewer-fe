@@ -7,6 +7,10 @@
             <button @click="zoomOutHandler">-</button>
             <span>{{ scalePercent }}%</span>
             <button @click="zoomInHandler">+</button>
+            <label>
+                eraser
+                <input type="checkbox" @change="onEraseMode" />
+            </label>
         </div>
         <div class="pageView" ref="$pageView">
             <div class="pageContainer" ref="$pageContainer" @copy="copyHandler">
@@ -53,6 +57,9 @@ const pageNumList = ref<number[]>([]);
 const scalePercent = computed(() => {
     return Math.floor(pdfStore.viewportOption.scale * 100);
 });
+
+type ModeType = 'eraser' | 'default';
+let mode: ModeType = 'default;';
 onMounted(() => {
     $pdfView.value.addEventListener('mousedown', selectionStartHandler);
     document.addEventListener('selectionchange', selectionChangeHandler);
@@ -158,6 +165,11 @@ function zoomInHandler() {
 }
 function zoomOutHandler() {
     pdfStore.decreaseScale();
+}
+
+function onEraseMode(evt: Event) {
+    const $target = evt.target as HTMLInputElement;
+    mode = $target.checked ? 'eraser' : 'default';
 }
 </script>
 
