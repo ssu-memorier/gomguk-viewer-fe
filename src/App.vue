@@ -7,7 +7,12 @@
                     {{ HEADER.VIEW.MENU.LOAD }}
                 </button>
                 <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
-                <login-button>{{ HEADER.VIEW.MENU.LOGIN }}</login-button>
+
+                <logout-button v-if="userStore.isLoggined">{{
+                    HEADER.VIEW.MENU.LOGOUT
+                }}</logout-button>
+                <login-button v-else>{{ HEADER.VIEW.MENU.LOGIN }}</login-button>
+                {{ userStore.userName }}
             </menu>
         </div>
     </header>
@@ -34,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import RowResizer from '@/components/resizer/RowResizer.vue';
 import ColumnResizer from '@/components/resizer/ColumnResizer.vue';
 import PdfView from '@/views/Paper/PdfView.vue';
@@ -42,17 +48,22 @@ import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import LoginButton from './components/button/LoginButton.vue';
+import LogoutButton from './components/button/LogoutButton.vue';
 import { useModalStore } from '@/store/modal';
 import { useFileStore } from '@/store/file';
+import { useUserStore } from '@/store/user';
 import HEADER from '@/constants/HEADER';
 import MESSAGE from '@/constants/MESSAGE';
-import { ref } from 'vue';
 
 const $main = ref();
 
 const modalStore = useModalStore();
 const fileStore = useFileStore();
+const userStore = useUserStore();
 
+onMounted(async () => {
+    await userStore.getProfile();
+});
 function load() {
     modalStore.showModal();
 }
