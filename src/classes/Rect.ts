@@ -28,10 +28,10 @@ export default class Rect {
         this.endPoint.y = y;
     }
     isOverlap(x: number, y: number): boolean {
-        if (!(this.left < x && x < this.right)) {
+        if (!(this.left <= x && x <= this.right)) {
             return false;
         }
-        if (!(this.top < y && y < this.bottom)) {
+        if (!(this.top <= y && y <= this.bottom)) {
             return false;
         }
         return true;
