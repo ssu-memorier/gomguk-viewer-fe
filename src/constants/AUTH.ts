@@ -4,12 +4,14 @@ export const PROVIDER = {
 } as const;
 
 export const URL = {
-    KAKAO_AUTH: '/auth/kakao',
-    GOOGLE_AUTH: '/auth/google',
+    KAKAO_LOGIN: '/kakao',
+    GOOGLE_LOGIN: '/google',
+    LOGOUT: '/logout',
+    PROFILE: '/profile',
 } as const;
 
 export default {
-    DOMAIN: process.env.VUE_APP_AUTH_DOMAIN,
+    BASE: '/auth',
     URL: URL,
     PROVIDER: PROVIDER,
 };
