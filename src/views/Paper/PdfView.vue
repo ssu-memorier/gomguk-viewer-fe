@@ -11,7 +11,7 @@
                 eraser
                 <input
                     type="checkbox"
-                    @change="toolsStore.changeTool(TOOL.ERASER)"
+                    @change="changeTool($event, TOOL.ERASER)"
                 />
             </label>
         </div>
@@ -55,6 +55,7 @@ import setSelection from '@/utils/setSelection';
 import clearSelection from '@/utils/clearSelection';
 import { IPos } from '@/Interface/IPos';
 import TOOL from '@/constants/TOOL';
+import { ToolType } from '@/types/ToolType';
 
 const pdfStore = usePdfStore();
 const toolsStore = useToolsStore();
@@ -180,6 +181,17 @@ function zoomInHandler() {
 }
 function zoomOutHandler() {
     pdfStore.decreaseScale();
+}
+
+function changeTool(evt: Event, tool: ToolType) {
+    const $target = evt.target as HTMLInputElement;
+
+    if ($target.checked) {
+        toolsStore.changeTool(tool);
+        return;
+    }
+
+    toolsStore.changeTool(TOOL.NONE);
 }
 </script>
 
