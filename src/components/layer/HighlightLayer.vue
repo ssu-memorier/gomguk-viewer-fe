@@ -6,7 +6,7 @@
 /**
  * HighlightLayer는 pdf의 Highlight 영역을 그리는 레이어 컴포넌트 입니다.
  */
-import { defineProps, ref, onMounted, computed, watch } from 'vue';
+import { defineProps, ref, computed, watch } from 'vue';
 import { useHighlightStore } from '@/store/file/highlight';
 import Line from '@/classes/Line';
 import Color from '@/classes/Color';
@@ -41,6 +41,7 @@ const highlightsInPage = computed(() => {
 });
 
 watch(highlightsInPage, () => {
+    clearCanvas();
     drawHighlight(highlightsInPage.value);
 });
 watch(props, () => {
@@ -52,6 +53,7 @@ watch(props, () => {
     };
 
     resizeCanvas($highlightLayer.value, newSize);
+    clearCanvas();
     drawHighlight(highlightsInPage.value);
 });
 
@@ -75,6 +77,10 @@ function drawLines(lines: Line[], color: Color) {
         ctx.value.fillStyle = color.code;
         ctx.value.fill();
     });
+}
+
+function clearCanvas() {
+    ctx.value?.clearRect(0, 0, props.width, props.height);
 }
 </script>
 <style>

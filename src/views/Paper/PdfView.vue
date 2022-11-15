@@ -7,9 +7,21 @@
             <button @click="zoomOutHandler">-</button>
             <span>{{ scalePercent }}%</span>
             <button @click="zoomInHandler">+</button>
+            <label>
+                eraser
+                <input
+                    type="checkbox"
+                    @change="changeTool($event, TOOL.ERASER)"
+                />
+            </label>
         </div>
         <div class="pageView" ref="$pageView">
-            <div class="pageContainer" ref="$pageContainer" @copy="copyHandler">
+            <div
+                class="pageContainer"
+                ref="$pageContainer"
+                @copy="copyHandler"
+                :class="{ eraseMode: toolsStore.tool === TOOL.ERASER }"
+            >
                 <PdfPage
                     v-for="num in pageNumList"
                     :key="pdfStore.fileName + num"
@@ -31,6 +43,7 @@
 import PdfPage from '@/components/PdfPage.vue';
 import { useSelectionStore } from '@/store/selection';
 import { usePdfStore } from '@/store/file/pdf';
+import { useToolsStore } from '@/store/file/tools';
 import { ref, onMounted, computed } from 'vue';
 import CLIPBOARD from '@/constants/CLIPBOARD';
 import POPUP from '@/constants/POPUP';
@@ -41,8 +54,11 @@ import Line from '@/classes/Line';
 import setSelection from '@/utils/setSelection';
 import clearSelection from '@/utils/clearSelection';
 import { IPos } from '@/Interface/IPos';
+import TOOL from '@/constants/TOOL';
+import { ToolType } from '@/types/ToolType';
 
 const pdfStore = usePdfStore();
+const toolsStore = useToolsStore();
 const selectionStore = useSelectionStore();
 const $selectionPopup = ref();
 const $pdfView = ref();
@@ -53,10 +69,17 @@ const pageNumList = ref<number[]>([]);
 const scalePercent = computed(() => {
     return Math.floor(pdfStore.viewportOption.scale * 100);
 });
+
 onMounted(() => {
-    $pdfView.value.addEventListener('mousedown', selectionStartHandler);
-    document.addEventListener('selectionchange', selectionChangeHandler);
-    $pdfView.value.addEventListener('mouseup', selectionEndHandler);
+    $pdfView.value.addEventListener('mousedown', () => {
+        if (toolsStore.tool === TOOL.NONE) selectionStartHandler();
+    });
+    document.addEventListener('selectionchange', () => {
+        if (toolsStore.tool === TOOL.NONE) selectionChangeHandler();
+    });
+    $pdfView.value.addEventListener('mouseup', (evt: MouseEvent) => {
+        if (toolsStore.tool === TOOL.NONE) selectionEndHandler(evt);
+    });
 });
 
 pdfStore.$subscribe((_, { numPages }) => {
@@ -159,6 +182,17 @@ function zoomInHandler() {
 function zoomOutHandler() {
     pdfStore.decreaseScale();
 }
+
+function changeTool(evt: Event, tool: ToolType) {
+    const $target = evt.target as HTMLInputElement;
+
+    if ($target.checked) {
+        toolsStore.changeTool(tool);
+        return;
+    }
+
+    toolsStore.changeTool(TOOL.NONE);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -203,5 +237,8 @@ function zoomOutHandler() {
             padding: $PAGE_CONTAINER_PADDING;
         }
     }
+}
+.eraseMode {
+    user-select: none;
 }
 </style>
