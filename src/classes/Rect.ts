@@ -27,6 +27,15 @@ export default class Rect {
     setBottom(y: number) {
         this.endPoint.y = y;
     }
+    isOverlap(x: number, y: number): boolean {
+        if (!(this.left < x && x < this.right)) {
+            return false;
+        }
+        if (!(this.top < y && y < this.bottom)) {
+            return false;
+        }
+        return true;
+    }
     get height() {
         return Math.max(this.endPoint.y - this.startPoint.y, 0);
     }

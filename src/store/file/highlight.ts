@@ -4,6 +4,9 @@ import Highlight, { IHighlight } from '@/classes/Highlight';
 
 export const useHighlightStore = defineStore('highlight', () => {
     const highlightList = ref<Highlight[]>([]);
+    function getHiglightsInPage(page: number) {
+        return highlightList.value.filter((h) => h.pageNum === page);
+    }
 
     function addHighlight(highlight: Highlight) {
         highlightList.value.push(highlight);
@@ -16,6 +19,7 @@ export const useHighlightStore = defineStore('highlight', () => {
     }
     return {
         highlightList,
+        getHiglightsInPage,
         addHighlight,
         toJSON,
         fromArray,
