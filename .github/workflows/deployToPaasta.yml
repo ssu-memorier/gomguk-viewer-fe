@@ -48,7 +48,7 @@ jobs:
               with:
                   source-directory: dist/
                   destination-github-username: 'ssu-memorier'
-                  destination-repository-name: 'gomguk-web-server'
+                  destination-repository-name: 'gomguk-webserver'
                   commit-message: build by ORIGIN_COMMIT
-                  target-branch: development
-                  target-directory: dist
+                  target-branch: main
+                  target-directory: public
