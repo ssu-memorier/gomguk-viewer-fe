@@ -97,6 +97,7 @@ export async function requestDeleteFile(
         };
 
         await model.delete(STORAGE.URL.FILE, {
+            headers: { 'Content-Type': 'application/json' },
             data,
         });
 
