@@ -20,14 +20,18 @@ export default {
 import { useFileStore } from '@/store/file';
 import { ref, onMounted } from 'vue';
 import { IFileInfo } from '@/Interface/IFileInfo';
+import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
 
 const fileStore = useFileStore();
+const userStore = useUserStore();
 const fileList = ref<IFileInfo[]>([]);
 const $files = ref();
 
 onMounted(async () => {
-    updateFileList();
+    if (userStore.isLoggined) {
+        updateFileList();
+    }
 });
 
 async function loadFile(fileInfo: IFileInfo) {
