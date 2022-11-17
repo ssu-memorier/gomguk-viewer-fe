@@ -1,5 +1,11 @@
 <template>
-    <div ref="$pdfPage" class="pdfPage card">
+    <div
+        ref="$pdfPage"
+        class="pdfPage card"
+        @mousedown="eraseStart"
+        @mousemove="eraseHandler"
+        @mouseup="eraseEnd"
+    >
         <canvas ref="$highResolutionLayer" class="highResolutionLayer"></canvas>
         <canvas
             ref="$lowResolutionLayer"
@@ -34,6 +40,8 @@
  */
 import { defineProps, ref, onMounted, watch, computed } from 'vue';
 import { usePdfStore } from '@/store/file/pdf';
+import { useToolsStore } from '@/store/file/tools';
+import { useHighlightStore } from '@/store/file/highlight';
 import SelectionLayer from '@/components/layer/SelectionLayer.vue';
 import HighlightLayer from '@/components/layer/HighlightLayer.vue';
 import copyCanvas from '@/utils/copyCanvas';
@@ -43,6 +51,8 @@ import resizeElement from '@/utils/resizeElement';
 import rescaleCanvas from '@/utils/rescaleCanvas';
 import { SizeType } from '@/types/SizeType';
 import PDF from '@/constants/PDF';
+import TOOL from '@/constants/TOOL';
+import { IPos } from '@/Interface/IPos';
 
 const props = defineProps({
     pageIndex: {
@@ -57,6 +67,7 @@ const props = defineProps({
 
 const isChangingSize = ref<boolean>(false);
 const isIntersecting = ref<boolean>(false);
+const isErasing = ref<boolean>(false);
 const pdfStore = usePdfStore();
 const $pdfPage = ref<HTMLDivElement>();
 const $textLayer = ref<HTMLDivElement>();
@@ -64,7 +75,8 @@ const $highResolutionLayer = ref<HTMLCanvasElement>();
 const $lowResolutionLayer = ref<HTMLCanvasElement>();
 const $selectionLayer = ref();
 const $highlightLayer = ref();
-
+const toolsStore = useToolsStore();
+const highlightStore = useHighlightStore();
 const highResolutionCtx = computed<CanvasRenderingContext2D | null>(() => {
     if (!$highResolutionLayer.value) return null;
     return $highResolutionLayer.value.getContext('2d');
@@ -206,6 +218,30 @@ async function renderTextLayer(pageSize: SizeType) {
     $textLayer.value.innerHTML = '';
     $textLayer.value.appendChild(fragment);
     page.addTokenInfo($textLayer.value);
+}
+function eraseStart() {
+    isErasing.value = true;
+}
+function eraseEnd() {
+    isErasing.value = false;
+}
+function eraseHandler(evt: MouseEvent) {
+    if (toolsStore.tool !== TOOL.ERASER) return;
+    if (!isErasing.value) return;
+
+    const rect = $pdfPage.value?.getBoundingClientRect();
+    if (!rect) return;
+
+    const pos: IPos = {
+        x: evt.x - rect.x,
+        y: evt.y - rect.y,
+    };
+
+    const target = highlightStore.findOverlappedHighlight(pos, props.pageIndex);
+
+    if (!target) return;
+
+    highlightStore.deleteHighlight(target);
 }
 </script>
 

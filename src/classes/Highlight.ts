@@ -19,7 +19,7 @@ export default class Highlight {
     endLine: number | undefined;
     endToken: number | undefined;
     endOffset: number | undefined;
-    color: Color | undefined = Color.YELLOW;
+    color: Color = Color.YELLOW;
 
     constructor(pageNum?: number, range?: Range) {
         if (!pageNum || !range) return;
@@ -82,7 +82,7 @@ export default class Highlight {
         highlight.endLine = json.endLine;
         highlight.endToken = json.endToken;
         highlight.endOffset = json.endOffset;
-        highlight.color = json.color ? Color.fromHex(json.color) : undefined;
+        highlight.color = json.color ? Color.fromHex(json.color) : Color.YELLOW;
 
         return highlight;
     }
