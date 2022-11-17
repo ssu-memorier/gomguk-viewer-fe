@@ -54,12 +54,34 @@ import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import HEADER from '@/constants/HEADER';
 import MESSAGE from '@/constants/MESSAGE';
+/**
+ * TODO: 제거 예정
+ */
+import axios from 'axios';
 
 const $main = ref();
 
 const modalStore = useModalStore();
 const fileStore = useFileStore();
 const userStore = useUserStore();
+
+/**
+ * TODO: 추후 제거 예정
+ *
+ * 아래 로직은 ajax 요청의 결과가 401인 경우 로그아웃을 시키는 로직으로 추후 get~~Model 유틸에 흡수할 예정입니다.
+ * 현재는 model이 여러 곳으로 쪼개져 있어 임시로 이 곳에서 401을 처리하도록 하지만
+ * 추후 gateway를 통해 통합된 model을 제공할 예정이기 때문에 그 때 이 로직을 제거하고 통합된 model에서 401을 처리하게 할 것입니다.
+ */
+axios.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (err) => {
+        if (err.response.status === 401) {
+            userStore.isLoggined = false;
+        }
+    }
+);
 
 onMounted(async () => {
     await userStore.getProfile();
