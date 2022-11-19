@@ -33,7 +33,7 @@
             </template>
         </row-resizer>
     </main>
-    <center-modal :show="modalStore.isShow">
+    <center-modal v-if="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
     </center-modal>
 </template>

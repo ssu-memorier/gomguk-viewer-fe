@@ -29,6 +29,7 @@ const fileList = ref<IFileInfo[]>([]);
 const $files = ref();
 
 onMounted(async () => {
+    console.log(32);
     if (userStore.isLoggined) {
         updateFileList();
     }
