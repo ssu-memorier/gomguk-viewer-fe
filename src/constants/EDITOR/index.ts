@@ -3,6 +3,7 @@ import Header from '@editorjs/header';
 import ToggleBlock from 'editorjs-toggle-block';
 import SimpleImage from '@editorjs/simple-image';
 import LaTeX from 'editorjs-simple-latex';
+import DEFAULT from '@/constants/EDITOR/DEFAULT';
 
 const HEADER_OPS = {
     class: Header,
@@ -46,4 +47,5 @@ export default {
     SIMPLE_IMAGE_OPS,
     LATEX_OPS,
     TOOL_CONFIG,
+    DEFAULT,
 };
