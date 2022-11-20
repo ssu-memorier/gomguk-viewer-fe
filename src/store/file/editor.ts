@@ -15,7 +15,10 @@ export const useEditorStore = defineStore('editor', () => {
     }
     async function toJSON() {
         if (!editor) return null;
-        return await editor.save();
+
+        const content = await editor.save();
+        console.log(content);
+        return content;
     }
     async function fromJSON(json: OutputData) {
         if (!editor) return;
