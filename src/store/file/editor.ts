@@ -17,7 +17,9 @@ export const useEditorStore = defineStore('editor', () => {
         if (!editor) return null;
 
         const content = await editor.save();
-        console.log(content);
+        if (content.blocks.length === 0) {
+            content.blocks.push(EDITOR.DEFAULT);
+        }
         return content;
     }
     async function fromJSON(json: OutputData) {
