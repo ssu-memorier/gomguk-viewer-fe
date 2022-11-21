@@ -17,4 +17,4 @@ export default {
     VIEW: {
         LOGOUT: '로그아웃',
     },
-};
+} as const;
