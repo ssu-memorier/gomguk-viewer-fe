@@ -76,12 +76,8 @@ async function save() {
         *:last-child {
             margin-right: 0;
         }
-        .load {
-            width: 48px;
-        }
-        .save {
-            width: 48px;
-        }
+        .load,
+        .save,
         .profile {
             width: 48px;
         }
