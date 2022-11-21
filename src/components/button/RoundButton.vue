@@ -13,4 +13,19 @@ defineProps({
     },
 });
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import '@/assets/scss/theme';
+
+button {
+    aspect-ratio: 1 / 1;
+    padding: 0.25rem;
+    border: 0;
+    border-radius: 50%;
+    background-color: $SURFACE-COLOR;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $SURFACE-COLOR__HOVER;
+    }
+}
+</style>
