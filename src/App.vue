@@ -1,20 +1,6 @@
 <template>
     <header class="card">
-        <div class="center">
-            <site-logo></site-logo>
-            <menu>
-                <button @click="load">
-                    {{ HEADER.VIEW.MENU.LOAD }}
-                </button>
-                <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
-
-                <logout-button v-if="userStore.isLoggined">{{
-                    HEADER.VIEW.MENU.LOGOUT
-                }}</logout-button>
-                <login-button v-else>{{ HEADER.VIEW.MENU.LOGIN }}</login-button>
-                {{ userStore.userName }}
-            </menu>
-        </div>
+        <masthead-view class="center"></masthead-view>
     </header>
     <main ref="$main">
         <row-resizer class="resizeBox" :left-percent="0.5">
@@ -47,25 +33,18 @@ import TranslatorView from '@/views/Paper/TranslatorView.vue';
 import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
-import LoginButton from '@/components/button/LoginButton.vue';
-import LogoutButton from '@/components/button/LogoutButton.vue';
-import SiteLogo from '@/components/SiteLogo.vue';
 import { useModalStore } from '@/store/modal';
-import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
-import HEADER from '@/constants/HEADER';
-import MESSAGE from '@/constants/MESSAGE';
 /**
  * TODO: 제거 예정
  */
 import axios from 'axios';
+import MastheadView from './views/MastheadView.vue';
 
 const $main = ref();
 
-const modalStore = useModalStore();
-const fileStore = useFileStore();
 const userStore = useUserStore();
-
+const modalStore = useModalStore();
 /**
  * TODO: 추후 제거 예정
  *
@@ -87,18 +66,10 @@ axios.interceptors.response.use(
 onMounted(async () => {
     await userStore.getProfile();
 });
-function load() {
-    modalStore.showModal();
-}
-async function save() {
-    const isSuccess = await fileStore.updateFile();
-    if (!isSuccess) {
-        alert(MESSAGE.STORAGE.UPDATE_FAILED);
-    }
-}
 </script>
 
 <style lang="scss">
+@import '@/assets/scss/layout';
 @import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
 
@@ -125,7 +96,7 @@ body {
 header {
     position: relative;
     box-sizing: border-box;
-    height: $header-height;
+    height: $HEADER-HEIGHT;
     background-color: $SURFACE-COLOR;
     padding: 0.5rem 2rem;
     z-index: 200;
@@ -145,7 +116,7 @@ header {
 }
 main {
     position: relative;
-    height: calc(100% - $header-height);
+    height: calc(100% - $HEADER-HEIGHT);
     width: 100%;
     margin: 0;
     z-index: 10;
