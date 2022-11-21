@@ -39,7 +39,10 @@ async function save() {
 }
 </script>
 <style lang="scss" scoped>
+@import '@/assets/scss/constants/MASTHEAD';
 .mastheadView {
+    width: 100%;
+    height: $MASTHEAD-HEIGHT;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
