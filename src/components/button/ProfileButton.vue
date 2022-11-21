@@ -29,5 +29,6 @@ button {
     border-radius: 50%;
     border: 0;
     cursor: pointer;
+    background-color: $PRIMARY-COLOR;
 }
 </style>
