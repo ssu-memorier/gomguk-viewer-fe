@@ -101,9 +101,6 @@ header {
     padding: 0.5rem 2rem;
     z-index: 200;
     .center {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
         margin: 0 auto;
         width: 100%;
         height: 100%;

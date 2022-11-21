@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mastheadView">
         <site-logo></site-logo>
         <menu>
             <button @click="load">
@@ -38,4 +38,10 @@ async function save() {
     }
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mastheadView {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+</style>
