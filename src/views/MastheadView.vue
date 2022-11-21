@@ -2,18 +2,26 @@
     <div id="mastheadView">
         <site-logo></site-logo>
         <menu v-if="userStore.isLoggined">
-            <button @click="load">
-                {{ HEADER.VIEW.MENU.LOAD }}
-            </button>
+            <round-button
+                class="load"
+                @click="load"
+                :title="HEADER.VIEW.MENU.LOAD"
+            >
+                <img src="@/assets/images/svg/folder.svg" />
+            </round-button>
             <button @click="save">
                 {{ HEADER.VIEW.MENU.SAVE }}
             </button>
             <logout-button>{{ HEADER.VIEW.MENU.LOGOUT }}</logout-button>
         </menu>
         <menu v-else>
-            <button @click="load">
-                {{ HEADER.VIEW.MENU.LOAD }}
-            </button>
+            <round-button
+                class="load"
+                @click="load"
+                :title="HEADER.VIEW.MENU.LOAD"
+            >
+                <img src="@/assets/images/svg/folder.svg" />
+            </round-button>
             <login-button>{{ HEADER.VIEW.MENU.LOGIN }}</login-button>
         </menu>
     </div>
@@ -28,6 +36,7 @@ import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
 import HEADER from '@/constants/HEADER';
+import RoundButton from '@/components/button/RoundButton.vue';
 
 const modalStore = useModalStore();
 const fileStore = useFileStore();
@@ -52,5 +61,11 @@ async function save() {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    menu {
+        .load {
+            width: 48px;
+        }
+    }
 }
 </style>
