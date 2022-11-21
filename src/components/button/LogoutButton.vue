@@ -1,12 +1,12 @@
 <template>
     <div class="logout" @click="go(AUTH.BASE + AUTH.URL.LOGOUT)">
-        <a> {{ AUTH.VIEW.LOGOUT }} </a>
+        <alert-button>{{ AUTH.VIEW.LOGOUT }}</alert-button>
     </div>
 </template>
 
 <script setup lang="ts">
 import AUTH from '@/constants/AUTH';
-
+import AlertButton from '@/components/button/AlertButton.vue';
 function go(url: string) {
     window.location.assign(url);
 }
@@ -19,11 +19,5 @@ function go(url: string) {
     background-color: $SURFACE-COLOR;
     box-shadow: $SHADOW__6DP;
     border-radius: $BORDER-RADIUS__16;
-
-    a {
-        border: 1px solid black;
-        border-radius: $BORDER-RADIUS__16;
-        text-decoration: none;
-    }
 }
 </style>
