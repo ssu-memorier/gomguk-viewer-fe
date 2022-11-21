@@ -70,6 +70,9 @@ async function save() {
         .load {
             width: 48px;
         }
+        .save {
+            width: 48px;
+        }
         .profile {
             width: 48px;
         }
