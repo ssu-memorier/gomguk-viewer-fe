@@ -1,7 +1,5 @@
 <template>
-    <a :href="AUTH.BASE + AUTH.URL.LOGOUT">
-        <slot></slot>
-    </a>
+    <a :href="AUTH.BASE + AUTH.URL.LOGOUT"> 로그아웃 </a>
 </template>
 
 <script setup lang="ts">
