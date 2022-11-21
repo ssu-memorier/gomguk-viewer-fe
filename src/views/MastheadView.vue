@@ -42,6 +42,7 @@ async function save() {
 @import '@/assets/scss/constants/MASTHEAD';
 .mastheadView {
     width: 100%;
+    padding: 0 24px;
     height: $MASTHEAD-HEIGHT;
     display: flex;
     flex-direction: row;
