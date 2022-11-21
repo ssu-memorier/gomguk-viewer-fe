@@ -81,7 +81,8 @@ async function save() {
         .load,
         .save,
         .profile {
-            width: 48px;
+            width: 40px;
+            height: 40px;
         }
     }
 }
