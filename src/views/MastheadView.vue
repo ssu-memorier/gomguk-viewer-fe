@@ -1,5 +1,5 @@
 <template>
-    <div class="mastheadView">
+    <div id="mastheadView">
         <site-logo></site-logo>
         <menu>
             <button @click="load">
@@ -40,7 +40,7 @@ async function save() {
 </script>
 <style lang="scss" scoped>
 @import '@/assets/scss/constants/MASTHEAD';
-.mastheadView {
+#mastheadView {
     width: 100%;
     padding: 0 24px;
     height: $MASTHEAD-HEIGHT;
