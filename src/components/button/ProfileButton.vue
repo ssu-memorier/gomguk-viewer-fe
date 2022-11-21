@@ -1,12 +1,11 @@
 <template>
-    <round-button>
+    <button>
         <img v-if="picture" :src="picture" />
         <img v-else src="@/assets/images/svg/user.svg" />
-    </round-button>
+    </button>
 </template>
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import RoundButton from '@/components/button/RoundButton.vue';
 
 defineProps({
     picture: {
@@ -21,3 +20,14 @@ defineProps({
     },
 });
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/theme';
+
+button {
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 0;
+    cursor: pointer;
+}
+</style>
