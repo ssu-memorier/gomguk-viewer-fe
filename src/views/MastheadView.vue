@@ -83,6 +83,8 @@ async function save() {
         .profile {
             width: 40px;
             height: 40px;
+            margin-top: auto;
+            margin-bottom: auto;
         }
     }
 }
