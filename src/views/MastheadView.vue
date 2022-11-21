@@ -9,9 +9,13 @@
             >
                 <img src="@/assets/images/svg/folder.svg" />
             </round-button>
-            <button @click="save">
-                {{ HEADER.VIEW.MENU.SAVE }}
-            </button>
+            <round-button
+                class="save"
+                @click="save"
+                :title="HEADER.VIEW.MENU.SAVE"
+            >
+                <img src="@/assets/images/svg/save.svg" />
+            </round-button>
             <logout-button>{{ HEADER.VIEW.MENU.LOGOUT }}</logout-button>
         </menu>
         <menu v-else>
