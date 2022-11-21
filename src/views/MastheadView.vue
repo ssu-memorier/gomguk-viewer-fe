@@ -3,19 +3,20 @@
         <site-logo></site-logo>
         <menu v-if="userStore.isLoggined">
             <round-button
-                class="load"
-                @click="load"
-                :title="HEADER.VIEW.MENU.LOAD"
-            >
-                <img src="@/assets/images/svg/folder.svg" />
-            </round-button>
-            <round-button
                 class="save"
                 @click="save"
                 :title="HEADER.VIEW.MENU.SAVE"
             >
                 <img src="@/assets/images/svg/save.svg" />
             </round-button>
+            <round-button
+                class="load"
+                @click="load"
+                :title="HEADER.VIEW.MENU.LOAD"
+            >
+                <img src="@/assets/images/svg/folder.svg" />
+            </round-button>
+
             <profile-button class="profile"></profile-button>
         </menu>
         <menu v-else>
