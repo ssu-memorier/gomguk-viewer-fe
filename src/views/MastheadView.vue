@@ -18,6 +18,8 @@
 
 <script setup lang="ts">
 import SiteLogo from '@/components/SiteLogo.vue';
+import LogoutButton from '@/components/button/LogoutButton.vue';
+import LoginButton from '@/components/button/LoginButton.vue';
 import { useFileStore } from '@/store/file';
 import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
