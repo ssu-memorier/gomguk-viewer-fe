@@ -17,7 +17,10 @@
                 <img src="@/assets/images/svg/folder.svg" />
             </round-button>
 
-            <profile-button class="profile"></profile-button>
+            <profile-button
+                class="profile"
+                @click="toggleProfileMenu"
+            ></profile-button>
         </menu>
         <menu v-else>
             <round-button
@@ -55,6 +58,10 @@ async function save() {
     if (!isSuccess) {
         alert(MESSAGE.STORAGE.UPDATE_FAILED);
     }
+}
+
+function toggleProfileMenu() {
+    modalStore.toggleProfileMenu();
 }
 </script>
 <style lang="scss" scoped>

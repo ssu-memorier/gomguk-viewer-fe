@@ -22,6 +22,9 @@
     <center-modal v-if="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
     </center-modal>
+    <div class="dropdown profileMenu" v-show="modalStore.isShowProfileMenu">
+        <logout-button></logout-button>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -40,6 +43,7 @@ import { useUserStore } from '@/store/user';
  */
 import axios from 'axios';
 import MastheadView from './views/MastheadView.vue';
+import LogoutButton from './components/button/LogoutButton.vue';
 
 const $main = ref();
 
@@ -128,6 +132,12 @@ main {
         width: 100%;
         height: 100%;
     }
+}
+.profileMenu {
+    position: absolute;
+    right: 24px;
+    top: $HEADER-HEIGHT;
+    z-index: 1000;
 }
 .view {
     width: 100%;
