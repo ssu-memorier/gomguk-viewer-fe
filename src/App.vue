@@ -1,5 +1,5 @@
 <template>
-    <header class="card">
+    <header>
         <masthead-view class="center"></masthead-view>
     </header>
     <main ref="$main">
@@ -101,6 +101,7 @@ header {
     position: relative;
     height: $HEADER-HEIGHT;
     background-color: $SURFACE-COLOR;
+    box-shadow: $SHADOW__2DP;
     z-index: 200;
     .center {
         margin: 0 auto;
