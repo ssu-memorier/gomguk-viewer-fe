@@ -2,7 +2,6 @@
     <header class="card">
         <div class="center">
             <site-logo></site-logo>
-            <b class="appName">{{ HEADER.VIEW.TITLE }}</b>
             <menu>
                 <button @click="load">
                     {{ HEADER.VIEW.MENU.LOAD }}
