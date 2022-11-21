@@ -95,20 +95,16 @@ body {
 }
 header {
     position: relative;
-    box-sizing: border-box;
     height: $HEADER-HEIGHT;
     background-color: $SURFACE-COLOR;
-    padding: 0.5rem 2rem;
     z-index: 200;
     .center {
         margin: 0 auto;
-        width: 100%;
-        height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         max-width: $screen-main-max-width;
-    }
-    .appName {
-        font-weight: bold;
-        font-size: 1.6rem;
     }
 }
 main {
