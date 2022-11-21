@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Roboto&dispay=swap');
+
 $bg-color: #eeeeee;
 $SURFACE-COLOR: #ffffff;
 $SURFACE-COLOR__HOVER: #eee;
 $PRIMARY-COLOR: #7ed1ff;
-@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Roboto&dispay=swap');
+
+$SHADOW__2DP: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+$SHADOW__6DP: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
 
 .card {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: $SHADOW__2DP;
 }
