@@ -16,7 +16,7 @@
             >
                 <img src="@/assets/images/svg/save.svg" />
             </round-button>
-            <logout-button>{{ HEADER.VIEW.MENU.LOGOUT }}</logout-button>
+            <profile-button class="profile"></profile-button>
         </menu>
         <menu v-else>
             <round-button
@@ -33,7 +33,6 @@
 
 <script setup lang="ts">
 import SiteLogo from '@/components/SiteLogo.vue';
-import LogoutButton from '@/components/button/LogoutButton.vue';
 import LoginButton from '@/components/button/LoginButton.vue';
 import { useFileStore } from '@/store/file';
 import { useModalStore } from '@/store/modal';
@@ -41,6 +40,7 @@ import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
 import HEADER from '@/constants/HEADER';
 import RoundButton from '@/components/button/RoundButton.vue';
+import ProfileButton from '@/components/button/ProfileButton.vue';
 
 const modalStore = useModalStore();
 const fileStore = useFileStore();
@@ -68,6 +68,9 @@ async function save() {
 
     menu {
         .load {
+            width: 48px;
+        }
+        .profile {
             width: 48px;
         }
     }
