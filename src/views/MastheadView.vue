@@ -68,7 +68,7 @@ function toggleProfileMenu() {
 @import '@/assets/scss/constants/MASTHEAD';
 #mastheadView {
     width: 100%;
-    padding: 0 24px;
+    padding: 0 $VERTICAL-PADDING;
     height: $MASTHEAD-HEIGHT;
     display: flex;
     flex-direction: row;
