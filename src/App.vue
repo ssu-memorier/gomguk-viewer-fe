@@ -76,7 +76,7 @@ onMounted(async () => {
 @import '@/assets/scss/layout';
 @import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
-
+@import '@/assets/scss/constants/MASTHEAD';
 * {
     box-sizing: border-box;
 }
@@ -134,7 +134,7 @@ main {
 }
 .profileMenu {
     position: absolute;
-    right: 24px;
+    right: $VERTICAL-PADDING;
     top: $HEADER-HEIGHT;
     z-index: 1000;
 }
