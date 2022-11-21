@@ -1,5 +1,5 @@
 <template>
-    <a :href="AUTH.BASE + AUTH.URL.LOGOUT"> 로그아웃 </a>
+    <a :href="AUTH.BASE + AUTH.URL.LOGOUT"> {{ AUTH.VIEW.LOGOUT }} </a>
 </template>
 
 <script setup lang="ts">

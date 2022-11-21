@@ -14,4 +14,7 @@ export default {
     BASE: '/auth',
     URL: URL,
     PROVIDER: PROVIDER,
+    VIEW: {
+        LOGOUT: '로그아웃',
+    },
 };
