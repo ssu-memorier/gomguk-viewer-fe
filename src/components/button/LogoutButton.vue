@@ -1,22 +1,29 @@
 <template>
-    <a :href="AUTH.BASE + AUTH.URL.LOGOUT"> {{ AUTH.VIEW.LOGOUT }} </a>
+    <div class="logout" @click="go(AUTH.BASE + AUTH.URL.LOGOUT)">
+        <a> {{ AUTH.VIEW.LOGOUT }} </a>
+    </div>
 </template>
 
 <script setup lang="ts">
 import AUTH from '@/constants/AUTH';
+
+function go(url: string) {
+    window.location.assign(url);
+}
 </script>
 
 <style lang="scss" scoped>
-.viewBox {
-    margin-top: 20px;
-    left: 100%;
-    margin-left: -200px;
-    position: relative;
-    width: 200px;
-    height: 100px;
-    .loginView {
-        position: absolute;
-        right: 0px;
+@import '@/assets/scss/theme';
+.logout {
+    padding: 1rem;
+    background-color: $SURFACE-COLOR;
+    box-shadow: $SHADOW__6DP;
+    border-radius: $BORDER-RADIUS__16;
+
+    a {
+        border: 1px solid black;
+        border-radius: $BORDER-RADIUS__16;
+        text-decoration: none;
     }
 }
 </style>

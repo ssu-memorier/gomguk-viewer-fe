@@ -8,6 +8,9 @@ $PRIMARY-COLOR: #7ed1ff;
 $SHADOW__2DP: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 $SHADOW__6DP: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
 
+$BORDER-RADIUS__4: 4px;
+$BORDER-RADIUS__16: 16px;
+
 .card {
     box-shadow: $SHADOW__2DP;
 }
