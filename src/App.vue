@@ -1,6 +1,7 @@
 <template>
     <header class="card">
         <div class="center">
+            <site-logo></site-logo>
             <b class="appName">{{ HEADER.VIEW.TITLE }}</b>
             <menu>
                 <button @click="load">
@@ -49,6 +50,7 @@ import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import LoginButton from './components/button/LoginButton.vue';
 import LogoutButton from './components/button/LogoutButton.vue';
+import SiteLogo from '@/components/SiteLogo.vue';
 import { useModalStore } from '@/store/modal';
 import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
