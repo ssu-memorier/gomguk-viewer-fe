@@ -1,17 +1,20 @@
 <template>
     <div id="mastheadView">
         <site-logo></site-logo>
-        <menu>
+        <menu v-if="userStore.isLoggined">
             <button @click="load">
                 {{ HEADER.VIEW.MENU.LOAD }}
             </button>
-            <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
-
-            <logout-button v-if="userStore.isLoggined">{{
-                HEADER.VIEW.MENU.LOGOUT
-            }}</logout-button>
-            <login-button v-else>{{ HEADER.VIEW.MENU.LOGIN }}</login-button>
-            {{ userStore.userName }}
+            <button @click="save">
+                {{ HEADER.VIEW.MENU.SAVE }}
+            </button>
+            <logout-button>{{ HEADER.VIEW.MENU.LOGOUT }}</logout-button>
+        </menu>
+        <menu v-else>
+            <button @click="load">
+                {{ HEADER.VIEW.MENU.LOAD }}
+            </button>
+            <login-button>{{ HEADER.VIEW.MENU.LOGIN }}</login-button>
         </menu>
     </div>
 </template>
