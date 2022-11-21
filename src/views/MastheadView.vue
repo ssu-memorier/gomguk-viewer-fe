@@ -67,6 +67,15 @@ async function save() {
     justify-content: space-between;
 
     menu {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        * {
+            margin-right: 16px;
+        }
+        *:last-child {
+            margin-right: 0;
+        }
         .load {
             width: 48px;
         }
