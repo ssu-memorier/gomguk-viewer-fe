@@ -85,6 +85,11 @@ async function save() {
             height: 40px;
             margin-top: auto;
             margin-bottom: auto;
+
+            img {
+                aspect-ratio: 1 / 1;
+                width: 28px;
+            }
         }
     }
 }

@@ -17,7 +17,6 @@ defineProps({
 @import '@/assets/scss/theme';
 
 button {
-    aspect-ratio: 1 / 1;
     padding: 0.25rem;
     border: 0;
     border-radius: 50%;
