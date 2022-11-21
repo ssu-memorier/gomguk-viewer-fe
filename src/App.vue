@@ -135,7 +135,7 @@ main {
 .profileMenu {
     position: absolute;
     right: $VERTICAL-PADDING;
-    top: $HEADER-HEIGHT;
+    top: calc($HEADER-HEIGHT + 8px);
     z-index: 1000;
 }
 .view {
