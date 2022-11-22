@@ -14,4 +14,8 @@ export default {
     BASE: '/auth',
     URL: URL,
     PROVIDER: PROVIDER,
-};
+    VIEW: {
+        LOGOUT: '로그아웃',
+        LOGIN: '로그인',
+    },
+} as const;

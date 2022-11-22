@@ -1,24 +1,13 @@
 <template>
-    <a :href="AUTH.BASE + AUTH.URL.LOGOUT">
-        <slot></slot>
-    </a>
+    <alert-button @click="changeLocation(AUTH.BASE + AUTH.URL.LOGOUT)">
+        {{ AUTH.VIEW.LOGOUT }}
+    </alert-button>
 </template>
 
 <script setup lang="ts">
 import AUTH from '@/constants/AUTH';
+import AlertButton from '@/components/button/AlertButton.vue';
+import changeLocation from '@/utils/changeLocation';
 </script>
 
-<style lang="scss" scoped>
-.viewBox {
-    margin-top: 20px;
-    left: 100%;
-    margin-left: -200px;
-    position: relative;
-    width: 200px;
-    height: 100px;
-    .loginView {
-        position: absolute;
-        right: 0px;
-    }
-}
-</style>
+<style lang="scss" scoped></style>

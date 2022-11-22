@@ -1,34 +1,38 @@
 <template>
-    <button @click="toggleAuthMethod">
-        <slot></slot>
+    <button @click="modalStore.toggleLoginMethods()">
+        <b class="label">{{ AUTH.VIEW.LOGIN }}</b>
+        <img class="icon" src="@/assets/images/svg/user.svg" />
     </button>
-    <div class="viewBox card" v-show="isShow">
-        <component :is="LoginView" class="loginView"></component>
-    </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import LoginView from '@/views/LoginView.vue';
+import AUTH from '@/constants/AUTH';
+import { useModalStore } from '@/store/modal';
 
-const isShow = ref<boolean>(false);
-
-function toggleAuthMethod() {
-    isShow.value = !isShow.value;
-}
+const modalStore = useModalStore();
 </script>
 
 <style lang="scss" scoped>
-.viewBox {
-    margin-top: 20px;
-    left: 100%;
-    margin-left: -200px;
-    position: relative;
-    width: 200px;
-    height: 100px;
-    .loginView {
-        position: absolute;
-        right: 0px;
+@import '@/assets/scss/theme';
+button {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    border-radius: $BORDER-RADIUS__ROUND;
+    padding: 0 0 0 16px;
+    background-color: transparent;
+    border: 1px solid $BORDER-COLOR;
+    cursor: pointer;
+    * {
+        margin: auto 0;
+    }
+    b.label {
+        font: $HEADER__3;
+        margin-right: 8px;
+    }
+    img.icon {
+        height: 100%;
+        padding: 6px 8px 6px 0;
     }
 }
 </style>

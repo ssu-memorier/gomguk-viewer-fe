@@ -1,20 +1,6 @@
 <template>
-    <header class="card">
-        <div class="center">
-            <b class="appName">{{ HEADER.VIEW.TITLE }}</b>
-            <menu>
-                <button @click="load">
-                    {{ HEADER.VIEW.MENU.LOAD }}
-                </button>
-                <button @click="save">{{ HEADER.VIEW.MENU.SAVE }}</button>
-
-                <logout-button v-if="userStore.isLoggined">{{
-                    HEADER.VIEW.MENU.LOGOUT
-                }}</logout-button>
-                <login-button v-else>{{ HEADER.VIEW.MENU.LOGIN }}</login-button>
-                {{ userStore.userName }}
-            </menu>
-        </div>
+    <header>
+        <masthead-view class="center"></masthead-view>
     </header>
     <main ref="$main">
         <row-resizer class="resizeBox" :left-percent="0.5">
@@ -36,6 +22,13 @@
     <center-modal v-if="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
     </center-modal>
+    <div class="dropdown profileMenu" v-show="modalStore.isShowProfileMenu">
+        <logout-button></logout-button>
+    </div>
+    <div class="dropdown loginMethods" v-show="modalStore.isShowLoginMethods">
+        <kakao-login-button></kakao-login-button>
+        <google-login-button></google-login-button>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -47,13 +40,12 @@ import TranslatorView from '@/views/Paper/TranslatorView.vue';
 import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
-import LoginButton from './components/button/LoginButton.vue';
-import LogoutButton from './components/button/LogoutButton.vue';
+import MastheadView from '@/views/MastheadView.vue';
+import LogoutButton from '@/components/button/LogoutButton.vue';
+import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
+import GoogleLoginButton from '@/components/button/GoogleLoginButton.vue';
 import { useModalStore } from '@/store/modal';
-import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
-import HEADER from '@/constants/HEADER';
-import MESSAGE from '@/constants/MESSAGE';
 /**
  * TODO: 제거 예정
  */
@@ -61,10 +53,8 @@ import axios from 'axios';
 
 const $main = ref();
 
-const modalStore = useModalStore();
-const fileStore = useFileStore();
 const userStore = useUserStore();
-
+const modalStore = useModalStore();
 /**
  * TODO: 추후 제거 예정
  *
@@ -86,21 +76,13 @@ axios.interceptors.response.use(
 onMounted(async () => {
     await userStore.getProfile();
 });
-function load() {
-    modalStore.showModal();
-}
-async function save() {
-    const isSuccess = await fileStore.updateFile();
-    if (!isSuccess) {
-        alert(MESSAGE.STORAGE.UPDATE_FAILED);
-    }
-}
 </script>
 
 <style lang="scss">
+@import '@/assets/scss/layout';
 @import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
-
+@import '@/assets/scss/constants/MASTHEAD';
 * {
     box-sizing: border-box;
 }
@@ -123,28 +105,21 @@ body {
 }
 header {
     position: relative;
-    box-sizing: border-box;
-    height: $header-height;
+    height: $HEADER-HEIGHT;
     background-color: $SURFACE-COLOR;
-    padding: 0.5rem 2rem;
+    box-shadow: $SHADOW__2DP;
     z-index: 200;
     .center {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
         margin: 0 auto;
-        width: 100%;
-        height: 100%;
-        max-width: $screen-main-max-width;
-    }
-    .appName {
-        font-weight: bold;
-        font-size: 1.6rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 main {
     position: relative;
-    height: calc(100% - $header-height);
+    height: calc(100% - $HEADER-HEIGHT);
     width: 100%;
     margin: 0;
     z-index: 10;
@@ -163,6 +138,25 @@ main {
         width: 100%;
         height: 100%;
     }
+}
+.profileMenu,
+.loginMethods {
+    position: absolute;
+    right: $VERTICAL-PADDING;
+    top: calc($HEADER-HEIGHT + 8px);
+    z-index: 1000;
+    border-radius: $BORDER-RADIUS__16;
+    box-shadow: $SHADOW__6DP;
+    background-color: $SURFACE-COLOR;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+}
+.loginMethods > * {
+    margin-bottom: 0.5rem;
+}
+.loginMethods > *:last-child {
+    margin-bottom: 0;
 }
 .view {
     width: 100%;
