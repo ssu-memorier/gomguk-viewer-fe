@@ -4,6 +4,7 @@ $bg-color: #eeeeee;
 $SURFACE-COLOR: #ffffff;
 $SURFACE-COLOR__HOVER: #eee;
 $PRIMARY-COLOR: #7ed1ff;
+$BORDER-COLOR: #ccc;
 $BORDER-COLOR__LIGHT: #eee;
 
 $ALERT-COLOR: #f48989;
@@ -15,6 +16,7 @@ $SHADOW__6DP: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
 
 $BORDER-RADIUS__4: 4px;
 $BORDER-RADIUS__16: 16px;
+$BORDER-RADIUS__ROUND: 9999px;
 
 .card {
     box-shadow: $SHADOW__2DP;
