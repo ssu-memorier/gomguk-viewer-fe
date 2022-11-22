@@ -20,13 +20,24 @@ const modalStore = useModalStore();
 </script>
 <style scoped lang="scss">
 @import '@/assets/scss/theme';
-.load {
-    padding: 1rem 3rem;
-    font: $HEADER__3;
-    background-color: $PRIMARY-COLOR;
 
-    &:hover {
-        background-color: $PRIMARY-COLOR__DARK;
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    .guideText {
+        display: inline-block;
+        margin-bottom: 3rem;
+    }
+    .load {
+        padding: 1rem 3rem;
+        font: $HEADER__3;
+        background-color: $PRIMARY-COLOR;
+
+        &:hover {
+            background-color: $PRIMARY-COLOR__DARK;
+        }
     }
 }
 </style>
