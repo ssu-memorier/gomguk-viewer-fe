@@ -27,6 +27,7 @@
     </div>
     <div class="dropdown loginMethods" v-show="modalStore.isShowLoginMethods">
         <kakao-login-button></kakao-login-button>
+        <google-login-button></google-login-button>
     </div>
 </template>
 
@@ -42,6 +43,7 @@ import CenterModal from '@/components/CenterModal.vue';
 import MastheadView from '@/views/MastheadView.vue';
 import LogoutButton from '@/components/button/LogoutButton.vue';
 import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
+import GoogleLoginButton from '@/components/button/GoogleLoginButton.vue';
 import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
 /**
@@ -147,6 +149,14 @@ main {
     box-shadow: $SHADOW__6DP;
     background-color: $SURFACE-COLOR;
     padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+}
+.loginMethods > * {
+    margin-bottom: 0.5rem;
+}
+.loginMethods > *:last-child {
+    margin-bottom: 0;
 }
 .view {
     width: 100%;
