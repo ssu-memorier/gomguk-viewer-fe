@@ -1,9 +1,6 @@
 <template>
     <div id="pdfView" ref="$pdfView" class="view">
-        <div class="noPdf" v-if="pageNumList.length <= 0">
-            <p>파일을 불러와주세요😀</p>
-        </div>
-        <div class="header" v-else>
+        <div class="header">
             <button @click="zoomOutHandler">-</button>
             <span>{{ scalePercent }}%</span>
             <button @click="zoomInHandler">+</button>

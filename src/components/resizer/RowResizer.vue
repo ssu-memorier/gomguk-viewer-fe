@@ -3,9 +3,10 @@
         class="rowResizer"
         @mousemove="resize"
         @mouseup="resizeEnd"
+        :style="{ width: `${props.boxWidth}px` }"
         ref="$rowResizer"
     >
-        <div class="left" :style="{ width: leftWidth + 'px' }">
+        <div class="left" :style="{ width: `${leftWidth}px` }">
             <slot name="left"></slot>
         </div>
         <div
@@ -18,7 +19,7 @@
         >
             <div class="line"></div>
         </div>
-        <div class="right" :style="{ width: rightWidth + 'px' }">
+        <div class="right" :style="{ width: `${rightWidth}px` }">
             <slot name="right"></slot>
         </div>
     </div>
@@ -28,6 +29,13 @@ import { ref, onMounted, computed, defineProps } from 'vue';
 import RESIZER from '@/constants/RESIZER';
 
 const props = defineProps({
+    boxWidth: {
+        type: Number,
+        required: true,
+        validator(value: number) {
+            return value > 0;
+        },
+    },
     leftPercent: {
         type: Number,
         validator(value: number) {
@@ -37,21 +45,15 @@ const props = defineProps({
 });
 const $resizer = ref();
 const $rowResizer = ref();
-const boxWidth = ref<number>(0);
 const boxOffset = ref<number>(0);
 const leftPercent = ref<number>(props.leftPercent ?? 0.5);
 const isResizing = ref<boolean>(false);
-const leftWidth = computed(() => boxWidth.value * leftPercent.value);
-const rightWidth = computed(() => boxWidth.value - leftWidth.value);
+const leftWidth = computed(() => props.boxWidth * leftPercent.value);
+const rightWidth = computed(() => props.boxWidth - leftWidth.value);
 
 onMounted(() => {
     const rect = $rowResizer.value.getBoundingClientRect();
-    boxWidth.value = rect.width;
     boxOffset.value = rect.x;
-});
-
-window.addEventListener('resize', () => {
-    boxWidth.value = $rowResizer.value.getBoundingClientRect().width;
 });
 
 function resizeStart() {
@@ -63,7 +65,7 @@ function resizeEnd() {
 function resize(evt: MouseEvent) {
     if (!isResizing.value) return;
 
-    leftPercent.value = (evt.clientX - boxOffset.value) / boxWidth.value;
+    leftPercent.value = (evt.clientX - boxOffset.value) / props.boxWidth;
 }
 </script>
 <style scoped lang="scss">
@@ -81,6 +83,8 @@ function resize(evt: MouseEvent) {
 div.resizer {
     position: absolute;
     z-index: 100;
+    left: 0;
+    top: 0;
     width: $RESIZER_LEN;
     height: 100%;
     display: flex;

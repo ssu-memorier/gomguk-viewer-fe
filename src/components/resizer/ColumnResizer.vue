@@ -3,9 +3,10 @@
         class="columnResizer"
         @mousemove="resize"
         @mouseup="resizeEnd"
+        :style="{ height: `${props.boxHeight}px` }"
         ref="$columnResizer"
     >
-        <div class="top" :style="{ height: topHeight + 'px' }">
+        <div class="top" :style="{ height: `${topHeight}px` }">
             <slot name="top"></slot>
         </div>
         <div
@@ -18,7 +19,7 @@
         >
             <div class="line"></div>
         </div>
-        <div class="bottom" :style="{ height: bottomHeight + 'px' }">
+        <div class="bottom" :style="{ height: `${bottomHeight}px` }">
             <slot name="bottom"></slot>
         </div>
     </div>
@@ -28,6 +29,13 @@ import { ref, onMounted, computed, defineProps } from 'vue';
 import RESIZER from '@/constants/RESIZER';
 
 const props = defineProps({
+    boxHeight: {
+        type: Number,
+        required: true,
+        validator(value: number) {
+            return value > 0;
+        },
+    },
     topPercent: {
         type: Number,
         validator(value: number) {
@@ -37,21 +45,16 @@ const props = defineProps({
 });
 const $resizer = ref();
 const $columnResizer = ref();
-const boxHeight = ref<number>(0);
 const boxOffset = ref<number>(0);
 const topPercent = ref<number>(props.topPercent ?? 0.5);
 const isResizing = ref<boolean>(false);
-const topHeight = computed(() => boxHeight.value * topPercent.value);
-const bottomHeight = computed(() => boxHeight.value - topHeight.value);
+const topHeight = computed(() => props.boxHeight * topPercent.value);
+const bottomHeight = computed(() => props.boxHeight - topHeight.value);
 
 onMounted(() => {
     const rect = $columnResizer.value.getBoundingClientRect();
-    boxHeight.value = rect.height;
-    boxOffset.value = rect.y;
-});
 
-window.addEventListener('resize', () => {
-    boxHeight.value = $columnResizer.value.getBoundingClientRect().height;
+    boxOffset.value = rect.y;
 });
 
 function resizeStart() {
@@ -63,7 +66,7 @@ function resizeEnd() {
 function resize(evt: MouseEvent) {
     if (!isResizing.value) return;
 
-    topPercent.value = (evt.clientY - boxOffset.value) / boxHeight.value;
+    topPercent.value = (evt.clientY - boxOffset.value) / props.boxHeight;
 }
 </script>
 <style scoped lang="scss">
@@ -80,6 +83,8 @@ function resize(evt: MouseEvent) {
 }
 div.resizer {
     position: absolute;
+    left: 0;
+    top: 0;
     z-index: 100;
     width: 100%;
     height: $RESIZER_LEN;

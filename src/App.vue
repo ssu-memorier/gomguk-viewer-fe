@@ -3,21 +3,8 @@
         <masthead-view class="center"></masthead-view>
     </header>
     <main ref="$main">
-        <row-resizer class="resizeBox" :left-percent="0.5">
-            <template #left>
-                <column-resizer class="resizeBox" :top-percent="0.75">
-                    <template #top>
-                        <pdf-view></pdf-view>
-                    </template>
-                    <template #bottom>
-                        <translator-view></translator-view>
-                    </template>
-                </column-resizer>
-            </template>
-            <template #right>
-                <editor-view></editor-view>
-            </template>
-        </row-resizer>
+        <guide-view class="guideView" v-if="!pdfStore.isPdfExist"></guide-view>
+        <paper-view class="paperView" v-else></paper-view>
     </main>
     <center-modal v-if="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
@@ -33,28 +20,26 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import RowResizer from '@/components/resizer/RowResizer.vue';
-import ColumnResizer from '@/components/resizer/ColumnResizer.vue';
-import PdfView from '@/views/Paper/PdfView.vue';
-import TranslatorView from '@/views/Paper/TranslatorView.vue';
-import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import MastheadView from '@/views/MastheadView.vue';
+import GuideView from '@/views/GuideView.vue';
 import LogoutButton from '@/components/button/LogoutButton.vue';
 import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
 import GoogleLoginButton from '@/components/button/GoogleLoginButton.vue';
+import PaperView from '@/views/Paper/PaperView.vue';
 import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
+import { usePdfStore } from '@/store/file/pdf';
 /**
  * TODO: 제거 예정
  */
 import axios from 'axios';
 
 const $main = ref();
-
 const userStore = useUserStore();
 const modalStore = useModalStore();
+const pdfStore = usePdfStore();
 /**
  * TODO: 추후 제거 예정
  *
@@ -92,7 +77,7 @@ body {
     margin: 0;
     width: 100vw;
     height: 100vh;
-    background-color: $bg-color;
+    background-color: $BG-COLOR;
 }
 #app {
     position: absolute;
@@ -132,7 +117,7 @@ main {
         display: flex;
         flex-direction: column;
     }
-    div.resizeBox {
+    .paperView {
         position: absolute;
         z-index: 100;
         width: 100%;
@@ -157,6 +142,11 @@ main {
 }
 .loginMethods > *:last-child {
     margin-bottom: 0;
+}
+.guideView {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
 }
 .view {
     width: 100%;
