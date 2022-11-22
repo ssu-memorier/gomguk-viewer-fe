@@ -3,7 +3,8 @@
         <masthead-view class="center"></masthead-view>
     </header>
     <main ref="$main">
-        <row-resizer class="resizeBox" :left-percent="0.5">
+        <guide-view class="guideView" v-if="!pdfStore.isPdfExist"></guide-view>
+        <row-resizer class="resizeBox" v-else :left-percent="0.5">
             <template #left>
                 <column-resizer class="resizeBox" :top-percent="0.75">
                     <template #top>
@@ -41,20 +42,22 @@ import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import MastheadView from '@/views/MastheadView.vue';
+import GuideView from '@/views/GuideView.vue';
 import LogoutButton from '@/components/button/LogoutButton.vue';
 import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
 import GoogleLoginButton from '@/components/button/GoogleLoginButton.vue';
 import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
+import { usePdfStore } from '@/store/file/pdf';
 /**
  * TODO: 제거 예정
  */
 import axios from 'axios';
 
 const $main = ref();
-
 const userStore = useUserStore();
 const modalStore = useModalStore();
+const pdfStore = usePdfStore();
 /**
  * TODO: 추후 제거 예정
  *
@@ -157,6 +160,11 @@ main {
 }
 .loginMethods > *:last-child {
     margin-bottom: 0;
+}
+.guideView {
+    width: 100%;
+    height: 100%;
+    background-color: green;
 }
 .view {
     width: 100%;
