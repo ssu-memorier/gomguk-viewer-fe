@@ -143,6 +143,10 @@ main {
     right: $VERTICAL-PADDING;
     top: calc($HEADER-HEIGHT + 8px);
     z-index: 1000;
+    border-radius: $BORDER-RADIUS__16;
+    box-shadow: $SHADOW__6DP;
+    background-color: $SURFACE-COLOR;
+    padding: 1rem 2rem;
 }
 .view {
     width: 100%;
