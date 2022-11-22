@@ -6,17 +6,13 @@
 </template>
 <script setup lang="ts">
 import { defineProps } from 'vue';
+import isUrl from '@/utils/isUrl';
 
 defineProps({
     picture: {
         type: String,
         required: false,
-        validator(value: string) {
-            const urlReg =
-                /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi;
-
-            return urlReg.test(value);
-        },
+        validator: isUrl,
     },
 });
 </script>
