@@ -4,6 +4,7 @@ import { ref } from 'vue';
 export const useModalStore = defineStore('modal', () => {
     const isShow = ref<boolean>(false);
     const isShowProfileMenu = ref<boolean>(false);
+    const isShowLoginMethods = ref<boolean>(false);
 
     function showModal() {
         isShow.value = true;
@@ -16,11 +17,17 @@ export const useModalStore = defineStore('modal', () => {
         isShowProfileMenu.value = !isShowProfileMenu.value;
     }
 
+    function toggleLoginMethods() {
+        isShowLoginMethods.value = !isShowLoginMethods.value;
+    }
+
     return {
         isShow,
         showModal,
         hideModal,
         isShowProfileMenu,
         toggleProfileMenu,
+        isShowLoginMethods,
+        toggleLoginMethods,
     };
 });
