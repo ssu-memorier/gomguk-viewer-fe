@@ -15,4 +15,15 @@
 import RoundButton from '@/components/button/RoundButton.vue';
 import LOADER from '@/constants/LOADER';
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import '@/assets/scss/theme';
+.load {
+    padding: 1rem 3rem;
+    font: $HEADER__3;
+    background-color: $PRIMARY-COLOR;
+
+    &:hover {
+        background-color: $PRIMARY-COLOR__DARK;
+    }
+}
+</style>
