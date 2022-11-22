@@ -32,6 +32,9 @@ const props = defineProps({
     boxWidth: {
         type: Number,
         required: true,
+        validator(value: number) {
+            return value > 0;
+        },
     },
     leftPercent: {
         type: Number,

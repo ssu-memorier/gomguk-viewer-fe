@@ -32,6 +32,9 @@ const props = defineProps({
     boxHeight: {
         type: Number,
         required: true,
+        validator(value: number) {
+            return value > 0;
+        },
     },
     topPercent: {
         type: Number,
