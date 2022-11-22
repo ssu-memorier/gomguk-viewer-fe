@@ -3,10 +3,10 @@
         class="columnResizer"
         @mousemove="resize"
         @mouseup="resizeEnd"
-        :style="{ height: props.boxHeight + 'px' }"
+        :style="{ height: `${props.boxHeight}px` }"
         ref="$columnResizer"
     >
-        <div class="top" :style="{ height: topHeight + 'px' }">
+        <div class="top" :style="{ height: `${topHeight}px` }">
             <slot name="top"></slot>
         </div>
         <div
@@ -19,7 +19,7 @@
         >
             <div class="line"></div>
         </div>
-        <div class="bottom" :style="{ height: bottomHeight + 'px' }">
+        <div class="bottom" :style="{ height: `${bottomHeight}px` }">
             <slot name="bottom"></slot>
         </div>
     </div>

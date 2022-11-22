@@ -3,10 +3,10 @@
         class="rowResizer"
         @mousemove="resize"
         @mouseup="resizeEnd"
-        :style="{ width: props.boxWidth + 'px' }"
+        :style="{ width: `${props.boxWidth}px` }"
         ref="$rowResizer"
     >
-        <div class="left" :style="{ width: leftWidth + 'px' }">
+        <div class="left" :style="{ width: `${leftWidth}px` }">
             <slot name="left"></slot>
         </div>
         <div
@@ -19,7 +19,7 @@
         >
             <div class="line"></div>
         </div>
-        <div class="right" :style="{ width: rightWidth + 'px' }">
+        <div class="right" :style="{ width: `${rightWidth}px` }">
             <slot name="right"></slot>
         </div>
     </div>
