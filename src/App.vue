@@ -164,7 +164,7 @@ main {
 .guideView {
     width: 100%;
     height: 100%;
-    background-color: green;
+    background-color: transparent;
 }
 .view {
     width: 100%;
