@@ -80,10 +80,10 @@ function toggleProfileMenu() {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        * {
+        & > * {
             margin-right: 16px;
         }
-        *:last-child {
+        & > *:last-child {
             margin-right: 0;
         }
         .load,
