@@ -1,6 +1,6 @@
 <template>
     <button @click="go(AUTH.BASE + AUTH.URL.LOGOUT)">
-        {{ AUTH.PROVIDER.KAKAO }}
+        <img src="@/assets/images/png/kakao_login_medium_narrow.png" />
     </button>
 </template>
 
@@ -12,4 +12,11 @@ function go(url: string) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+button {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+</style>
