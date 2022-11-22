@@ -16,5 +16,6 @@ export default {
     PROVIDER: PROVIDER,
     VIEW: {
         LOGOUT: '로그아웃',
+        LOGIN: '로그인',
     },
 } as const;
