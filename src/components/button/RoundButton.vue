@@ -19,7 +19,7 @@ defineProps({
 button {
     padding: 0.25rem;
     border: 0;
-    border-radius: 50%;
+    border-radius: $BORDER-RADIUS__ROUND;
     background-color: $SURFACE-COLOR;
     cursor: pointer;
 
