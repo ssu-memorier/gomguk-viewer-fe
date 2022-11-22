@@ -1,5 +1,5 @@
 <template>
-    <button>
+    <button @click="modalStore.toggleLoginMethods()">
         <b class="label">{{ AUTH.VIEW.LOGIN }}</b>
         <img class="icon" src="@/assets/images/svg/user.svg" />
     </button>
@@ -7,6 +7,9 @@
 
 <script setup lang="ts">
 import AUTH from '@/constants/AUTH';
+import { useModalStore } from '@/store/modal';
+
+const modalStore = useModalStore();
 </script>
 
 <style lang="scss" scoped>
