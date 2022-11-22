@@ -1,5 +1,5 @@
 <template>
-    <button @click="go(AUTH.BASE + AUTH.URL.LOGOUT)">
+    <button @click="go(AUTH.BASE + AUTH.URL.KAKAO_LOGIN)">
         <img src="@/assets/images/png/kakao_login_medium_narrow.png" />
     </button>
 </template>
