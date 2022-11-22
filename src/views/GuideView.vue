@@ -3,14 +3,13 @@
         <div class="center">
             <span class="guideText">{{ GUIDE.GUIDE_TEXT }}</span>
             <round-button class="load" @click="modalStore.showModal">
-                {{ LOADER.VIEW.FILE_LOAD }}
+                {{ GUIDE.FILE_LOAD }}
             </round-button>
         </div>
     </div>
 </template>
 <script setup lang="ts">
 import RoundButton from '@/components/button/RoundButton.vue';
-import LOADER from '@/constants/LOADER';
 import GUIDE from '@/constants/GUIDE';
 import { useModalStore } from '@/store/modal';
 
