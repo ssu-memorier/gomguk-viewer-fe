@@ -10,7 +10,7 @@ button {
     border: 1px solid $ALERT-COLOR;
     color: $ALERT-COLOR__DARK;
     background-color: $SURFACE-COLOR;
-    border-radius: $BORDER-RADIUS__16;
+    border-radius: $BORDER-RADIUS__ROUND;
     padding: 0.5rem 2rem;
     text-decoration: none;
     cursor: pointer;
