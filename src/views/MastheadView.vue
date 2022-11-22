@@ -82,6 +82,8 @@ function toggleProfileMenu() {
         justify-content: center;
         & > * {
             margin-right: 16px;
+            margin-top: auto;
+            margin-bottom: auto;
         }
         & > *:last-child {
             margin-right: 0;
