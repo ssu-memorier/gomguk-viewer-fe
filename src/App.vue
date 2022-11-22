@@ -25,6 +25,9 @@
     <div class="dropdown profileMenu" v-show="modalStore.isShowProfileMenu">
         <logout-button></logout-button>
     </div>
+    <div class="dropdown loginMethods" v-show="modalStore.isShowLoginMethods">
+        <kakao-login-button></kakao-login-button>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -36,14 +39,15 @@ import TranslatorView from '@/views/Paper/TranslatorView.vue';
 import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
+import MastheadView from '@/views/MastheadView.vue';
+import LogoutButton from '@/components/button/LogoutButton.vue';
+import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
 import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
 /**
  * TODO: 제거 예정
  */
 import axios from 'axios';
-import MastheadView from './views/MastheadView.vue';
-import LogoutButton from './components/button/LogoutButton.vue';
 
 const $main = ref();
 
@@ -133,7 +137,8 @@ main {
         height: 100%;
     }
 }
-.profileMenu {
+.profileMenu,
+.loginMethods {
     position: absolute;
     right: $VERTICAL-PADDING;
     top: calc($HEADER-HEIGHT + 8px);
