@@ -95,7 +95,7 @@ body {
     margin: 0;
     width: 100vw;
     height: 100vh;
-    background-color: $bg-color;
+    background-color: $BG-COLOR;
 }
 #app {
     position: absolute;
