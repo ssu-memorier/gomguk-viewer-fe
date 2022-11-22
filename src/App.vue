@@ -4,21 +4,7 @@
     </header>
     <main ref="$main">
         <guide-view class="guideView" v-if="!pdfStore.isPdfExist"></guide-view>
-        <row-resizer class="resizeBox" v-else :left-percent="0.5">
-            <template #left>
-                <column-resizer class="resizeBox" :top-percent="0.75">
-                    <template #top>
-                        <pdf-view></pdf-view>
-                    </template>
-                    <template #bottom>
-                        <translator-view></translator-view>
-                    </template>
-                </column-resizer>
-            </template>
-            <template #right>
-                <editor-view></editor-view>
-            </template>
-        </row-resizer>
+        <paper-view class="paperView" v-else></paper-view>
     </main>
     <center-modal v-if="modalStore.isShow">
         <file-loaders-view></file-loaders-view>
@@ -34,11 +20,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import RowResizer from '@/components/resizer/RowResizer.vue';
-import ColumnResizer from '@/components/resizer/ColumnResizer.vue';
-import PdfView from '@/views/Paper/PdfView.vue';
-import TranslatorView from '@/views/Paper/TranslatorView.vue';
-import EditorView from '@/views/EditorView.vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import MastheadView from '@/views/MastheadView.vue';
@@ -46,6 +27,7 @@ import GuideView from '@/views/GuideView.vue';
 import LogoutButton from '@/components/button/LogoutButton.vue';
 import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
 import GoogleLoginButton from '@/components/button/GoogleLoginButton.vue';
+import PaperView from '@/views/Paper/PaperView.vue';
 import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
 import { usePdfStore } from '@/store/file/pdf';
@@ -135,7 +117,7 @@ main {
         display: flex;
         flex-direction: column;
     }
-    div.resizeBox {
+    .paperView {
         position: absolute;
         z-index: 100;
         width: 100%;
