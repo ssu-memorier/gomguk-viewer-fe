@@ -1,6 +1,7 @@
 <template>
     <ul ref="$files">
         <li class="head">
+            <span class="icon"></span>
             <span class="name">파일명</span>
             <span class="lastModified">마지막 수정일</span>
             <span class="size">크기</span>
@@ -11,6 +12,9 @@
             :key="file.key"
             @dblclick="loadFile(file)"
         >
+            <span class="icon">
+                <img src="@/assets/images/svg/file.svg" />
+            </span>
             <span class="name">{{ file.key }}</span>
             <span class="lastModified">{{ file.lastModified }}</span>
             <span class="size">{{ file.size }}</span>
@@ -100,12 +104,15 @@ ul {
         padding: 0 1rem;
         text-align: left;
         line-height: 1.6rem;
-        user-select: none;
         display: flex;
         flex-direction: row;
         cursor: pointer;
-        &:hover {
+
+        &.item:hover {
             background-color: lightgray;
+        }
+        .icon {
+            width: 48px;
         }
         .name {
             flex-grow: 1;
