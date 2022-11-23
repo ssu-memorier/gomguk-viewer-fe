@@ -107,7 +107,9 @@ ul {
         display: flex;
         flex-direction: row;
         cursor: pointer;
-
+        &.head {
+            cursor: default;
+        }
         &.item:hover {
             background-color: lightgray;
         }
