@@ -107,7 +107,6 @@ function notifyFileLoad() {
 </script>
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
-@import '@/assets/scss/constants/LOADER';
 @import '@/assets/scss/constants/FILE_TABLE';
 
 ul {
@@ -133,6 +132,8 @@ ul {
         &.head {
             cursor: default;
             height: $FILE-TABLE-HEAD-HEIGHT;
+            border-bottom: $FILE-HEAD-BORDER-THICKNESS solid
+                $BORDER-COLOR__LIGHT;
         }
         &.item:hover {
             background-color: lightgray;
