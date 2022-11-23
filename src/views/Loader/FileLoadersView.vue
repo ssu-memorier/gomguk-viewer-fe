@@ -72,6 +72,9 @@ function changeCurrentTab(tabName: LoaderTabType) {
     menu {
         display: flex;
         flex-direction: row;
+        margin: 0;
+        padding: 0 1rem;
+        height: 2.5rem;
 
         button.item {
             padding: 0 8px;
