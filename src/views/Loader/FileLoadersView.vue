@@ -64,6 +64,7 @@ function changeCurrentTab(target: LoaderTabType) {
 
 <style scoped lang="scss">
 @import '@/assets/scss/theme';
+@import '@/assets/scss/constants/LOADER';
 .container {
     height: 100%;
     width: 100%;
@@ -72,10 +73,10 @@ function changeCurrentTab(target: LoaderTabType) {
     .header {
         display: flex;
         flex-direction: row;
-        padding: 0 1rem;
-        height: 4rem;
+        padding: $LOADER-HEADER-PADDING;
+        height: $LOADER-HEADER-HEIGHT;
         font: $HEADER__2;
-        border-bottom: 2px solid $BORDER-COLOR;
+        border-bottom: $BORDER-THICKNESS solid $BORDER-COLOR;
 
         & > * {
             margin: auto 0;
@@ -92,18 +93,18 @@ function changeCurrentTab(target: LoaderTabType) {
         display: flex;
         flex-direction: row;
         margin: 0;
-        padding: 0 1rem;
-        height: 2.5rem;
-        border-bottom: 2px solid $BORDER-COLOR;
+        padding: $LOADER-MENU-PADDING;
+        height: $LOADER-MENU-HEIGHT;
+        border-bottom: $BORDER-THICKNESS solid $BORDER-COLOR;
 
         button.item {
-            padding: 0 8px;
+            padding: $LOADER-ITEM-PADDING;
             border: 0;
             background-color: transparent;
-            border-bottom: 2px solid transparent;
+            border-bottom: $BORDER-THICKNESS solid transparent;
             cursor: pointer;
             &.selected {
-                border-bottom: 2px solid $PRIMARY-COLOR;
+                border-bottom: $BORDER-THICKNESS solid $PRIMARY-COLOR;
             }
         }
     }

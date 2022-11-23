@@ -110,7 +110,7 @@ ul {
     li {
         padding: 0 1rem;
         text-align: left;
-        line-height: 1.6rem;
+        line-height: 100%;
         display: flex;
         flex-direction: row;
         cursor: pointer;
