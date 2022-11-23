@@ -1,6 +1,10 @@
 <template>
-    <div class="view">
-        <h2>{{ LOADER.VIEW.TITLE }}</h2>
+    <div class="container">
+        <div class="header">
+            <img class="icon" src="@/assets/images/svg/folder.svg" />
+            <h2>{{ LOADER.VIEW.TITLE }}</h2>
+            <button class="close">x</button>
+        </div>
         <menu>
             <button
                 class="item"
@@ -37,12 +41,33 @@ function changeCurrentTab(tabName: LoaderTabType) {
 </script>
 
 <style scoped lang="scss">
-menu {
-    display: flex;
-    flex-direction: row;
+@import '@/assets/scss/theme';
+.container {
+    .header {
+        display: flex;
+        flex-direction: row;
+        padding: 0 1rem;
+        font: $HEADER__2;
+        border-bottom: 2px solid $BORDER-COLOR;
+        img.icon {
+            margin-right: 1rem;
+        }
+        h2 {
+            flex-grow: 1;
+            text-align: start;
+        }
+        button.close {
+            margin: auto 0;
+            height: 2rem;
+        }
+    }
+    menu {
+        display: flex;
+        flex-direction: row;
 
-    button.item {
-        padding: 0 8px;
+        button.item {
+            padding: 0 8px;
+        }
     }
 }
 </style>
