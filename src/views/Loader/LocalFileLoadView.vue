@@ -19,11 +19,7 @@ const editorStore = useEditorStore();
 
 async function loadPdfHandler(pdf: File) {
     pdfStore.setPdfFile(pdf);
-    editorStore.fromJSON({
-        time: 1668084171608,
-        blocks: [EDITOR.DEFAULT],
-        version: '2.25.0',
-    });
+    editorStore.fromJSON(EDITOR.DEFAULT);
 
     return;
 }
