@@ -10,8 +10,9 @@
         <menu>
             <button
                 class="item"
-                v-for="name in tabNames"
+                v-for="(name, idx) in tabNames"
                 :key="name"
+                :class="{ selected: currentTab === idx }"
                 @click="changeCurrentTab(name)"
             >
                 {{ LOADER.TABS[name].NAME }}
@@ -94,6 +95,13 @@ function changeCurrentTab(target: LoaderTabType) {
 
         button.item {
             padding: 0 8px;
+            border: 0;
+            background-color: transparent;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            &.selected {
+                border-bottom: 2px solid $PRIMARY-COLOR;
+            }
         }
     }
 }
