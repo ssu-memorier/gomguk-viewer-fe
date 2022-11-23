@@ -21,6 +21,7 @@
         <div class="tabView">
             <component
                 :is="tabs[currentTab]"
+                class="center"
                 @loadfile="modalStore.hideModal"
             ></component>
         </div>
@@ -108,6 +109,12 @@ function changeCurrentTab(target: LoaderTabType) {
     }
     .tabView {
         flex-grow: 1;
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
     }
 }
 </style>
