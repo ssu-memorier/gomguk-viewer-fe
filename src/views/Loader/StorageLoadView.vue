@@ -2,10 +2,10 @@
     <ul ref="$files">
         <li class="head">
             <span class="icon"></span>
-            <span class="name">파일명</span>
-            <span class="lastModified">마지막 수정일</span>
-            <span class="size">크기</span>
-            <span class="delete">삭제</span>
+            <span class="name">{{ FILE.VIEW.NAME }}</span>
+            <span class="lastModified">{{ FILE.VIEW.LAST_MODIFIED }}</span>
+            <span class="size">{{ FILE.VIEW.SIZE }}</span>
+            <span class="delete">{{ FILE.VIEW.DELETE }}</span>
         </li>
         <li
             class="item"
@@ -20,7 +20,7 @@
             }}</span>
             <span class="size">{{ size2format(file.size) }}</span>
             <span class="delete">
-                <a @click.stop="deleteFile(file)">삭제</a>
+                <a @click.stop="deleteFile(file)">{{ FILE.VIEW.DELETE }}</a>
             </span>
         </li>
     </ul>
@@ -36,6 +36,7 @@ import { useFileStore } from '@/store/file';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
+import FILE from '@/constants/FILE';
 import date2format from '@/utils/date2format';
 import size2format from '@/utils/size2format';
 
