@@ -18,10 +18,12 @@
                 {{ LOADER.TABS[name].NAME }}
             </button>
         </menu>
-        <component
-            :is="tabs[currentTab]"
-            @loadfile="modalStore.hideModal"
-        ></component>
+        <div class="tabView">
+            <component
+                :is="tabs[currentTab]"
+                @loadfile="modalStore.hideModal"
+            ></component>
+        </div>
     </div>
 </template>
 
@@ -64,6 +66,8 @@ function changeCurrentTab(target: LoaderTabType) {
 .container {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
     .header {
         display: flex;
         flex-direction: row;
@@ -101,6 +105,9 @@ function changeCurrentTab(target: LoaderTabType) {
                 border-bottom: 2px solid $PRIMARY-COLOR;
             }
         }
+    }
+    .tabView {
+        flex-grow: 1;
     }
 }
 </style>
