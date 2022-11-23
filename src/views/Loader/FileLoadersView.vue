@@ -109,6 +109,7 @@ function changeCurrentTab(target: LoaderTabType) {
     }
     .tabView {
         flex-grow: 1;
+        position: relative;
         .center {
             position: absolute;
             left: 50%;
