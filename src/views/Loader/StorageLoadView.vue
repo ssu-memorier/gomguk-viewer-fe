@@ -19,7 +19,7 @@
             <span class="lastModified">{{
                 date2format(new Date(file.lastModified))
             }}</span>
-            <span class="size">{{ file.size }}</span>
+            <span class="size">{{ size2format(file.size) }}</span>
         </li>
     </ul>
 </template>
@@ -43,7 +43,7 @@ const fileList = ref<IFileInfo[]>([
         dir: 'test_id',
         key: 'test1.pdf',
         lastModified: '2022-11-01T14:56:29Z',
-        size: 442404,
+        size: 704,
     },
     {
         dir: 'test_id',
@@ -55,7 +55,7 @@ const fileList = ref<IFileInfo[]>([
         dir: 'test_id',
         key: 'test3.pdf',
         lastModified: '2022-11-23T10:02:50Z',
-        size: 442404,
+        size: 1442404,
     },
 ]);
 const $files = ref();
@@ -99,6 +99,15 @@ async function updateFileList() {
 function notifyFileLoad() {
     const fileLoadEvent = new Event('loadfile', { bubbles: true });
     $files.value.dispatchEvent(fileLoadEvent);
+}
+
+function size2format(size: number) {
+    if (size > 1024 * 1024) {
+        return (size / (1024 * 1024)).toFixed(1) + 'MB';
+    } else if (size > 1024) {
+        return (size / 1024).toFixed(1) + 'KB';
+    }
+    return size + 'B';
 }
 </script>
 <style lang="scss" scoped>
