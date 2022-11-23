@@ -35,6 +35,7 @@ import { IFileInfo } from '@/Interface/IFileInfo';
 import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
 import date2format from '@/utils/date2format';
+import size2format from '@/utils/size2format';
 // @click.stop="deleteFile(file)"
 const fileStore = useFileStore();
 const userStore = useUserStore();
@@ -99,15 +100,6 @@ async function updateFileList() {
 function notifyFileLoad() {
     const fileLoadEvent = new Event('loadfile', { bubbles: true });
     $files.value.dispatchEvent(fileLoadEvent);
-}
-
-function size2format(size: number) {
-    if (size > 1024 * 1024) {
-        return (size / (1024 * 1024)).toFixed(1) + 'MB';
-    } else if (size > 1024) {
-        return (size / 1024).toFixed(1) + 'KB';
-    }
-    return size + 'B';
 }
 </script>
 <style lang="scss" scoped>
