@@ -75,6 +75,7 @@ function changeCurrentTab(tabName: LoaderTabType) {
         margin: 0;
         padding: 0 1rem;
         height: 2.5rem;
+        border-bottom: 2px solid $BORDER-COLOR;
 
         button.item {
             padding: 0 8px;
