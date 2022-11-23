@@ -62,8 +62,6 @@ function changeCurrentTab(target: LoaderTabType) {
 <style scoped lang="scss">
 @import '@/assets/scss/theme';
 .container {
-    border-radius: $BORDER-RADIUS__4;
-    box-shadow: $SHADOW__6DP;
     height: 100%;
     width: 100%;
     .header {
