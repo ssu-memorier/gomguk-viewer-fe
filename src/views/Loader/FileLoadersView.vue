@@ -3,7 +3,7 @@
         <div class="header">
             <img class="icon" src="@/assets/images/svg/folder.svg" />
             <h2>{{ LOADER.VIEW.TITLE }}</h2>
-            <button class="close">x</button>
+            <button class="close" @click="modalStore.hideModal">x</button>
         </div>
         <menu>
             <button
