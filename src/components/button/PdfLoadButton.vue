@@ -1,6 +1,6 @@
 <template>
     <label>
-        PDF 선택
+        파일 선택
         <input
             type="file"
             id="fileLoad"
