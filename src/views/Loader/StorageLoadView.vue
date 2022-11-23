@@ -42,7 +42,7 @@ const userStore = useUserStore();
 const fileList = ref<IFileInfo[]>([
     {
         dir: 'test_id',
-        key: 'test1.pdf',
+        key: 'test1111111111111111111111111111111111111111.pdf',
         lastModified: '2022-11-01T14:56:29Z',
         size: 704,
     },
@@ -124,15 +124,21 @@ ul {
         }
         .icon {
             width: 48px;
+            flex-shrink: 0;
         }
         .name {
             flex-grow: 1;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            padding-right: 1rem;
         }
         .lastModified {
             width: 160px;
+            flex-shrink: 0;
         }
         .size {
             width: 160px;
+            flex-shrink: 0;
         }
     }
 }
