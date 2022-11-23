@@ -101,6 +101,9 @@ function notifyFileLoad() {
 }
 </script>
 <style lang="scss" scoped>
+@import '@/assets/scss/constants/LOADER';
+@import '@/assets/scss/constants/FILE_TABLE';
+
 ul {
     width: 100%;
     height: 100%;
@@ -108,7 +111,7 @@ ul {
     padding: 0;
     margin: 0;
     li {
-        padding: 0 1rem;
+        padding: $FILE-TABLE-VERTICAL-PADDING;
         text-align: left;
         line-height: 100%;
         display: flex;
@@ -122,7 +125,7 @@ ul {
         }
         &.head {
             cursor: default;
-            height: 2rem;
+            height: $FILE-TABLE-HEAD-HEIGHT;
         }
         &.item:hover {
             background-color: lightgray;
@@ -130,27 +133,27 @@ ul {
 
         .icon {
             aspect-ratio: 1 / 1;
-            width: 24px;
-            margin-right: 0.5rem;
+            width: $FILE-ICON-SIZE;
+            margin-right: $FILE-ICON-MARGIN-RIGHT;
             flex-shrink: 0;
         }
         .name {
             flex-grow: 1;
             text-overflow: ellipsis;
             overflow: hidden;
-            padding-right: 1rem;
+            margin-right: $FILE-NAME-MARGIN-RIGHT;
         }
         .lastModified {
-            width: 160px;
+            width: $FILE-LASTMODIFIED-WIDTH;
             flex-shrink: 0;
         }
         .size {
-            width: 160px;
+            width: $FILE-SIZE-WIDTH;
             flex-shrink: 0;
         }
     }
     li.item {
-        height: 36px;
+        height: $FILE-HEIGHT;
     }
 }
 </style>
