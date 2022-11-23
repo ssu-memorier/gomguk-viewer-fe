@@ -16,7 +16,7 @@
                 <img src="@/assets/images/svg/file.svg" />
             </span>
             <span class="name">{{ file.key }}</span>
-            <span class="lastModified">{{ file.lastModified }}</span>
+            <span class="lastModified">{{ new Date(file.lastModified) }}</span>
             <span class="size">{{ file.size }}</span>
         </li>
     </ul>
@@ -27,8 +27,8 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { useFileStore } from '@/store/file';
 import { ref, onMounted } from 'vue';
+import { useFileStore } from '@/store/file';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
@@ -50,7 +50,6 @@ const fileList = ref<IFileInfo[]>([
     },
 ]);
 const $files = ref();
-
 onMounted(async () => {
     if (userStore.isLoggined) {
         updateFileList();
