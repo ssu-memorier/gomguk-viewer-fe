@@ -16,7 +16,9 @@
                 <img src="@/assets/images/svg/file.svg" />
             </span>
             <span class="name">{{ file.key }}</span>
-            <span class="lastModified">{{ new Date(file.lastModified) }}</span>
+            <span class="lastModified">{{
+                date2format(new Date(file.lastModified))
+            }}</span>
             <span class="size">{{ file.size }}</span>
         </li>
     </ul>
@@ -46,6 +48,12 @@ const fileList = ref<IFileInfo[]>([
         dir: 'test_id',
         key: 'test2.pdf',
         lastModified: '2022-11-03T15:02:50Z',
+        size: 442404,
+    },
+    {
+        dir: 'test_id',
+        key: 'test3.pdf',
+        lastModified: '2022-11-23T10:02:50Z',
         size: 442404,
     },
 ]);
@@ -90,6 +98,25 @@ async function updateFileList() {
 function notifyFileLoad() {
     const fileLoadEvent = new Event('loadfile', { bubbles: true });
     $files.value.dispatchEvent(fileLoadEvent);
+}
+
+function date2format(date: Date) {
+    const today = new Date();
+    if (
+        date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate()
+    ) {
+        const HH = `00${date.getHours()}`.slice(-2);
+        const DD = `00${date.getMinutes()}`.slice(-2);
+        return `${HH}:${DD}`;
+    }
+
+    const YYYY = `${date.getFullYear()}`;
+    const MM = `00${date.getMonth() + 1}`.slice(-2);
+    const DD = `00${date.getDate()}`.slice(-2);
+
+    return `${YYYY}-${MM}-${DD}`;
 }
 </script>
 <style lang="scss" scoped>
