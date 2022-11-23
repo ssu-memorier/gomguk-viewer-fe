@@ -42,26 +42,7 @@ import size2format from '@/utils/size2format';
 
 const fileStore = useFileStore();
 const userStore = useUserStore();
-const fileList = ref<IFileInfo[]>([
-    {
-        dir: 'test_id',
-        key: 'test1111111111111111111111111111111111111111.pdf',
-        lastModified: '2022-11-01T14:56:29Z',
-        size: 704,
-    },
-    {
-        dir: 'test_id',
-        key: 'test2.pdf',
-        lastModified: '2022-11-03T15:02:50Z',
-        size: 442404,
-    },
-    {
-        dir: 'test_id',
-        key: 'test3.pdf',
-        lastModified: '2022-11-23T10:02:50Z',
-        size: 1442404,
-    },
-]);
+const fileList = ref<IFileInfo[]>([]);
 const $files = ref();
 onMounted(async () => {
     if (userStore.isLoggined) {
