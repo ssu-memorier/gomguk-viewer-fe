@@ -34,6 +34,7 @@ import { useFileStore } from '@/store/file';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
+import date2format from '@/utils/date2format';
 // @click.stop="deleteFile(file)"
 const fileStore = useFileStore();
 const userStore = useUserStore();
@@ -98,25 +99,6 @@ async function updateFileList() {
 function notifyFileLoad() {
     const fileLoadEvent = new Event('loadfile', { bubbles: true });
     $files.value.dispatchEvent(fileLoadEvent);
-}
-
-function date2format(date: Date) {
-    const today = new Date();
-    if (
-        date.getFullYear() === today.getFullYear() &&
-        date.getMonth() === today.getMonth() &&
-        date.getDate() === today.getDate()
-    ) {
-        const HH = `00${date.getHours()}`.slice(-2);
-        const DD = `00${date.getMinutes()}`.slice(-2);
-        return `${HH}:${DD}`;
-    }
-
-    const YYYY = `${date.getFullYear()}`;
-    const MM = `00${date.getMonth() + 1}`.slice(-2);
-    const DD = `00${date.getDate()}`.slice(-2);
-
-    return `${YYYY}-${MM}-${DD}`;
 }
 </script>
 <style lang="scss" scoped>
