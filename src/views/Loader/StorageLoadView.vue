@@ -1,13 +1,19 @@
 <template>
     <ul ref="$files">
+        <li class="head">
+            <span class="name">파일명</span>
+            <span class="lastModified">마지막 수정일</span>
+            <span class="size">크기</span>
+        </li>
         <li
             class="item"
             v-for="file in fileList"
             :key="file.key"
             @dblclick="loadFile(file)"
         >
-            {{ file.key }}
-            <button @click.stop="deleteFile(file)">x</button>
+            <span class="name">{{ file.key }}</span>
+            <span class="lastModified">{{ file.lastModified }}</span>
+            <span class="size">{{ file.size }}</span>
         </li>
     </ul>
 </template>
@@ -22,10 +28,23 @@ import { ref, onMounted } from 'vue';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
-
+// @click.stop="deleteFile(file)"
 const fileStore = useFileStore();
 const userStore = useUserStore();
-const fileList = ref<IFileInfo[]>([]);
+const fileList = ref<IFileInfo[]>([
+    {
+        dir: 'test_id',
+        key: 'test1.pdf',
+        lastModified: '2022-11-01T14:56:29Z',
+        size: 442404,
+    },
+    {
+        dir: 'test_id',
+        key: 'test2.pdf',
+        lastModified: '2022-11-03T15:02:50Z',
+        size: 442404,
+    },
+]);
 const $files = ref();
 
 onMounted(async () => {
@@ -72,15 +91,30 @@ function notifyFileLoad() {
 </script>
 <style lang="scss" scoped>
 ul {
+    width: 100%;
+    height: 100%;
     list-style: none;
     padding: 0;
-    li.item {
+    margin: 0;
+    li {
+        padding: 0 1rem;
         text-align: left;
         line-height: 1.6rem;
         user-select: none;
+        display: flex;
+        flex-direction: row;
         cursor: pointer;
         &:hover {
             background-color: lightgray;
+        }
+        .name {
+            flex-grow: 1;
+        }
+        .lastModified {
+            width: 160px;
+        }
+        .size {
+            width: 160px;
         }
     }
 }
