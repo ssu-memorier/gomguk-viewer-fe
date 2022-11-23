@@ -10,11 +10,11 @@
         <menu>
             <button
                 class="item"
-                v-for="(tab, idx) in tabs"
-                :key="tab.name"
-                @click="changeCurrentTab(tab.name as LoaderTabType)"
+                v-for="name in tabNames"
+                :key="name"
+                @click="changeCurrentTab(name)"
             >
-                {{ LOADER.TABS[idx].NAME }}
+                {{ LOADER.TABS[name].NAME }}
             </button>
         </menu>
         <component
@@ -25,20 +25,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watchEffect, computed } from 'vue';
 import StorageLoadView from '@/views/Loader/StorageLoadView.vue';
 import FileUploadView from '@/views/Loader/FileUploadView.vue';
+import LocalFileLoadView from '@/views/Loader/LocalFileLoadView.vue';
 import RoundButton from '@/components/button/RoundButton.vue';
 import LOADER from '@/constants/LOADER';
 import { LoaderTabType } from '@/types/LoaderTabType';
 import { useModalStore } from '@/store/modal';
+import { useUserStore } from '@/store/user';
+import { storeToRefs } from 'pinia';
 
 const modalStore = useModalStore();
+const userStore = useUserStore();
 const currentTab = ref<number>(0);
 const tabs = ref([StorageLoadView, FileUploadView]);
+const { isLoggined } = storeToRefs(userStore);
+const tabNames = computed<LoaderTabType[]>(() => {
+    return tabs.value.map((tab) => tab.name as LoaderTabType);
+});
 
-function changeCurrentTab(tabName: LoaderTabType) {
-    const idx = tabs.value.findIndex((tab) => tab.name === tabName);
+watchEffect(() => {
+    if (isLoggined.value) {
+        tabs.value = [StorageLoadView, FileUploadView];
+    } else {
+        tabs.value = [LocalFileLoadView];
+    }
+});
+function changeCurrentTab(target: LoaderTabType) {
+    const idx = tabNames.value.findIndex((name) => name === target);
     currentTab.value = idx;
 }
 </script>
