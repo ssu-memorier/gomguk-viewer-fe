@@ -5,6 +5,7 @@
             <span class="name">파일명</span>
             <span class="lastModified">마지막 수정일</span>
             <span class="size">크기</span>
+            <span class="delete">삭제</span>
         </li>
         <li
             class="item"
@@ -18,6 +19,9 @@
                 date2format(new Date(file.lastModified))
             }}</span>
             <span class="size">{{ size2format(file.size) }}</span>
+            <span class="delete">
+                <a @click.stop="deleteFile(file)">삭제</a>
+            </span>
         </li>
     </ul>
 </template>
@@ -34,7 +38,7 @@ import { useUserStore } from '@/store/user';
 import MESSAGE from '@/constants/MESSAGE';
 import date2format from '@/utils/date2format';
 import size2format from '@/utils/size2format';
-// @click.stop="deleteFile(file)"
+
 const fileStore = useFileStore();
 const userStore = useUserStore();
 const fileList = ref<IFileInfo[]>([
@@ -101,6 +105,7 @@ function notifyFileLoad() {
 }
 </script>
 <style lang="scss" scoped>
+@import '@/assets/scss/theme';
 @import '@/assets/scss/constants/LOADER';
 @import '@/assets/scss/constants/FILE_TABLE';
 
@@ -120,7 +125,8 @@ ul {
         .icon img,
         .name,
         .lastModified,
-        .size {
+        .size,
+        .delete {
             margin: auto 0;
         }
         &.head {
@@ -150,6 +156,18 @@ ul {
         .size {
             width: $FILE-SIZE-WIDTH;
             flex-shrink: 0;
+        }
+        .delete {
+            width: $FILE-DELETE-WIDTH;
+            flex-shrink: 0;
+            text-align: center;
+            a {
+                font: $SMALL_TEXT;
+                color: $ALERT-COLOR;
+            }
+            a:hover {
+                text-decoration: underline $ALERT-COLOR;
+            }
         }
     }
     li.item {
