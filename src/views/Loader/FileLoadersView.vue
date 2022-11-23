@@ -1,9 +1,11 @@
 <template>
     <div class="container">
         <div class="header">
-            <img class="icon" src="@/assets/images/svg/folder.svg" />
+            <img class="icon folder" src="@/assets/images/svg/folder.svg" />
             <h2>{{ LOADER.VIEW.TITLE }}</h2>
-            <button class="close" @click="modalStore.hideModal">x</button>
+            <button class="close" @click="modalStore.hideModal">
+                <img class="icon" src="@/assets/images/svg/Times.svg" />
+            </button>
         </div>
         <menu>
             <button
@@ -49,16 +51,20 @@ function changeCurrentTab(tabName: LoaderTabType) {
         padding: 0 1rem;
         font: $HEADER__2;
         border-bottom: 2px solid $BORDER-COLOR;
-        img.icon {
+        img.icon.folder {
             margin-right: 1rem;
         }
         h2 {
             flex-grow: 1;
             text-align: start;
         }
-        button.close {
+        .close {
+            width: fit-content;
+            height: fit-content;
             margin: auto 0;
-            height: 2rem;
+            border: 0;
+            background-color: transparent;
+            cursor: pointer;
         }
     }
     menu {
