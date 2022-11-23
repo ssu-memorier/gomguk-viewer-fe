@@ -3,9 +3,9 @@
         <div class="header">
             <img class="icon folder" src="@/assets/images/svg/folder.svg" />
             <h2>{{ LOADER.VIEW.TITLE }}</h2>
-            <button class="close" @click="modalStore.hideModal">
+            <round-button class="close" @click="modalStore.hideModal">
                 <img class="icon" src="@/assets/images/svg/Times.svg" />
-            </button>
+            </round-button>
         </div>
         <menu>
             <button
@@ -28,6 +28,7 @@
 import { ref } from 'vue';
 import StorageLoadView from '@/views/Loader/StorageLoadView.vue';
 import FileUploadView from '@/views/Loader/FileUploadView.vue';
+import RoundButton from '@/components/button/RoundButton.vue';
 import LOADER from '@/constants/LOADER';
 import { LoaderTabType } from '@/types/LoaderTabType';
 import { useModalStore } from '@/store/modal';
@@ -49,22 +50,19 @@ function changeCurrentTab(tabName: LoaderTabType) {
         display: flex;
         flex-direction: row;
         padding: 0 1rem;
+        height: 4rem;
         font: $HEADER__2;
         border-bottom: 2px solid $BORDER-COLOR;
+
+        & > * {
+            margin: auto 0;
+        }
         img.icon.folder {
             margin-right: 1rem;
         }
         h2 {
             flex-grow: 1;
             text-align: start;
-        }
-        .close {
-            width: fit-content;
-            height: fit-content;
-            margin: auto 0;
-            border: 0;
-            background-color: transparent;
-            cursor: pointer;
         }
     }
     menu {
