@@ -1,3 +1,3 @@
 import LOADER from '@/constants/LOADER';
 
-export type LoaderTabType = typeof LOADER.TABS[number]['KEY'];
+export type LoaderTabType = keyof typeof LOADER.TABS;
