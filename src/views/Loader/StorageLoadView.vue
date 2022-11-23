@@ -12,9 +12,7 @@
             :key="file.key"
             @dblclick="loadFile(file)"
         >
-            <span class="icon">
-                <img src="@/assets/images/svg/file.svg" />
-            </span>
+            <img class="icon" src="@/assets/images/svg/file.svg" />
             <span class="name">{{ file.key }}</span>
             <span class="lastModified">{{
                 date2format(new Date(file.lastModified))
@@ -116,14 +114,24 @@ ul {
         display: flex;
         flex-direction: row;
         cursor: pointer;
+        .icon img,
+        .name,
+        .lastModified,
+        .size {
+            margin: auto 0;
+        }
         &.head {
             cursor: default;
+            height: 2rem;
         }
         &.item:hover {
             background-color: lightgray;
         }
+
         .icon {
-            width: 48px;
+            aspect-ratio: 1 / 1;
+            width: 24px;
+            margin-right: 0.5rem;
             flex-shrink: 0;
         }
         .name {
@@ -140,6 +148,9 @@ ul {
             width: 160px;
             flex-shrink: 0;
         }
+    }
+    li.item {
+        height: 36px;
     }
 }
 </style>
