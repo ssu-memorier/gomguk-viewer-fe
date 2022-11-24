@@ -7,13 +7,11 @@
                     : TRANSLATOR.VIEW.SHOW_ORIGIN
             }}
         </button>
-        <div class="translated">
-            {{
-                isShowOriginText
-                    ? translatorStore.originalText
-                    : translatorStore.translatedText
-            }}
-        </div>
+        {{
+            isShowOriginText
+                ? translatorStore.originalText
+                : translatorStore.translatedText
+        }}
         <hr v-show="otherMeansExist" />
         <div v-show="otherMeansExist">
             <other-means
@@ -55,24 +53,16 @@ function toggleShowOriginText() {
 @import '@/assets/scss/constants/TRANSLATOR';
 div.translator {
     position: relative;
+    height: 100%;
     background-color: $TRANSLATOR-BG-COLOR;
     overflow: auto;
-    height: 100%;
+    color: $TRANSLATOR-COLOR;
+    font-size: $TRANSLATOR-FONT-SIZE;
     .toggle {
-        width: 100%;
+        float: right;
     }
 }
 
-div.translated {
-    color: $TRANSLATOR-COLOR;
-    font-size: $TRANSLATOR-FONT-SIZE;
-    border: none;
-    padding: $TRANSLATOR-PADDING;
-    box-sizing: border-box;
-    text-align: left;
-    margin: 0;
-    flex-grow: 1;
-}
 textarea.origin {
     resize: none;
 }
