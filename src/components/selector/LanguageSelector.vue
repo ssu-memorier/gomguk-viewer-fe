@@ -33,11 +33,25 @@ function changeOption(evt: Event) {
 }
 </script>
 <style scoped lang="scss">
+@import '@/assets/scss/theme';
 select {
-    border: 0;
+    border: 1px solid transparent;
+    border-radius: $BORDER-RADIUS__ROUND;
+    padding: 0.25rem 0.5rem;
     text-align: center;
     font-size: 1.05rem;
-    background-color: transparent;
+    background-color: $SURFACE-COLOR;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+
     cursor: pointer;
+    &:hover {
+        border: 1px solid $BORDER-COLOR__LIGHT;
+    }
+    &:focus {
+        outline: none;
+        border: 1px solid $BORDER-COLOR__LIGHT;
+    }
 }
 </style>
