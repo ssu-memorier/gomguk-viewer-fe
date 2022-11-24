@@ -5,15 +5,19 @@
         @mouseup="resizeEnd"
         @mouseleave="resizeForceEnd"
         ref="$columnResizer"
-        :style="{ height: (isFold ? props.min : h) + 'px' }"
+        :style="{ height: h + 'px' }"
         :class="{ unselectable: isResizing }"
     >
-        <span class="handle" @mousedown.stop="resizeStart"></span>
+        <span
+            class="handle"
+            @mousedown.stop="resizeStart"
+            @dblclick="fold"
+        ></span>
         <slot></slot>
     </div>
 </template>
 <script setup lang="ts">
-import { ref, defineProps, watch } from 'vue';
+import { ref, defineProps } from 'vue';
 
 const props = defineProps({
     base: {
@@ -48,39 +52,36 @@ const props = defineProps({
 const isResizing = ref<boolean>(false);
 const $columnResizer = ref();
 const h = ref<number>(props.height);
-const isFold = ref<boolean>(false);
-let isChangingSize = false;
+const oldH = ref<number>(props.height);
 
-watch(h, (value) => {
-    if (value === props.min) {
-        isFold.value = true;
-    }
-});
 function resizeStart() {
     isResizing.value = true;
-    isChangingSize = false;
 }
 function resize(evt: MouseEvent) {
     if (!isResizing.value) return;
-    isChangingSize = true;
-    isFold.value = false;
     const newHeight = props.base - evt.clientY + 18;
     if (newHeight > (props.max ?? 0)) return;
     if (newHeight < (props.min ?? 0)) return;
     h.value = newHeight;
 }
 function resizeEnd() {
+    if (!isResizing.value) return;
+
     isResizing.value = false;
-    if (!isChangingSize) {
-        if (h.value === props.min) h.value = props.height;
-        isFold.value = !isFold.value;
-        isChangingSize = false;
-    }
 }
 function resizeForceEnd() {
     isResizing.value = false;
 }
+function fold() {
+    if (h.value > props.min) {
+        oldH.value = h.value;
+        h.value = props.min;
+    } else {
+        h.value = oldH.value;
+    }
+}
 </script>
+
 <style scoped lang="scss">
 @import '@/assets/scss/theme';
 .container {
