@@ -6,7 +6,7 @@
         ref="$columnResizer"
         :style="{ height: h + 'px' }"
     >
-        <span @mousedown="resizeStart">---</span>
+        <span class="handle" @mousedown="resizeStart"></span>
         <slot></slot>
     </div>
 </template>
@@ -56,11 +56,21 @@ function resizeEnd() {
 }
 </script>
 <style scoped lang="scss">
+@import '@/assets/scss/theme';
 .container {
     box-sizing: border-box;
-    padding-top: 0.5rem;
 }
-span {
-    padding-bottom: 0.5rem;
+span.handle {
+    display: inline-block;
+    border-radius: $BORDER-RADIUS__ROUND;
+    height: 8px;
+    width: 40px;
+    background-color: #eee;
+    margin-top: 0.75rem;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #ddd;
+    }
 }
 </style>
