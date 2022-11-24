@@ -11,7 +11,7 @@
     </select>
 </template>
 <script setup lang="ts">
-import { defineEmits, defineProps, PropType, ref } from 'vue';
+import { defineEmits, defineProps, PropType } from 'vue';
 import { LanguageType } from '@/types/LanguageType';
 import LANGUAGES, { EN } from '@/constants/TRANSLATOR/LANGUAGES';
 const emit = defineEmits<{
