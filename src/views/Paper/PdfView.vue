@@ -200,7 +200,7 @@ function changeTool(evt: Event, tool: ToolType) {
     height: inherit;
     overflow: hidden;
 
-    padding: 0 16px 16px 0;
+    padding: 0 16px 0 0;
     .selectionPopup {
         position: absolute;
         opacity: 0;
