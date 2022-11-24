@@ -69,6 +69,8 @@ div.translator {
     }
     .container.otherMeans {
         border-top: 1px solid $BORDER-COLOR__LIGHT;
+        padding-top: 1rem;
+        margin-top: 2rem;
     }
 }
 
