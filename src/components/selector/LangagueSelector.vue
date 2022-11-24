@@ -32,3 +32,12 @@ function changeOption(evt: Event) {
     emit('change', lang);
 }
 </script>
+<style scoped lang="scss">
+select {
+    border: 0;
+    text-align: center;
+    font-size: 1.05rem;
+    background-color: transparent;
+    cursor: pointer;
+}
+</style>
