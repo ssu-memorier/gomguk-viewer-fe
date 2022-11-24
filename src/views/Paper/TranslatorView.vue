@@ -2,26 +2,14 @@
     <div class="container">
         <div class="translatorHeader">
             <div class="translatorLanguageSelect">
-                <select @change="sourceLanguageHandler">
-                    <option
-                        v-for="LANG in LANGUAGES"
-                        :key="LANG.KEY"
-                        :value="LANG.KEY"
-                        :selected="LANG.KEY === translatorStore.source"
-                    >
-                        {{ LANG.NAME }}
-                    </option>
-                </select>
-                <select @change="targetLanguageHandler">
-                    <option
-                        v-for="LANG in LANGUAGES"
-                        :key="LANG.KEY"
-                        :value="LANG.KEY"
-                        :selected="LANG.KEY === translatorStore.target"
-                    >
-                        {{ LANG.NAME }}
-                    </option>
-                </select>
+                <langague-selector
+                    @change="sourceLanguageHandler"
+                    :selected="translatorStore.source"
+                ></langague-selector>
+                <langague-selector
+                    @change="targetLanguageHandler"
+                    :selected="translatorStore.target"
+                ></langague-selector>
             </div>
         </div>
         <language-translator
@@ -36,22 +24,20 @@
  * TrasnlatorView는 텍스트를 입력하면 번역된 결과를 보여주는 뷰입니다.
  */
 import { ref } from 'vue';
-import LANGUAGES from '@/constants/TRANSLATOR/LANGUAGES';
 import LanguageTranslator from '@/components/translator/LanguageTranslator.vue';
+import LangagueSelector from '@/components/selector/LangagueSelector.vue';
 import { useTranslatorStore } from '@/store/translator';
 import { LanguageType } from '@/types/LanguageType';
 
 const translatorStore = useTranslatorStore();
 const isMinimized = ref<boolean>(false);
 
-function sourceLanguageHandler(evt: Event) {
-    const $target = evt.target as HTMLOptionElement;
-    translatorStore.setSourceLanguage($target.value as LanguageType);
+function sourceLanguageHandler(lang: LanguageType) {
+    translatorStore.setSourceLanguage(lang);
 }
 
-function targetLanguageHandler(evt: Event) {
-    const $target = evt.target as HTMLOptionElement;
-    translatorStore.setTargetLanguage($target.value as LanguageType);
+function targetLanguageHandler(lang: LanguageType) {
+    translatorStore.setTargetLanguage(lang);
 }
 </script>
 
