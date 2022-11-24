@@ -39,7 +39,7 @@ input[type='checkbox'] {
 }
 input[type='checkbox']:checked {
     & + span {
-        box-shadow: inset 1px 1px rgba(0, 0, 0, 0.25);
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
         background-color: $SURFACE-COLOR__HOVER;
     }
 }
