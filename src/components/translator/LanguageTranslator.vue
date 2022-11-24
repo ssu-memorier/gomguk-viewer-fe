@@ -12,8 +12,7 @@
                 ? translatorStore.originalText
                 : translatorStore.translatedText
         }}
-        <hr v-show="otherMeansExist" />
-        <div v-show="otherMeansExist">
+        <div class="container otherMeans" v-show="otherMeansExist">
             <other-means
                 v-for="(kind, idx) in allKinds"
                 :key="kind"
@@ -69,6 +68,9 @@ div.translator {
         &:hover {
             background-color: $SURFACE-COLOR__HOVER;
         }
+    }
+    .container.otherMeans {
+        border-top: 1px solid $BORDER-COLOR__LIGHT;
     }
 }
 
