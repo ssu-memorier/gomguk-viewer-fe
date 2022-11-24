@@ -3,21 +3,18 @@
         class="container"
         @mousemove="resize"
         @mouseup="resizeEnd"
-        @mouseleave="resizeEnd"
+        @mouseleave="resizeForceEnd"
         ref="$columnResizer"
         :style="{ height: (isFold ? props.min : h) + 'px' }"
         :class="{ unselectable: isResizing }"
     >
-        <span
-            class="handle"
-            @mousedown.stop="resizeStart"
-            @click="toggleSize"
-        ></span>
+        <span class="handle" @mousedown.stop="resizeStart"></span>
         <slot></slot>
     </div>
 </template>
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { is } from '@babel/types';
+import { ref, defineProps, watch } from 'vue';
 
 const props = defineProps({
     base: {
@@ -53,13 +50,20 @@ const isResizing = ref<boolean>(false);
 const $columnResizer = ref();
 const h = ref<number>(props.height);
 const isFold = ref<boolean>(false);
+let isChangingSize = false;
 
+watch(h, (value) => {
+    if (value === props.min) {
+        isFold.value = true;
+    }
+});
 function resizeStart() {
     isResizing.value = true;
+    isChangingSize = false;
 }
 function resize(evt: MouseEvent) {
     if (!isResizing.value) return;
-
+    isChangingSize = true;
     const newHeight = props.base - evt.clientY + 18;
     if (newHeight > (props.max ?? 0)) return;
     if (newHeight < (props.min ?? 0)) return;
@@ -67,10 +71,14 @@ function resize(evt: MouseEvent) {
 }
 function resizeEnd() {
     isResizing.value = false;
+    if (!isChangingSize) {
+        if (h.value === props.min) h.value = props.height;
+        isFold.value = !isFold.value;
+        isChangingSize = false;
+    }
 }
-function toggleSize() {
-    console.log('?');
-    isFold.value = !isFold.value;
+function resizeForceEnd() {
+    isResizing.value = false;
 }
 </script>
 <style scoped lang="scss">
