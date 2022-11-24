@@ -18,7 +18,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import RowResizer from '@/components/resizer/RowResizer.vue';
-import ColumnResizer from '@/components/resizer/ColumnResizer.vue';
 import EditorView from '@/views/EditorView.vue';
 import TranslatorView from '@/views/Paper/TranslatorView.vue';
 import PdfView from '@/views/Paper/PdfView.vue';
