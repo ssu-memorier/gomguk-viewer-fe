@@ -10,6 +10,7 @@
                     <pdf-view></pdf-view>
                     <column-resizer
                         :base="base"
+                        :height="200"
                         :max="600"
                         :min="40"
                         class="translatorView"
