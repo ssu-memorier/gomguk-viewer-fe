@@ -1,16 +1,14 @@
 <template>
     <div class="container">
-        <div class="translatorHeader">
-            <div class="translatorLanguageSelect">
-                <langague-selector
-                    @change="sourceLanguageHandler"
-                    :selected="translatorStore.source"
-                ></langague-selector>
-                <langague-selector
-                    @change="targetLanguageHandler"
-                    :selected="translatorStore.target"
-                ></langague-selector>
-            </div>
+        <div class="translatorLanguageSelect">
+            <langague-selector
+                @change="sourceLanguageHandler"
+                :selected="translatorStore.source"
+            ></langague-selector>
+            <langague-selector
+                @change="targetLanguageHandler"
+                :selected="translatorStore.target"
+            ></langague-selector>
         </div>
         <language-translator
             class="translator"
@@ -50,9 +48,9 @@ div.container {
     background-color: #ccc;
     display: flex;
     flex-direction: column;
-    div.translatorHeader {
+    div.translatorLanguageSelect {
         flex-shrink: 0;
-        padding: $TRANSLATOR-HEADER-PADDING;
+        padding: $TRANSLATOR-LANGUAGE-SELECTOR-PADDING;
         button {
             cursor: pointer;
         }
