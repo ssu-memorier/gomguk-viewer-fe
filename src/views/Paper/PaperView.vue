@@ -8,7 +8,13 @@
             <template #left>
                 <div class="pdfView">
                     <pdf-view></pdf-view>
-                    <column-resizer class="translatorView">
+                    <column-resizer
+                        :base="base"
+                        :max="600"
+                        :min="100"
+                        class="translatorView"
+                        ref="$translatorContainer"
+                    >
                         <translator-view></translator-view>
                     </column-resizer>
                 </div>
@@ -28,14 +34,18 @@ import TranslatorView from '@/views/Paper/TranslatorView.vue';
 import PdfView from '@/views/Paper/PdfView.vue';
 
 const $paperView = ref();
+const $translatorContainer = ref();
 const containerWidth = ref<number>(0);
 const containerHeight = ref<number>(0);
+const base = ref<number>(0);
 onMounted(() => {
     setContainerSize();
+    setTranslatorPos();
 });
 
 window.addEventListener('resize', () => {
     setContainerSize();
+    setTranslatorPos();
 });
 
 function setContainerSize() {
@@ -43,6 +53,10 @@ function setContainerSize() {
 
     containerWidth.value = rect.width;
     containerHeight.value = rect.height;
+}
+function setTranslatorPos() {
+    const rect = $translatorContainer.value.$el.getBoundingClientRect();
+    base.value = rect.bottom;
 }
 </script>
 <style scoped lang="scss">
