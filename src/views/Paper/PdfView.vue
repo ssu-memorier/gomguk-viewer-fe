@@ -211,18 +211,18 @@ function changeTool(evt: Event, tool: ToolType) {
         }
     }
     .header {
-        height: $HEADER_HEIGHT;
+        height: $HEADER-HEIGHT;
         position: sticky;
         top: 0;
         background-color: $SURFACE-COLOR;
     }
     .pageView {
-        height: $PAGE_CONTAINER_HEIGHT;
+        height: $PAGE-CONTAINER-HEIGHT;
         overflow: scroll;
         .pageContainer {
             position: relative;
             margin: 0 auto;
-            padding: $PAGE_CONTAINER_PADDING;
+            padding: $PAGE-CONTAINER-PADDING;
         }
     }
 }
