@@ -1,14 +1,14 @@
 <template>
     <div class="container">
         <div class="languageOptions">
-            <langague-selector
+            <language-selector
                 @change="sourceLanguageHandler"
                 :selected="translatorStore.source"
-            ></langague-selector>
-            <langague-selector
+            ></language-selector>
+            <language-selector
                 @change="targetLanguageHandler"
                 :selected="translatorStore.target"
-            ></langague-selector>
+            ></language-selector>
         </div>
         <language-translator
             class="translator"
@@ -23,7 +23,7 @@
  */
 import { ref } from 'vue';
 import LanguageTranslator from '@/components/translator/LanguageTranslator.vue';
-import LangagueSelector from '@/components/selector/LangagueSelector.vue';
+import LanguageSelector from '@/components/selector/LanguageSelector.vue';
 import { useTranslatorStore } from '@/store/translator';
 import { LanguageType } from '@/types/LanguageType';
 
