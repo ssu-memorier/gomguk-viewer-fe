@@ -41,6 +41,7 @@ function setContainerSize() {
 }
 </script>
 <style scoped lang="scss">
+@import '@/assets/scss/theme';
 .row {
     height: 100%;
 }
@@ -57,5 +58,6 @@ function setContainerSize() {
     transform: translateX(-50%);
     border-radius: 16px;
     overflow: hidden;
+    box-shadow: $SHADOW__6DP;
 }
 </style>

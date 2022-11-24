@@ -64,7 +64,6 @@ div.container {
     background-color: #ccc;
     display: flex;
     flex-direction: column;
-    box-shadow: $SHADOW__6DP;
     div.translatorHeader {
         flex-shrink: 0;
         padding: $TRANSLATOR-HEADER-PADDING;
