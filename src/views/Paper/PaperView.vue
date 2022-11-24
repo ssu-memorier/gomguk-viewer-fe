@@ -11,7 +11,7 @@
                     <column-resizer
                         :base="base"
                         :max="600"
-                        :min="100"
+                        :min="40"
                         class="translatorView"
                         ref="$translatorContainer"
                     >
