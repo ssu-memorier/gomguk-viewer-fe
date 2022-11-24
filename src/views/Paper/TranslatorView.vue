@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="translatorLanguageSelect">
+        <div class="languageOptions">
             <langague-selector
                 @change="sourceLanguageHandler"
                 :selected="translatorStore.source"
@@ -48,7 +48,7 @@ div.container {
     background-color: $SURFACE-COLOR;
     display: flex;
     flex-direction: column;
-    div.translatorLanguageSelect {
+    div.languageOptions {
         flex-shrink: 0;
         padding: $TRANSLATOR-LANGUAGE-SELECTOR-PADDING;
         border-bottom: 1px solid $BORDER-COLOR;
