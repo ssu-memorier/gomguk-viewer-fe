@@ -19,7 +19,6 @@ const props = defineProps<Props>();
 <style lang="scss" scoped>
 @import '@/assets/scss/constants/TRANSLATOR';
 div.otherMean {
-    padding: $TRANSLATOR-PADDING;
     text-align: left;
 }
 </style>
