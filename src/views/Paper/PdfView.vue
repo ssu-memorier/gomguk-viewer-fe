@@ -1,13 +1,14 @@
 <template>
     <div id="pdfView" ref="$pdfView" class="view">
         <div class="header">
-            <label>
-                eraser
-                <input
-                    type="checkbox"
+            <div class="tools">
+                <round-toggle
+                    class="eraser"
                     @change="changeTool($event, TOOL.ERASER)"
-                />
-            </label>
+                >
+                    <img class="icon" src="@/assets/images/svg/eraser.svg" />
+                </round-toggle>
+            </div>
             <div class="zoomControll">
                 <round-button class="zoomHandler" @click="zoomOutHandler">
                     <img class="icon" src="@/assets/images/svg/minus.svg" />
@@ -60,6 +61,7 @@ import { IPos } from '@/Interface/IPos';
 import TOOL from '@/constants/TOOL';
 import { ToolType } from '@/types/ToolType';
 import RoundButton from '@/components/button/RoundButton.vue';
+import RoundToggle from '@/components/toggle/RoundToggle.vue';
 
 const pdfStore = usePdfStore();
 const toolsStore = useToolsStore();
@@ -225,7 +227,6 @@ function changeTool(evt: Event, tool: ToolType) {
         display: flex;
         justify-content: space-between;
         padding: 0 1rem;
-        box-shadow: $SHADOW__2DP;
     }
     .zoomControll {
         display: flex;
@@ -235,12 +236,28 @@ function changeTool(evt: Event, tool: ToolType) {
             margin-right: 0.5rem;
         }
         .zoomHandler {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             box-shadow: $SHADOW__2DP;
             .icon {
                 aspect-ratio: 1 / 1;
                 width: 16px;
+            }
+        }
+    }
+    .tools {
+        display: flex;
+        flex-direction: row;
+        & > * {
+            margin: auto 0;
+        }
+        .eraser {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            .icon {
+                aspect-ratio: 1 / 1;
+                width: 24px;
             }
         }
     }
