@@ -1,5 +1,5 @@
 <template>
-    <div class="translatorView card view">
+    <div class="container">
         <div class="translatorHeader">
             <div class="translatorLanguageSelect">
                 <select @change="sourceLanguageHandler">
@@ -57,10 +57,14 @@ function targetLanguageHandler(evt: Event) {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/constants/TRANSLATOR';
-div.translatorView {
+@import '@/assets/scss/theme';
+div.container {
+    width: 100%;
+    height: 100%;
     background-color: #ccc;
     display: flex;
     flex-direction: column;
+    box-shadow: $SHADOW__6DP;
     div.translatorHeader {
         flex-shrink: 0;
         padding: $TRANSLATOR-HEADER-PADDING;

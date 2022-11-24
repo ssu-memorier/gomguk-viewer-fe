@@ -2,18 +2,12 @@
     <div class="container" ref="$paperView">
         <row-resizer class="row" :boxWidth="containerWidth" :left-percent="0.5">
             <template #left>
-                <column-resizer
-                    class="column"
-                    :box-height="containerHeight"
-                    :top-percent="0.75"
-                >
-                    <template #top>
-                        <pdf-view></pdf-view>
-                    </template>
-                    <template #bottom>
+                <div class="pdfView">
+                    <pdf-view></pdf-view>
+                    <div class="translatorView">
                         <translator-view></translator-view>
-                    </template>
-                </column-resizer>
+                    </div>
+                </div>
             </template>
             <template #right>
                 <editor-view></editor-view>
@@ -47,3 +41,20 @@ function setContainerSize() {
     containerHeight.value = rect.height;
 }
 </script>
+<style scoped lang="scss">
+.row {
+    height: 100%;
+}
+.pdfView {
+    height: 100%;
+}
+.translatorView {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    width: 80%;
+    max-width: 800px;
+    height: 200px;
+    transform: translateX(-50%);
+}
+</style>
