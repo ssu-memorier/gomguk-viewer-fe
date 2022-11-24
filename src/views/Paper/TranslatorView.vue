@@ -45,12 +45,13 @@ function targetLanguageHandler(lang: LanguageType) {
 div.container {
     width: 100%;
     height: 100%;
-    background-color: #ccc;
+    background-color: $SURFACE-COLOR;
     display: flex;
     flex-direction: column;
     div.translatorLanguageSelect {
         flex-shrink: 0;
         padding: $TRANSLATOR-LANGUAGE-SELECTOR-PADDING;
+        border-bottom: 1px solid $BORDER-COLOR;
         button {
             cursor: pointer;
         }
