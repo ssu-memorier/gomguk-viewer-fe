@@ -1,9 +1,6 @@
 <template>
     <div id="pdfView" ref="$pdfView" class="view">
         <div class="header">
-            <button @click="zoomOutHandler">-</button>
-            <span>{{ scalePercent }}%</span>
-            <button @click="zoomInHandler">+</button>
             <label>
                 eraser
                 <input
@@ -11,6 +8,15 @@
                     @change="changeTool($event, TOOL.ERASER)"
                 />
             </label>
+            <div class="zoomControll">
+                <round-button class="zoomHandler" @click="zoomOutHandler">
+                    <img class="icon" src="@/assets/images/svg/minus.svg" />
+                </round-button>
+                <span class="zoomPercent">{{ scalePercent }}%</span>
+                <round-button class="zoomHandler" @click="zoomInHandler">
+                    <img class="icon" src="@/assets/images/svg/plus.svg" />
+                </round-button>
+            </div>
         </div>
         <div class="pageView" ref="$pageView">
             <div
@@ -53,6 +59,7 @@ import clearSelection from '@/utils/clearSelection';
 import { IPos } from '@/Interface/IPos';
 import TOOL from '@/constants/TOOL';
 import { ToolType } from '@/types/ToolType';
+import RoundButton from '@/components/button/RoundButton.vue';
 
 const pdfStore = usePdfStore();
 const toolsStore = useToolsStore();
@@ -215,6 +222,27 @@ function changeTool(evt: Event, tool: ToolType) {
         position: sticky;
         top: 0;
         background-color: $SURFACE-COLOR;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        box-shadow: $SHADOW__2DP;
+    }
+    .zoomControll {
+        display: flex;
+        flex-direction: row;
+        & > * {
+            margin: auto 0;
+            margin-right: 0.5rem;
+        }
+        .zoomHandler {
+            width: 24px;
+            height: 24px;
+            box-shadow: $SHADOW__2DP;
+            .icon {
+                aspect-ratio: 1 / 1;
+                width: 16px;
+            }
+        }
     }
     .pageView {
         height: $PAGE-CONTAINER-HEIGHT;
