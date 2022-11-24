@@ -13,7 +13,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import { is } from '@babel/types';
 import { ref, defineProps, watch } from 'vue';
 
 const props = defineProps({
@@ -64,6 +63,7 @@ function resizeStart() {
 function resize(evt: MouseEvent) {
     if (!isResizing.value) return;
     isChangingSize = true;
+    isFold.value = false;
     const newHeight = props.base - evt.clientY + 18;
     if (newHeight > (props.max ?? 0)) return;
     if (newHeight < (props.min ?? 0)) return;
