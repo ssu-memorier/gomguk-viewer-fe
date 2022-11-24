@@ -7,12 +7,8 @@
                     : TRANSLATOR.VIEW.SHOW_ORIGIN
             }}
         </button>
-        {{
-            isShowOriginText
-                ? translatorStore.originalText
-                : translatorStore.translatedText
-        }}
-        <div class="container otherMeans" v-show="otherMeansExist">
+        {{ isShowOriginText ? originalText : translatedText }}
+        <div class="container otherMeans" v-show="allKinds.length > 0">
             <other-means
                 v-for="(kind, idx) in allKinds"
                 :key="kind"
@@ -31,15 +27,17 @@ import { ref, computed } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
 import TRANSLATOR from '@/constants/TRANSLATOR';
 import OtherMeans from '@/components/translator/OtherMeans.vue';
+import { storeToRefs } from 'pinia';
 const translatorStore = useTranslatorStore();
+const { allTranslations, originalText, translatedText } =
+    storeToRefs(translatorStore);
 const isShowOriginText = ref<boolean>(false);
-const otherMeansExist = computed(() => !!translatorStore.allTranslations);
 const allKinds = computed(() => {
-    const allTrans = translatorStore.allTranslations;
+    const allTrans = allTranslations.value;
     return allTrans ? Object.keys(allTrans) : [];
 });
 const allMeans = computed(() => {
-    const allTrans = translatorStore.allTranslations;
+    const allTrans = allTranslations.value;
     return allTrans ? Object.values(allTrans) : [];
 });
 
