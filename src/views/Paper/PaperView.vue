@@ -1,23 +1,28 @@
 <template>
     <div class="container" ref="$paperView">
-        <row-resizer class="row" :boxWidth="containerWidth" :left-percent="0.5">
+        <row-partition
+            class="row"
+            :boxWidth="containerWidth"
+            :left-percent="0.5"
+        >
             <template #left>
                 <div class="pdfView">
                     <pdf-view></pdf-view>
-                    <div class="translatorView">
+                    <column-resizer class="translatorView">
                         <translator-view></translator-view>
-                    </div>
+                    </column-resizer>
                 </div>
             </template>
             <template #right>
                 <editor-view></editor-view>
             </template>
-        </row-resizer>
+        </row-partition>
     </div>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import RowResizer from '@/components/resizer/RowResizer.vue';
+import RowPartition from '@/components/resizer/RowPartition.vue';
+import ColumnResizer from '@/components/resizer/ColumnResizer.vue';
 import EditorView from '@/views/EditorView.vue';
 import TranslatorView from '@/views/Paper/TranslatorView.vue';
 import PdfView from '@/views/Paper/PdfView.vue';
@@ -59,5 +64,6 @@ function setContainerSize() {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: $SHADOW__6DP;
+    background-color: $SURFACE-COLOR;
 }
 </style>

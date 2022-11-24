@@ -31,7 +31,6 @@ import { LanguageType } from '@/types/LanguageType';
 
 const translatorStore = useTranslatorStore();
 const isMinimized = ref<boolean>(false);
-
 function sourceLanguageHandler(lang: LanguageType) {
     translatorStore.setSourceLanguage(lang);
 }
@@ -48,7 +47,6 @@ div.container {
     width: 100%;
     height: 100%;
     padding: 1rem;
-    background-color: $SURFACE-COLOR;
     display: flex;
     text-align: left;
     flex-direction: column;
