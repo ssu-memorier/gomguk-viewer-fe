@@ -210,15 +210,6 @@ function changeTool(evt: Event, tool: ToolType) {
             z-index: 200;
         }
     }
-    .noPdf {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        p {
-            font-size: $NO_PDF_FONTSIZE;
-        }
-    }
     .header {
         height: $HEADER_HEIGHT;
         position: sticky;
