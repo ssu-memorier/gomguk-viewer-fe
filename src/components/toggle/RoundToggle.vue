@@ -30,7 +30,7 @@ input[type='checkbox'] {
         height: 100%;
         width: 100%;
         box-shadow: $SHADOW__2DP;
-        padding: 4px;
+        padding: 0.25rem;
 
         &:hover {
             background-color: $SURFACE-COLOR__HOVER;
@@ -39,7 +39,7 @@ input[type='checkbox'] {
 }
 input[type='checkbox']:checked {
     & + span {
-        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+        box-shadow: $INNER_SHADOW__2DP;
         background-color: $SURFACE-COLOR__HOVER;
     }
 }
