@@ -50,6 +50,7 @@ function toggleShowOriginText() {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/theme';
 @import '@/assets/scss/constants/TRANSLATOR';
 div.translator {
     position: relative;
@@ -58,8 +59,16 @@ div.translator {
     overflow: auto;
     color: $TRANSLATOR-COLOR;
     font-size: $TRANSLATOR-FONT-SIZE;
-    .toggle {
+    button.toggle {
         float: right;
+        background-color: $SURFACE-COLOR;
+        border: 1px solid $BORDER-COLOR;
+        border-radius: $BORDER-RADIUS__ROUND;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $SURFACE-COLOR__HOVER;
+        }
     }
 }
 
