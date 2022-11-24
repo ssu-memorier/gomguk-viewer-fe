@@ -11,6 +11,7 @@
                 :selected="translatorStore.target"
             ></language-selector>
         </div>
+        <hr />
         <language-translator
             class="translator"
             v-show="!isMinimized"
@@ -46,16 +47,16 @@ function targetLanguageHandler(lang: LanguageType) {
 div.container {
     width: 100%;
     height: 100%;
+    padding: 1rem;
     background-color: $SURFACE-COLOR;
     display: flex;
+    text-align: left;
     flex-direction: column;
     div.languageOptions {
         display: flex;
         flex-direction: row;
         justify-content: center;
         flex-shrink: 0;
-        padding: $TRANSLATOR-LANGUAGE-SELECTOR-PADDING;
-        border-bottom: 1px solid $BORDER-COLOR;
         & > * {
             margin-right: 1rem;
         }
@@ -65,6 +66,13 @@ div.container {
         button {
             cursor: pointer;
         }
+    }
+    hr {
+        width: 100%;
+        height: 1px;
+        border: none;
+        flex-shrink: 0;
+        background-color: $BORDER-COLOR__LIGHT;
     }
     .translator {
         flex-grow: 1;
