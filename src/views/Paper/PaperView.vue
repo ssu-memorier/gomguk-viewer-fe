@@ -55,5 +55,7 @@ function setContainerSize() {
     max-width: 800px;
     height: 200px;
     transform: translateX(-50%);
+    border-radius: 16px;
+    overflow: hidden;
 }
 </style>
