@@ -3,10 +3,12 @@
         class="container"
         @mousemove="resize"
         @mouseup="resizeEnd"
+        @mouseleave="resizeEnd"
         ref="$columnResizer"
         :style="{ height: h + 'px' }"
+        :class="{ unselectable: isResizing }"
     >
-        <span class="handle" @mousedown="resizeStart"></span>
+        <span class="handle" @mousedown.stop="resizeStart"></span>
         <slot></slot>
     </div>
 </template>
@@ -59,14 +61,17 @@ function resizeEnd() {
 @import '@/assets/scss/theme';
 .container {
     box-sizing: border-box;
+    &.unselectable {
+        user-select: none;
+    }
 }
 span.handle {
     display: inline-block;
     border-radius: $BORDER-RADIUS__ROUND;
     height: 8px;
-    width: 40px;
+    width: 60px;
     background-color: #eee;
-    margin-top: 0.75rem;
+    margin-top: 1rem;
     cursor: pointer;
 
     &:hover {
