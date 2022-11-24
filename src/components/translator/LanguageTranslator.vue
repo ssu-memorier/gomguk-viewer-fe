@@ -59,6 +59,7 @@ div.translator {
     button.toggle {
         float: right;
         background-color: $SURFACE-COLOR;
+        color: $TEXT-COLOR__LIGHT;
         border: 1px solid $BORDER-COLOR;
         border-radius: $BORDER-RADIUS__ROUND;
         cursor: pointer;
