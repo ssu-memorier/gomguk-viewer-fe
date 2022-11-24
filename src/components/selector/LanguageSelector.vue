@@ -37,7 +37,7 @@ function changeOption(evt: Event) {
 select {
     border: 1px solid transparent;
     border-radius: $BORDER-RADIUS__ROUND;
-    padding: 0.25rem 0.5rem;
+    padding: 0 0.5rem;
     text-align: center;
     font-size: 1.05rem;
     background-color: $SURFACE-COLOR;
