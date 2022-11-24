@@ -5,6 +5,7 @@
                 @change="sourceLanguageHandler"
                 :selected="translatorStore.source"
             ></language-selector>
+            <img src="@/assets/images/svg/arrow-narrow-right.svg" />
             <language-selector
                 @change="targetLanguageHandler"
                 :selected="translatorStore.target"
@@ -49,9 +50,18 @@ div.container {
     display: flex;
     flex-direction: column;
     div.languageOptions {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
         flex-shrink: 0;
         padding: $TRANSLATOR-LANGUAGE-SELECTOR-PADDING;
         border-bottom: 1px solid $BORDER-COLOR;
+        & > * {
+            margin-right: 1rem;
+        }
+        & > *:last-child {
+            margin-right: 0;
+        }
         button {
             cursor: pointer;
         }
