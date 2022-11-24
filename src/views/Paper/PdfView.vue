@@ -236,8 +236,8 @@ function changeTool(evt: Event, tool: ToolType) {
             margin-right: 0.5rem;
         }
         .zoomHandler {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             box-shadow: $SHADOW__2DP;
             .icon {
                 aspect-ratio: 1 / 1;
@@ -253,11 +253,11 @@ function changeTool(evt: Event, tool: ToolType) {
         }
         .eraser {
             display: inline-block;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             .icon {
                 aspect-ratio: 1 / 1;
-                width: 24px;
+                width: 20px;
             }
         }
     }
