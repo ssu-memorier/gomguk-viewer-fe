@@ -166,7 +166,7 @@ main {
     position: fixed;
     top: 80px;
     left: 50%;
-    display: inline-block;
+    width: 400px;
     z-index: 1000;
     transform: translateX(-50%);
 }
