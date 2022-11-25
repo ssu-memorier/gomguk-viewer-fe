@@ -44,6 +44,7 @@ export const useTranslatorStore = defineStore('translator', () => {
         const response = await requestTranslatedText(option);
 
         if (!response.isSuccess) {
+            alert(response.message);
             translatedText.value = '';
             return;
         }

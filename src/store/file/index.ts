@@ -21,6 +21,7 @@ export const useFileStore = defineStore('file', () => {
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
         const response = await requestFileList();
         if (!response.isSuccess) {
+            alert(response.message);
             return;
         }
 
@@ -35,6 +36,7 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
+            alert(response.message);
             return false;
         }
         return true;
@@ -58,6 +60,7 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
+            alert(response.message);
             return false;
         }
         return true;
@@ -68,7 +71,10 @@ export const useFileStore = defineStore('file', () => {
             dir: fileInfo.dir,
             key: fileInfo.key,
         });
-        if (!response.isSuccess) return false;
+        if (!response.isSuccess) {
+            alert(response.message);
+            return false;
+        }
 
         currentFileInfo.value = fileInfo;
         pdfStore.setPdfFile(response.payload.pdf);
@@ -83,6 +89,10 @@ export const useFileStore = defineStore('file', () => {
             dir: fileInfo.dir,
             key: fileInfo.key,
         });
+
+        if (!response.isSuccess) {
+            alert(response.message);
+        }
         return response.isSuccess;
     }
 
