@@ -16,6 +16,7 @@
         <kakao-login-button></kakao-login-button>
         <google-login-button></google-login-button>
     </div>
+    <alert-view class="alertView"></alert-view>
 </template>
 
 <script setup lang="ts">
@@ -23,6 +24,7 @@ import { ref, onMounted } from 'vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import MastheadView from '@/views/MastheadView.vue';
+import AlertView from '@/views/AlertView.vue';
 import GuideView from '@/views/GuideView.vue';
 import LogoutButton from '@/components/button/LogoutButton.vue';
 import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
@@ -35,6 +37,7 @@ import { usePdfStore } from '@/store/file/pdf';
  * TODO: 제거 예정
  */
 import axios from 'axios';
+import { useAlertStore } from '@/store/alert';
 
 const $main = ref();
 const userStore = useUserStore();
@@ -60,6 +63,17 @@ axios.interceptors.response.use(
 
 onMounted(async () => {
     await userStore.getProfile();
+    const alertStore = useAlertStore();
+
+    setTimeout(() => {
+        alertStore.pushAlert({ time: new Date(), message: 'test message1' });
+    }, 1000);
+    setTimeout(() => {
+        alertStore.pushAlert({ time: new Date(), message: 'test message2' });
+    }, 3000);
+    setTimeout(() => {
+        alertStore.pushAlert({ time: new Date(), message: 'test message3' });
+    }, 5000);
 });
 </script>
 
@@ -147,6 +161,14 @@ main {
     width: 100%;
     height: 100%;
     background-color: transparent;
+}
+.alertView {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    display: inline-block;
+    z-index: 1000;
+    transform: translateX(-50%);
 }
 .view {
     width: 100%;
