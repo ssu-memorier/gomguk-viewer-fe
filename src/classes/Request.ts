@@ -1,10 +1,10 @@
 import Response from '@/classes/Response';
 
 export default class Request {
-    static create(req: () => unknown): () => Promise<Response> {
-        return async () => {
+    static create(req: (params?: any) => unknown): () => Promise<Response> {
+        return async (params?: any) => {
             try {
-                const result = await req();
+                const result = await req(params);
 
                 return Response.success(result);
             } catch (err) {

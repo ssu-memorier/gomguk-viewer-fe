@@ -1,5 +1,5 @@
 import STORAGE from '@/constants/STORAGE';
-import Response from '@/classes/Response';
+import Request from '@/classes/Request';
 import getStorageModel from '@/utils/getStorageModel';
 import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
 import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
@@ -8,26 +8,17 @@ import { IRequestFileParams } from '@/Interface/api/IRequestFileParams';
 import JSZip from 'jszip';
 const model = getStorageModel();
 
-export async function requestFileList(): Promise<Response> {
-    try {
-        const response = await model.get(`${STORAGE.URL.LIST}`);
-        const result = response.data.contents;
+export const requestFileList = Request.create(async () => {
+    const response = await model.get(`${STORAGE.URL.LIST}`);
+    const result = response.data.contents;
 
-        if (response.status !== 200) throw Error(response.data.message);
-        return Response.success(result);
-    } catch (err) {
-        if (err instanceof Error) {
-            return Response.failed(err.message);
-        }
+    if (response.status !== 200) throw Error(response.data.message);
 
-        return Response.failed();
-    }
-}
+    return result;
+});
 
-export async function requestFile(
-    params: IRequestFileParams
-): Promise<Response> {
-    try {
+export const requestFile = Request.create(
+    async (params: IRequestFileParams) => {
         const { key } = params;
         const response = await model.get(STORAGE.URL.FILE, {
             params,
@@ -42,20 +33,12 @@ export async function requestFile(
         const pdfFile = new File([pdfBlob], `${key}.pdf`);
         const metaData = JSON.parse(jsonStr);
 
-        return Response.success({ pdf: pdfFile, metaData: metaData });
-    } catch (err) {
-        if (err instanceof Error) {
-            return Response.failed(err.message);
-        }
-
-        return Response.failed();
+        return { pdf: pdfFile, metaData: metaData };
     }
-}
+);
 
-export async function requestUploadFile(
-    params: IRequestFileUploadParams
-): Promise<Response> {
-    try {
+export const requestUploadFile = Request.create(
+    async (params: IRequestFileUploadParams) => {
         const { dir, file, key } = params;
         const formData = new FormData();
 
@@ -67,20 +50,11 @@ export async function requestUploadFile(
                 'Content-Type': 'multipart/form-data',
             },
         });
-
-        return Response.success();
-    } catch (err) {
-        if (err instanceof Error) {
-            return Response.failed(err.message);
-        }
-
-        return Response.failed();
     }
-}
-export async function requestUpdateFile(
-    params: IRequestFileUpdateParams
-): Promise<Response> {
-    try {
+);
+
+export const requestUpdateFile = Request.create(
+    async (params: IRequestFileUpdateParams) => {
         const { dir, key, data } = params;
         const sendData = JSON.stringify({
             key,
@@ -91,21 +65,11 @@ export async function requestUpdateFile(
         await model.put(STORAGE.URL.FILE, sendData, {
             headers: { 'Content-Type': 'application/json' },
         });
-
-        return Response.success();
-    } catch (err) {
-        if (err instanceof Error) {
-            return Response.failed(err.message);
-        }
-
-        return Response.failed();
     }
-}
+);
 
-export async function requestDeleteFile(
-    params: IRequestFileDeleteParams
-): Promise<Response> {
-    try {
+export const requestDeleteFile = Request.create(
+    async (params: IRequestFileDeleteParams) => {
         const { dir, key } = params;
         const data = {
             dir,
@@ -116,13 +80,5 @@ export async function requestDeleteFile(
             headers: { 'Content-Type': 'application/json' },
             data,
         });
-
-        return Response.success();
-    } catch (err) {
-        if (err instanceof Error) {
-            return Response.failed(err.message);
-        }
-
-        return Response.failed();
     }
-}
+);
