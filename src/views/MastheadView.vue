@@ -41,7 +41,6 @@ import LoginButton from '@/components/button/LoginButton.vue';
 import { useFileStore } from '@/store/file';
 import { useModalStore } from '@/store/modal';
 import { useUserStore } from '@/store/user';
-import MESSAGE from '@/constants/MESSAGE';
 import HEADER from '@/constants/HEADER';
 import RoundButton from '@/components/button/RoundButton.vue';
 import ProfileButton from '@/components/button/ProfileButton.vue';
@@ -54,10 +53,7 @@ function load() {
     modalStore.showModal();
 }
 async function save() {
-    const isSuccess = await fileStore.updateFile();
-    if (!isSuccess) {
-        alert(MESSAGE.STORAGE.UPDATE_FAILED);
-    }
+    await fileStore.updateFile();
 }
 
 function toggleProfileMenu() {

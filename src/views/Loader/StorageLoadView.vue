@@ -35,7 +35,6 @@ import { ref, onMounted } from 'vue';
 import { useFileStore } from '@/store/file';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { useUserStore } from '@/store/user';
-import MESSAGE from '@/constants/MESSAGE';
 import FILE from '@/constants/FILE';
 import date2format from '@/utils/date2format';
 import size2format from '@/utils/size2format';
@@ -52,31 +51,21 @@ onMounted(async () => {
 
 async function loadFile(fileInfo: IFileInfo) {
     const isSuccess = await fileStore.loadFile(fileInfo);
-    if (!isSuccess) {
-        alert(MESSAGE.STORAGE.LOAD_FAILED);
-
-        return;
-    }
+    if (!isSuccess) return;
 
     notifyFileLoad();
 }
 
 async function deleteFile(fileInfo: IFileInfo) {
     const isSuccess = await fileStore.deleteFile(fileInfo);
-    if (!isSuccess) {
-        alert(MESSAGE.STORAGE.DELETE_FAILED);
+    if (!isSuccess) return;
 
-        return;
-    }
     updateFileList();
 }
 
 async function updateFileList() {
     const list = await fileStore.fetchFileList();
-    if (!list) {
-        alert(MESSAGE.STORAGE.GET_LIST_FAILED);
-        return;
-    }
+    if (!list) return;
 
     fileList.value = list;
 }
