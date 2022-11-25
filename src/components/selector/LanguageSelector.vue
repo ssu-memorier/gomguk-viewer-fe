@@ -35,7 +35,7 @@ function changeOption(evt: Event) {
 <style scoped lang="scss">
 @import '@/assets/scss/theme';
 select {
-    border: 1px solid transparent;
+    border: 1px solid $BORDER-COLOR__LIGHT;
     border-radius: $BORDER-RADIUS__ROUND;
     padding: 0 0.5rem;
     text-align: center;
@@ -47,11 +47,17 @@ select {
 
     cursor: pointer;
     &:hover {
-        border: 1px solid $BORDER-COLOR__LIGHT;
+        border: 1px solid $PRIMARY-COLOR;
     }
     &:focus {
         outline: none;
         border: 1px solid $BORDER-COLOR__LIGHT;
     }
+    background: url('@/assets/images/svg/chervon-down.svg') no-repeat right 12px
+        center;
+}
+.icon {
+    aspect-ratio: 1 /1;
+    width: 20px;
 }
 </style>

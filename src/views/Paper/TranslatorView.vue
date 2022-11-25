@@ -2,11 +2,13 @@
     <div class="container">
         <div class="languageOptions">
             <language-selector
+                class="selector"
                 @change="sourceLanguageHandler"
                 :selected="translatorStore.source"
             ></language-selector>
             <img src="@/assets/images/svg/arrow-narrow-right.svg" />
             <language-selector
+                class="selector"
                 @change="targetLanguageHandler"
                 :selected="translatorStore.target"
             ></language-selector>
@@ -75,6 +77,9 @@ div.container {
     .translator {
         flex-grow: 1;
         overflow: auto;
+    }
+    .selector {
+        width: 160px;
     }
 }
 </style>
