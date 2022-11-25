@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', () => {
     async function getProfile() {
         const response = await requestProfile();
         if (response.isSuccess) {
-            userName.value = response.data.name;
+            userName.value = response.payload.name;
             isLoggined.value = true;
         } else {
             userName.value = '';

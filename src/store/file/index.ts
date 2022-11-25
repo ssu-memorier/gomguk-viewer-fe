@@ -24,7 +24,7 @@ export const useFileStore = defineStore('file', () => {
             return;
         }
 
-        return response.data;
+        return response.payload;
     }
 
     async function uploadFile(pdf: File): Promise<boolean> {
@@ -71,9 +71,9 @@ export const useFileStore = defineStore('file', () => {
         if (!response.isSuccess) return false;
 
         currentFileInfo.value = fileInfo;
-        pdfStore.setPdfFile(response.data.pdf);
-        editorStore.fromJSON(response.data.metaData.editor);
-        highlightStore.fromArray(response.data.metaData.highlights);
+        pdfStore.setPdfFile(response.payload.pdf);
+        editorStore.fromJSON(response.payload.metaData.editor);
+        highlightStore.fromArray(response.payload.metaData.highlights);
 
         return true;
     }

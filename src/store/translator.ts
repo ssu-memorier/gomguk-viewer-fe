@@ -47,8 +47,8 @@ export const useTranslatorStore = defineStore('translator', () => {
             translatedText.value = '';
             return;
         }
-        translatedText.value = response.data.text.translated;
-        allTranslations.value = response.data.allTranslations || {};
+        translatedText.value = response.payload.text.translated;
+        allTranslations.value = response.payload.allTranslations || {};
     }
 
     return {
