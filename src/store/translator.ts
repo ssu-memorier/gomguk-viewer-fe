@@ -4,8 +4,10 @@ import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { requestTranslatedText } from '@/api/translate';
 import createDebounce from '@/utils/createDebounce';
+import { useAlertStore } from '@/store/alert';
 
 export const useTranslatorStore = defineStore('translator', () => {
+    const alertStore = useAlertStore();
     const source = ref<LanguageType>('en');
     const target = ref<LanguageType>('ko');
     const originalText = ref<string>('');
@@ -44,7 +46,10 @@ export const useTranslatorStore = defineStore('translator', () => {
         const response = await requestTranslatedText(option);
 
         if (!response.isSuccess) {
-            alert(response.message);
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             translatedText.value = '';
             return;
         }

@@ -11,17 +11,23 @@ import {
 } from '@/api/storage';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { ref } from 'vue';
+import { useAlertStore } from '@/store/alert';
 
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
     const highlightStore = useHighlightStore();
     const pdfStore = usePdfStore();
+    const alertStore = useAlertStore();
+
     const currentFileInfo = ref<IFileInfo | undefined>();
 
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
         const response = await requestFileList();
         if (!response.isSuccess) {
-            alert(response.message);
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             return;
         }
 
@@ -36,7 +42,10 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
-            alert(response.message);
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             return false;
         }
         return true;
@@ -60,7 +69,10 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
-            alert(response.message);
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             return false;
         }
         return true;
@@ -72,7 +84,10 @@ export const useFileStore = defineStore('file', () => {
             key: fileInfo.key,
         });
         if (!response.isSuccess) {
-            alert(response.message);
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             return false;
         }
 
@@ -91,7 +106,10 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
-            alert(response.message);
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
         }
         return response.isSuccess;
     }

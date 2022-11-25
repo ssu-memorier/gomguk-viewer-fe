@@ -37,7 +37,6 @@ import { usePdfStore } from '@/store/file/pdf';
  * TODO: 제거 예정
  */
 import axios from 'axios';
-import { useAlertStore } from '@/store/alert';
 
 const $main = ref();
 const userStore = useUserStore();
@@ -63,17 +62,6 @@ axios.interceptors.response.use(
 
 onMounted(async () => {
     await userStore.getProfile();
-    const alertStore = useAlertStore();
-
-    setTimeout(() => {
-        alertStore.pushAlert({ time: new Date(), message: 'test message1' });
-    }, 1000);
-    setTimeout(() => {
-        alertStore.pushAlert({ time: new Date(), message: 'test message2' });
-    }, 3000);
-    setTimeout(() => {
-        alertStore.pushAlert({ time: new Date(), message: 'test message3' });
-    }, 5000);
 });
 </script>
 
