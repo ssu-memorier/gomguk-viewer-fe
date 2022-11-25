@@ -1,11 +1,10 @@
 import STORAGE from '@/constants/STORAGE';
-import createResponse from '@/utils/createResponse';
+import Response from '@/classes/Response';
 import getStorageModel from '@/utils/getStorageModel';
 import { IRequestFileUploadParams } from '@/Interface/api/IRequestFileUploadParams';
 import { IRequestFileDeleteParams } from '@/Interface/api/IRequestFileDeleteParams';
 import { IRequestFileUpdateParams } from '@/Interface/api/IRequestFileUpdateParams';
 import { IRequestFileParams } from '@/Interface/api/IRequestFileParams';
-import { Response } from '@/Interface/Response';
 import JSZip from 'jszip';
 const model = getStorageModel();
 
@@ -14,9 +13,14 @@ export async function requestFileList(): Promise<Response> {
         const response = await model.get(`${STORAGE.URL.LIST}`);
         const result = response.data.contents;
 
-        return createResponse(true, result);
+        if (response.status !== 200) throw Error(response.data.message);
+        return Response.success(result);
     } catch (err) {
-        return createResponse(false);
+        if (err instanceof Error) {
+            return Response.failed(err.message);
+        }
+
+        return Response.failed();
     }
 }
 
@@ -38,9 +42,13 @@ export async function requestFile(
         const pdfFile = new File([pdfBlob], `${key}.pdf`);
         const metaData = JSON.parse(jsonStr);
 
-        return createResponse(true, { pdf: pdfFile, metaData: metaData });
+        return Response.success({ pdf: pdfFile, metaData: metaData });
     } catch (err) {
-        return createResponse(false);
+        if (err instanceof Error) {
+            return Response.failed(err.message);
+        }
+
+        return Response.failed();
     }
 }
 
@@ -60,9 +68,13 @@ export async function requestUploadFile(
             },
         });
 
-        return createResponse(true);
+        return Response.success();
     } catch (err) {
-        return createResponse(false);
+        if (err instanceof Error) {
+            return Response.failed(err.message);
+        }
+
+        return Response.failed();
     }
 }
 export async function requestUpdateFile(
@@ -80,9 +92,13 @@ export async function requestUpdateFile(
             headers: { 'Content-Type': 'application/json' },
         });
 
-        return createResponse(true);
+        return Response.success();
     } catch (err) {
-        return createResponse(false);
+        if (err instanceof Error) {
+            return Response.failed(err.message);
+        }
+
+        return Response.failed();
     }
 }
 
@@ -101,8 +117,12 @@ export async function requestDeleteFile(
             data,
         });
 
-        return createResponse(true);
+        return Response.success();
     } catch (err) {
-        return createResponse(false);
+        if (err instanceof Error) {
+            return Response.failed(err.message);
+        }
+
+        return Response.failed();
     }
 }

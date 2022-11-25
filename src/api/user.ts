@@ -1,16 +1,19 @@
 import AUTH from '@/constants/AUTH';
 import getAuthModel from '@/utils/getAuthModel';
-import { Response } from '@/Interface/Response';
-import createResponse from '@/utils/createResponse';
+import Response from '@/classes/Response';
 
 const model = getAuthModel();
 
 export async function requestProfile(): Promise<Response> {
     try {
-        const response = await model.get(AUTH.URL.PROFILE);
+        const result = await model.get(AUTH.URL.PROFILE);
 
-        return createResponse(true, response);
+        return Response.success(result);
     } catch (err) {
-        return createResponse(false);
+        if (err instanceof Error) {
+            return Response.failed(err.message);
+        }
+
+        return Response.failed();
     }
 }
