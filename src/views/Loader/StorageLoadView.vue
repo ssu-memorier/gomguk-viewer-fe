@@ -11,7 +11,7 @@
             class="item"
             v-for="file in fileList"
             :key="file.key"
-            @dblclick="loadFile(file)"
+            @click="loadFile(file)"
         >
             <img class="icon" src="@/assets/images/svg/file.svg" />
             <span class="name">{{ file.key }}</span>
