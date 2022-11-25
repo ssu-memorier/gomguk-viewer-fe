@@ -53,10 +53,13 @@ function toggleShowOriginText() {
 @import '@/assets/scss/theme';
 @import '@/assets/scss/constants/TRANSLATOR';
 span.loading {
-    display: inline-block;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     img {
         aspect-ratio: 1 / 1;
         width: 4rem;
+        height: 4rem;
     }
 }
 div.translator {
