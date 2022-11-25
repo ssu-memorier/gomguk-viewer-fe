@@ -16,6 +16,7 @@
         <kakao-login-button></kakao-login-button>
         <google-login-button></google-login-button>
     </div>
+    <alert-view class="alertView"></alert-view>
 </template>
 
 <script setup lang="ts">
@@ -23,6 +24,7 @@ import { ref, onMounted } from 'vue';
 import FileLoadersView from '@/views/Loader/FileLoadersView.vue';
 import CenterModal from '@/components/CenterModal.vue';
 import MastheadView from '@/views/MastheadView.vue';
+import AlertView from '@/views/AlertView.vue';
 import GuideView from '@/views/GuideView.vue';
 import LogoutButton from '@/components/button/LogoutButton.vue';
 import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
@@ -147,6 +149,14 @@ main {
     width: 100%;
     height: 100%;
     background-color: transparent;
+}
+.alertView {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    width: 400px;
+    z-index: 1000;
+    transform: translateX(-50%);
 }
 .view {
     width: 100%;
