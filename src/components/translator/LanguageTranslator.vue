@@ -3,7 +3,11 @@
         <img src="@/assets/images/gif/loading.gif"
     /></span>
     <div v-else class="translator">
-        <button class="toggle" @click="toggleShowOriginText">
+        <button
+            v-show="originalText.length > 0"
+            class="toggle"
+            @click="toggleShowOriginText"
+        >
             {{
                 isShowOriginText
                     ? TRANSLATOR.VIEW.SHOW_TRANSLATED
@@ -70,7 +74,11 @@ div.translator {
     color: $TRANSLATOR-COLOR;
     font-size: $TRANSLATOR-FONT-SIZE;
     button.toggle {
-        float: right;
+        display: block;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 0.5rem;
         background-color: $SURFACE-COLOR;
         color: $TEXT-COLOR__LIGHT;
         border: 1px solid $BORDER-COLOR;
