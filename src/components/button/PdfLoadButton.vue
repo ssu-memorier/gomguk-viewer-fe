@@ -1,6 +1,6 @@
 <template>
     <label>
-        PDF 선택
+        파일 선택
         <input
             type="file"
             id="fileLoad"
@@ -53,13 +53,19 @@ function isExceedLimit(file: File): boolean {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/theme';
 label {
     display: inline-block;
     cursor: pointer;
-    border: 1px solid black;
+    border: 1px solid $BORDER-COLOR;
     border-radius: 4px;
     margin: auto 0;
-    padding: 0.25rem;
+    padding: 0.25rem 2rem;
+    background-color: $SURFACE-COLOR;
+
+    &:hover {
+        background-color: $SURFACE-COLOR__HOVER;
+    }
 }
 input[type='file'] {
     width: 0;

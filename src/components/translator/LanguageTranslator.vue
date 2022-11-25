@@ -1,21 +1,21 @@
 <template>
-    <div class="translator">
-        <button class="toggle" @click="toggleShowOriginText">
+    <span v-if="isLoading" class="loading">
+        <img src="@/assets/images/gif/loading.gif"
+    /></span>
+    <div v-else class="translator">
+        <button
+            v-show="originalText.length > 0"
+            class="toggle"
+            @click="toggleShowOriginText"
+        >
             {{
                 isShowOriginText
                     ? TRANSLATOR.VIEW.SHOW_TRANSLATED
                     : TRANSLATOR.VIEW.SHOW_ORIGIN
             }}
         </button>
-        <div class="translated">
-            {{
-                isShowOriginText
-                    ? translatorStore.originalText
-                    : translatorStore.translatedText
-            }}
-        </div>
-        <hr v-show="otherMeansExist" />
-        <div v-show="otherMeansExist">
+        {{ isShowOriginText ? originalText : translatedText }}
+        <div class="container otherMeans" v-show="allKinds.length > 0">
             <other-means
                 v-for="(kind, idx) in allKinds"
                 :key="kind"
@@ -34,15 +34,17 @@ import { ref, computed } from 'vue';
 import { useTranslatorStore } from '@/store/translator';
 import TRANSLATOR from '@/constants/TRANSLATOR';
 import OtherMeans from '@/components/translator/OtherMeans.vue';
+import { storeToRefs } from 'pinia';
 const translatorStore = useTranslatorStore();
+const { allTranslations, originalText, translatedText, isLoading } =
+    storeToRefs(translatorStore);
 const isShowOriginText = ref<boolean>(false);
-const otherMeansExist = computed(() => !!translatorStore.allTranslations);
 const allKinds = computed(() => {
-    const allTrans = translatorStore.allTranslations;
+    const allTrans = allTranslations.value;
     return allTrans ? Object.keys(allTrans) : [];
 });
 const allMeans = computed(() => {
-    const allTrans = translatorStore.allTranslations;
+    const allTrans = allTranslations.value;
     return allTrans ? Object.values(allTrans) : [];
 });
 
@@ -52,27 +54,48 @@ function toggleShowOriginText() {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/theme';
 @import '@/assets/scss/constants/TRANSLATOR';
+span.loading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    img {
+        aspect-ratio: 1 / 1;
+        width: 4rem;
+        height: 4rem;
+    }
+}
 div.translator {
     position: relative;
+    height: auto;
     background-color: $TRANSLATOR-BG-COLOR;
     overflow: auto;
-    height: 100%;
-    .toggle {
-        width: 100%;
+    color: $TRANSLATOR-COLOR;
+    font-size: $TRANSLATOR-FONT-SIZE;
+    button.toggle {
+        display: block;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 0.5rem;
+        background-color: $SURFACE-COLOR;
+        color: $TEXT-COLOR__LIGHT;
+        border: 1px solid $BORDER-COLOR;
+        border-radius: $BORDER-RADIUS__ROUND;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $SURFACE-COLOR__HOVER;
+        }
+    }
+    .container.otherMeans {
+        border-top: 1px solid $BORDER-COLOR__LIGHT;
+        padding-top: 1rem;
+        margin-top: 2rem;
     }
 }
 
-div.translated {
-    color: $TRANSLATOR-COLOR;
-    font-size: $TRANSLATOR-FONT-SIZE;
-    border: none;
-    padding: $TRANSLATOR-PADDING;
-    box-sizing: border-box;
-    text-align: left;
-    margin: 0;
-    flex-grow: 1;
-}
 textarea.origin {
     resize: none;
 }

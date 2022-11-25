@@ -1,11 +1,34 @@
-$bg-color: #eeeeee;
-$SURFACE-COLOR: #ffffff;
-$border-radius: 4px;
-$header-height: 60px;
-$screen-main-max-width: 900px;
-
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Roboto&dispay=swap');
 
+$BG-COLOR: #eeeeee;
+$SURFACE-COLOR: #ffffff;
+$SURFACE-COLOR__HOVER: #eee;
+$PRIMARY-COLOR: #7ed1ff;
+$PRIMARY-COLOR__DARK: #40bcff;
+$BORDER-COLOR: #ccc;
+$BORDER-COLOR__LIGHT: #eee;
+
+$ALERT-COLOR: #f48989;
+$ALERT-COLOR__DARK: #da1414;
+$ALERT-COLOR__LIGHT: #feefef;
+
+$SHADOW__2DP: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+$SHADOW__6DP: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+$INNER_SHADOW__2DP: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+
+$BORDER-RADIUS__4: 4px;
+$BORDER-RADIUS__16: 16px;
+$BORDER-RADIUS__ROUND: 9999px;
+
+$HEADER__2: 800 20px 'NanumGothic';
+$HEADER__3: 700 14px 'NanumGothic';
+$SMALL_TEXT: 400 12px 'NanumGothic';
+
+$FONT__REGULAR: 16px;
+$FONT__LARGE: 20px;
+
+$TEXT-COLOR__LIGHT: #999;
+
 .card {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: $SHADOW__2DP;
 }

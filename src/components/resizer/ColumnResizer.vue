@@ -1,104 +1,111 @@
 <template>
     <div
-        class="columnResizer"
+        class="container"
         @mousemove="resize"
         @mouseup="resizeEnd"
+        @mouseleave="resizeForceEnd"
         ref="$columnResizer"
+        :style="{ height: h + 'px' }"
+        :class="{ unselectable: isResizing }"
     >
-        <div class="top" :style="{ height: topHeight + 'px' }">
-            <slot name="top"></slot>
-        </div>
-        <div
-            ref="$resizer"
-            class="resizer"
-            :style="{
-                transform: `translateY(${topHeight - RESIZER.LEN / 2}px)`,
-            }"
-            @mousedown="resizeStart"
-        >
-            <div class="line"></div>
-        </div>
-        <div class="bottom" :style="{ height: bottomHeight + 'px' }">
-            <slot name="bottom"></slot>
+        <span
+            class="handle"
+            @mousedown.stop="resizeStart"
+            @dblclick="fold"
+        ></span>
+        <div class="contents">
+            <slot></slot>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, computed, defineProps } from 'vue';
-import RESIZER from '@/constants/RESIZER';
+import { ref, defineProps } from 'vue';
 
 const props = defineProps({
-    topPercent: {
+    base: {
         type: Number,
         validator(value: number) {
-            return 0 < value && value < 1;
+            return value >= 0;
         },
+        required: true,
+    },
+    height: {
+        type: Number,
+        validator(value: number) {
+            return value >= 0;
+        },
+        required: true,
+    },
+    max: {
+        type: Number,
+        validator(value: number) {
+            return value >= 0;
+        },
+        required: false,
+    },
+    min: {
+        type: Number,
+        validator(value: number) {
+            return value >= 0;
+        },
+        default: 0,
     },
 });
-const $resizer = ref();
-const $columnResizer = ref();
-const boxHeight = ref<number>(0);
-const boxOffset = ref<number>(0);
-const topPercent = ref<number>(props.topPercent ?? 0.5);
 const isResizing = ref<boolean>(false);
-const topHeight = computed(() => boxHeight.value * topPercent.value);
-const bottomHeight = computed(() => boxHeight.value - topHeight.value);
-
-onMounted(() => {
-    const rect = $columnResizer.value.getBoundingClientRect();
-    boxHeight.value = rect.height;
-    boxOffset.value = rect.y;
-});
-
-window.addEventListener('resize', () => {
-    boxHeight.value = $columnResizer.value.getBoundingClientRect().height;
-});
+const $columnResizer = ref();
+const h = ref<number>(props.height);
+const oldH = ref<number>(props.height);
 
 function resizeStart() {
     isResizing.value = true;
 }
-function resizeEnd() {
-    isResizing.value = false;
-}
 function resize(evt: MouseEvent) {
     if (!isResizing.value) return;
+    const newHeight = props.base - evt.clientY + 18;
+    if (newHeight > (props.max ?? 0)) return;
+    if (newHeight < (props.min ?? 0)) return;
+    h.value = newHeight;
+}
+function resizeEnd() {
+    if (!isResizing.value) return;
 
-    topPercent.value = (evt.clientY - boxOffset.value) / boxHeight.value;
+    isResizing.value = false;
+}
+function resizeForceEnd() {
+    isResizing.value = false;
+}
+function fold() {
+    if (h.value > props.min) {
+        oldH.value = h.value;
+        h.value = props.min;
+    } else {
+        h.value = oldH.value;
+    }
 }
 </script>
-<style scoped lang="scss">
-@import '@/assets/scss/constants/RESIZER';
-.columnResizer {
-    position: relative;
-    display: flex;
-    flex-direction: column;
 
-    .top,
-    .bottom {
-        position: relative;
+<style scoped lang="scss">
+@import '@/assets/scss/theme';
+.container {
+    box-sizing: border-box;
+    &.unselectable {
+        user-select: none;
     }
 }
-div.resizer {
-    position: absolute;
-    z-index: 100;
-    width: 100%;
-    height: $RESIZER_LEN;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    will-change: transform;
-    cursor: ns-resize;
-    div.line {
-        height: $RESIZER_LINE_LEN;
-        width: 100%;
-        background-color: lightgray;
-        transition: 0.3s;
-    }
+span.handle {
+    display: inline-block;
+    border-radius: $BORDER-RADIUS__ROUND;
+    height: 8px;
+    width: 60px;
+    background-color: #eee;
+    margin-top: 1rem;
+    cursor: pointer;
+
     &:hover {
-        div.line {
-            height: $RESIZER_LEN;
-            width: 100%;
-        }
+        background-color: #ddd;
     }
+}
+div.contents {
+    height: calc(100% - 1rem - 8px);
 }
 </style>

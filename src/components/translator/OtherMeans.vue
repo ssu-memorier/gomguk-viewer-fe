@@ -1,9 +1,9 @@
 <template>
     <div class="otherMean">
-        <span class="kind">[{{ props.kind }}]</span>
-        <ul>
+        <span class="kind">{{ props.kind }}</span>
+        <ol>
             <li v-for="mean in props.means" :key="mean">{{ mean }}</li>
-        </ul>
+        </ol>
     </div>
 </template>
 
@@ -17,9 +17,18 @@ const props = defineProps<Props>();
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/theme';
 @import '@/assets/scss/constants/TRANSLATOR';
 div.otherMean {
-    padding: $TRANSLATOR-PADDING;
     text-align: left;
+
+    .kind {
+        font-size: $FONT__LARGE;
+        font-weight: bold;
+    }
+
+    ol {
+        font-size: $FONT__REGULAR;
+    }
 }
 </style>

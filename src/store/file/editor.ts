@@ -1,7 +1,8 @@
 import EditorJS, { OutputData } from '@editorjs/editorjs';
 import { defineStore } from 'pinia';
 import EDITOR from '@/constants/EDITOR';
-
+import { DEFAULT_BLOCKS } from '@/constants/EDITOR/DEFAULT';
+import { nextTick } from 'vue';
 export const useEditorStore = defineStore('editor', () => {
     let editor: EditorJS | null = null;
 
@@ -18,12 +19,15 @@ export const useEditorStore = defineStore('editor', () => {
 
         const content = await editor.save();
         if (content.blocks.length === 0) {
-            content.blocks.push(EDITOR.DEFAULT);
+            content.blocks.push(...DEFAULT_BLOCKS);
         }
         return content;
     }
     async function fromJSON(json: OutputData) {
+        await nextTick();
+
         if (!editor) return;
+        await editor.isReady;
 
         editor.render(json);
     }

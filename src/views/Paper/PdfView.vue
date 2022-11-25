@@ -1,19 +1,23 @@
 <template>
     <div id="pdfView" ref="$pdfView" class="view">
-        <div class="noPdf" v-if="pageNumList.length <= 0">
-            <p>파일을 불러와주세요😀</p>
-        </div>
-        <div class="header" v-else>
-            <button @click="zoomOutHandler">-</button>
-            <span>{{ scalePercent }}%</span>
-            <button @click="zoomInHandler">+</button>
-            <label>
-                eraser
-                <input
-                    type="checkbox"
+        <div class="header">
+            <div class="tools">
+                <round-toggle
+                    class="eraser"
                     @change="changeTool($event, TOOL.ERASER)"
-                />
-            </label>
+                >
+                    <img class="icon" src="@/assets/images/svg/eraser.svg" />
+                </round-toggle>
+            </div>
+            <div class="zoomControll">
+                <round-button class="zoomHandler" @click="zoomOutHandler">
+                    <img class="icon" src="@/assets/images/svg/minus.svg" />
+                </round-button>
+                <span class="zoomPercent">{{ scalePercent }}%</span>
+                <round-button class="zoomHandler" @click="zoomInHandler">
+                    <img class="icon" src="@/assets/images/svg/plus.svg" />
+                </round-button>
+            </div>
         </div>
         <div class="pageView" ref="$pageView">
             <div
@@ -56,6 +60,8 @@ import clearSelection from '@/utils/clearSelection';
 import { IPos } from '@/Interface/IPos';
 import TOOL from '@/constants/TOOL';
 import { ToolType } from '@/types/ToolType';
+import RoundButton from '@/components/button/RoundButton.vue';
+import RoundToggle from '@/components/toggle/RoundToggle.vue';
 
 const pdfStore = usePdfStore();
 const toolsStore = useToolsStore();
@@ -203,7 +209,7 @@ function changeTool(evt: Event, tool: ToolType) {
     height: inherit;
     overflow: hidden;
 
-    padding: 0 16px 16px 0;
+    padding: 0 16px 0 0;
     .selectionPopup {
         position: absolute;
         opacity: 0;
@@ -213,28 +219,59 @@ function changeTool(evt: Event, tool: ToolType) {
             z-index: 200;
         }
     }
-    .noPdf {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        p {
-            font-size: $NO_PDF_FONTSIZE;
-        }
-    }
     .header {
-        height: $HEADER_HEIGHT;
+        height: $HEADER-HEIGHT;
         position: sticky;
         top: 0;
         background-color: $SURFACE-COLOR;
+        display: flex;
+        justify-content: center;
+        padding: 0 1rem;
+    }
+    .zoomControll {
+        display: flex;
+        flex-direction: row;
+        & > * {
+            margin: auto 0;
+            margin-right: 0.5rem;
+        }
+        .zoomHandler {
+            width: 28px;
+            height: 28px;
+            box-shadow: $SHADOW__2DP;
+            .icon {
+                aspect-ratio: 1 / 1;
+                width: 16px;
+            }
+        }
+    }
+    .tools {
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: row;
+        & > * {
+            margin: auto 0;
+        }
+        .eraser {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            .icon {
+                aspect-ratio: 1 / 1;
+                width: 20px;
+            }
+        }
     }
     .pageView {
-        height: $PAGE_CONTAINER_HEIGHT;
+        height: $PAGE-CONTAINER-HEIGHT;
         overflow: scroll;
         .pageContainer {
             position: relative;
             margin: 0 auto;
-            padding: $PAGE_CONTAINER_PADDING;
+            padding: $PAGE-CONTAINER-PADDING;
         }
     }
 }

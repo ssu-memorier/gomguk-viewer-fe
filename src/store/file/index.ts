@@ -11,20 +11,27 @@ import {
 } from '@/api/storage';
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { ref } from 'vue';
+import { useAlertStore } from '@/store/alert';
 
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
     const highlightStore = useHighlightStore();
     const pdfStore = usePdfStore();
+    const alertStore = useAlertStore();
+
     const currentFileInfo = ref<IFileInfo | undefined>();
 
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
         const response = await requestFileList();
         if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             return;
         }
 
-        return response.data;
+        return response.payload;
     }
 
     async function uploadFile(pdf: File): Promise<boolean> {
@@ -35,6 +42,10 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             return false;
         }
         return true;
@@ -58,6 +69,10 @@ export const useFileStore = defineStore('file', () => {
         });
 
         if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             return false;
         }
         return true;
@@ -68,12 +83,18 @@ export const useFileStore = defineStore('file', () => {
             dir: fileInfo.dir,
             key: fileInfo.key,
         });
-        if (!response.isSuccess) return false;
+        if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
+            return false;
+        }
 
         currentFileInfo.value = fileInfo;
-        pdfStore.setPdfFile(response.data.pdf);
-        editorStore.fromJSON(response.data.metaData.editor);
-        highlightStore.fromArray(response.data.metaData.highlights);
+        pdfStore.setPdfFile(response.payload.pdf);
+        editorStore.fromJSON(response.payload.metaData.editor);
+        highlightStore.fromArray(response.payload.metaData.highlights);
 
         return true;
     }
@@ -83,6 +104,13 @@ export const useFileStore = defineStore('file', () => {
             dir: fileInfo.dir,
             key: fileInfo.key,
         });
+
+        if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
+        }
         return response.isSuccess;
     }
 

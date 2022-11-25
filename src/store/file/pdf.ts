@@ -1,6 +1,6 @@
 import { PDFDocumentProxy, getDocument } from 'pdfjs-dist';
 import { defineStore } from 'pinia';
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import getBase64 from '@/utils/getBase64';
 import Page from '@/classes/Page';
 import PDF from '@/constants/PDF';
@@ -14,6 +14,9 @@ export const usePdfStore = defineStore('pdf', () => {
     const numPages = ref<number>(0);
     const fileName = ref<string>('');
 
+    const isPdfExist = computed(() => {
+        return pdfFile.value !== undefined;
+    });
     watch(pdfFile, async (newFile: File | undefined) => {
         pageMap.clear();
         if (!newFile) return;
@@ -81,5 +84,6 @@ export const usePdfStore = defineStore('pdf', () => {
         fileName,
         numPages,
         viewportOption,
+        isPdfExist,
     };
 });

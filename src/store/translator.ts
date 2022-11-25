@@ -4,13 +4,16 @@ import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { requestTranslatedText } from '@/api/translate';
 import createDebounce from '@/utils/createDebounce';
+import { useAlertStore } from '@/store/alert';
 
 export const useTranslatorStore = defineStore('translator', () => {
+    const alertStore = useAlertStore();
     const source = ref<LanguageType>('en');
     const target = ref<LanguageType>('ko');
     const originalText = ref<string>('');
     const translatedText = ref<string>('');
     const allTranslations = ref<object | null>(null);
+    const isLoading = ref<boolean>(false);
     const debouncedFetchTranslatedText = createDebounce(
         fetchTranslatedText,
         TRANSLATOR.LATENCY
@@ -41,14 +44,20 @@ export const useTranslatorStore = defineStore('translator', () => {
             source: source.value,
             target: target.value,
         };
+        isLoading.value = true;
         const response = await requestTranslatedText(option);
 
         if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
             translatedText.value = '';
             return;
         }
-        translatedText.value = response.data.text.translated;
-        allTranslations.value = response.data.allTranslations || {};
+        translatedText.value = response.payload.text.translated;
+        allTranslations.value = response.payload.allTranslations || {};
+        isLoading.value = false;
     }
 
     return {
@@ -57,6 +66,7 @@ export const useTranslatorStore = defineStore('translator', () => {
         originalText,
         translatedText,
         allTranslations,
+        isLoading,
         setOriginalText,
         setSourceLanguage,
         setTargetLanguage,
