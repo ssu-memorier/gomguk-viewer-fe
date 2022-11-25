@@ -9,7 +9,7 @@ const HEADER_OPS = {
     class: Header,
     config: {
         placeholder: '제목을 입력하세요',
-        levels: [1, 2, 3, 4, 5, 6],
+        levels: [2, 3, 4],
         defaultLevel: 2,
     },
 };
