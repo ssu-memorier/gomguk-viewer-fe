@@ -2,8 +2,10 @@
     <div class="container" ref="$paperView">
         <row-partition
             class="row"
-            :boxWidth="containerWidth"
+            :box-width="containerWidth"
             :left-percent="0.5"
+            :min-width="400"
+            :max-width="containerWidth - 400"
         >
             <template #left>
                 <div class="pdfView">

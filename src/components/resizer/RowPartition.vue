@@ -29,6 +29,14 @@ import { ref, onMounted, computed, defineProps } from 'vue';
 import RESIZER from '@/constants/RESIZER';
 
 const props = defineProps({
+    minWidth: {
+        type: Number,
+        default: 0,
+    },
+    maxWidth: {
+        type: Number,
+        default: 0,
+    },
     boxWidth: {
         type: Number,
         required: true,
@@ -48,7 +56,16 @@ const $rowResizer = ref();
 const boxOffset = ref<number>(0);
 const leftPercent = ref<number>(props.leftPercent ?? 0.5);
 const isResizing = ref<boolean>(false);
-const leftWidth = computed(() => props.boxWidth * leftPercent.value);
+const leftWidth = computed(() => {
+    const width = props.boxWidth * leftPercent.value;
+    if (width < props.minWidth) {
+        return props.minWidth;
+    }
+    if (width > props.maxWidth) {
+        return props.maxWidth;
+    }
+    return width;
+});
 const rightWidth = computed(() => props.boxWidth - leftWidth.value);
 
 onMounted(() => {
