@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import ALERT from '@/constants/ALERT';
 
 type Alert = { time: Date; message: string };
 export const useAlertStore = defineStore('message', () => {
@@ -9,7 +10,7 @@ export const useAlertStore = defineStore('message', () => {
         alertList.value.push(alert);
         setTimeout(() => {
             alertList.value.shift();
-        }, 5000);
+        }, ALERT.TIMEOUT);
     }
 
     return {
