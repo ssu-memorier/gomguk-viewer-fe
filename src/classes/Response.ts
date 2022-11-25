@@ -3,7 +3,7 @@ export default class Response {
     payload: any;
     message: string;
 
-    constructor(isSuccess: boolean, payload = null, message = '') {
+    constructor(isSuccess: boolean, payload: any, message = '') {
         this.isSuccess = isSuccess;
         this.payload = payload;
         this.message = message;
