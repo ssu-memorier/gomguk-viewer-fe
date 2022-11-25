@@ -4,6 +4,8 @@
             class="row"
             :box-width="containerWidth"
             :left-percent="0.5"
+            left-name="PDF"
+            right-name="에디터"
             :min-width="400"
             :max-width="containerWidth - 400"
         >
