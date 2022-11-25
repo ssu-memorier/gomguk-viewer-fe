@@ -13,7 +13,9 @@
             @mousedown.stop="resizeStart"
             @dblclick="fold"
         ></span>
-        <slot></slot>
+        <div class="contents">
+            <slot></slot>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
@@ -102,5 +104,8 @@ span.handle {
     &:hover {
         background-color: #ddd;
     }
+}
+div.contents {
+    height: calc(100% - 1rem - 8px);
 }
 </style>

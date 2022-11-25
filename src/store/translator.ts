@@ -13,6 +13,7 @@ export const useTranslatorStore = defineStore('translator', () => {
     const originalText = ref<string>('');
     const translatedText = ref<string>('');
     const allTranslations = ref<object | null>(null);
+    const isLoading = ref<boolean>(false);
     const debouncedFetchTranslatedText = createDebounce(
         fetchTranslatedText,
         TRANSLATOR.LATENCY
@@ -43,6 +44,7 @@ export const useTranslatorStore = defineStore('translator', () => {
             source: source.value,
             target: target.value,
         };
+        isLoading.value = true;
         const response = await requestTranslatedText(option);
 
         if (!response.isSuccess) {
@@ -55,6 +57,7 @@ export const useTranslatorStore = defineStore('translator', () => {
         }
         translatedText.value = response.payload.text.translated;
         allTranslations.value = response.payload.allTranslations || {};
+        isLoading.value = false;
     }
 
     return {
@@ -63,6 +66,7 @@ export const useTranslatorStore = defineStore('translator', () => {
         originalText,
         translatedText,
         allTranslations,
+        isLoading,
         setOriginalText,
         setSourceLanguage,
         setTargetLanguage,

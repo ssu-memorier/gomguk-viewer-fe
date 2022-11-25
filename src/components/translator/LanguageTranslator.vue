@@ -1,5 +1,8 @@
 <template>
-    <div class="translator">
+    <span v-if="isLoading" class="loading">
+        <img src="@/assets/images/gif/loading.gif"
+    /></span>
+    <div v-else class="translator">
         <button class="toggle" @click="toggleShowOriginText">
             {{
                 isShowOriginText
@@ -29,7 +32,7 @@ import TRANSLATOR from '@/constants/TRANSLATOR';
 import OtherMeans from '@/components/translator/OtherMeans.vue';
 import { storeToRefs } from 'pinia';
 const translatorStore = useTranslatorStore();
-const { allTranslations, originalText, translatedText } =
+const { allTranslations, originalText, translatedText, isLoading } =
     storeToRefs(translatorStore);
 const isShowOriginText = ref<boolean>(false);
 const allKinds = computed(() => {
@@ -49,9 +52,16 @@ function toggleShowOriginText() {
 <style lang="scss" scoped>
 @import '@/assets/scss/theme';
 @import '@/assets/scss/constants/TRANSLATOR';
+span.loading {
+    display: inline-block;
+    img {
+        aspect-ratio: 1 / 1;
+        width: 4rem;
+    }
+}
 div.translator {
     position: relative;
-    height: 100%;
+    height: auto;
     background-color: $TRANSLATOR-BG-COLOR;
     overflow: auto;
     color: $TRANSLATOR-COLOR;
