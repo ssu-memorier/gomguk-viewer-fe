@@ -1,18 +1,16 @@
 import { IRequestTranslatedTextParams } from '@/Interface/api/IRequestTranslatedTextParams';
 import TRANSLATOR from '@/constants/TRANSLATOR';
 import getTranslateModel from '@/utils/getTranslateModel';
-import Response from '@/classes/Response';
+import Request from '@/classes/Request';
 
 const model = getTranslateModel();
 
-export async function requestTranslatedText(
-    params: IRequestTranslatedTextParams
-): Promise<Response> {
-    if (!params.text) {
-        return Response.success('');
-    }
+export const requestTranslatedText = Request.create(
+    async (params: IRequestTranslatedTextParams) => {
+        if (!params.text) {
+            return '';
+        }
 
-    try {
         const body = {
             message: params.text,
             source: params.source,
@@ -21,12 +19,6 @@ export async function requestTranslatedText(
         const response = await model.post(TRANSLATOR.TRANSLATE_URL, body);
         const translateResult = response.data.body;
 
-        return Response.success(translateResult);
-    } catch (err) {
-        if (err instanceof Error) {
-            return Response.failed(err.message);
-        }
-
-        return Response.failed();
+        return translateResult;
     }
-}
+);
