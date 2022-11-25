@@ -97,7 +97,6 @@ const rightWidth = computed(() => props.boxWidth - leftWidth.value);
 const isLeftFold = ref<boolean>(false);
 const isRightFold = ref<boolean>(false);
 watch(leftPercent, (value) => {
-    console.log(value);
     if (value < 0.1) {
         isLeftFold.value = true;
         leftPercent.value = 0;
