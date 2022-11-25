@@ -1,7 +1,9 @@
 <template>
     <div id="mastheadView">
         <site-logo></site-logo>
-        <span class="fileName">{{ pdfStore.fileName }}</span>
+        <span class="fileName" :title="pdfStore.fileName">{{
+            pdfStore.fileName
+        }}</span>
         <menu v-if="userStore.isLoggined">
             <round-button
                 class="save"
@@ -74,6 +76,11 @@ function toggleProfileMenu() {
     justify-content: space-between;
     span.fileName {
         margin: auto 0;
+        text-align: center;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 800;
     }
     menu {
         padding: 0;
