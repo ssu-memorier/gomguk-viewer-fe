@@ -225,7 +225,7 @@ function changeTool(evt: Event, tool: ToolType) {
         top: 0;
         background-color: $SURFACE-COLOR;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         padding: 0 1rem;
     }
     .zoomControll {
@@ -246,6 +246,10 @@ function changeTool(evt: Event, tool: ToolType) {
         }
     }
     .tools {
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
         display: flex;
         flex-direction: row;
         & > * {
