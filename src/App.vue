@@ -70,6 +70,7 @@ onMounted(async () => {
 @import '@/assets/scss/theme';
 @import '@/assets/scss/mediaQuery';
 @import '@/assets/scss/constants/MASTHEAD';
+@import '@/assets/scss/constants/ALERT';
 * {
     box-sizing: border-box;
 }
@@ -154,7 +155,7 @@ main {
     position: fixed;
     top: 80px;
     left: 50%;
-    width: 400px;
+    width: $ALERT-WIDTH;
     z-index: 1000;
     transform: translateX(-50%);
 }
