@@ -18,9 +18,11 @@
 import { defineEmits } from 'vue';
 import PDF from '@/constants/PDF';
 import MESSAGE from '@/constants/MESSAGE';
+import { useAlertStore } from '@/store/alert';
 const emit = defineEmits<{
     (e: 'load', file: File): void;
 }>();
+const alertStore = useAlertStore();
 
 function loadFileHandler(e: Event) {
     if (!e.target) return;
@@ -32,11 +34,19 @@ function loadFileHandler(e: Event) {
 
     const file = fileList[0];
     if (!isPdfFile(file)) {
-        window.alert(MESSAGE.PDF.IS_NOT_PDF);
+        alertStore.pushAlert({
+            time: new Date(),
+            message: MESSAGE.PDF.IS_NOT_PDF,
+        });
+        // window.alert(MESSAGE.PDF.IS_NOT_PDF);
         return;
     }
     if (isExceedLimit(file)) {
-        window.alert(MESSAGE.PDF.EXCEED_LIMIT);
+        alertStore.pushAlert({
+            time: new Date(),
+            message: MESSAGE.PDF.EXCEED_LIMIT,
+        });
+        // window.alert(MESSAGE.PDF.EXCEED_LIMIT);
         return;
     }
 

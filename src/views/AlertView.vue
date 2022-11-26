@@ -30,7 +30,6 @@ ul {
         display: inline-block;
         border-radius: $BORDER-RADIUS__ROUND;
         width: 100%;
-        max-width: $ALERT-MAX-WIDTH;
         height: $ALERT-HEIGHT;
         background-color: $ALERT-SURFACE;
         color: $ALERT-ON-SURFACE;
