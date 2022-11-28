@@ -25,5 +25,16 @@ button {
     border: 0;
     cursor: pointer;
     background-color: $PRIMARY-COLOR;
+    overflow: hidden;
+    position: relative;
+
+    img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
 }
 </style>
