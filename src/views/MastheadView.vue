@@ -22,6 +22,7 @@
 
             <profile-button
                 class="profile"
+                :picture="userStore.thumbnailProfileImage"
                 @click="toggleProfileMenu"
             ></profile-button>
         </menu>
