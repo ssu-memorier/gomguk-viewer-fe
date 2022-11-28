@@ -10,12 +10,10 @@ export const useUserStore = defineStore('user', () => {
     async function getProfile() {
         const response = await requestProfile();
         if (response.isSuccess) {
-            const { name, profileImage, thumbnailProfileImage } =
-                response.payload;
-
-            userName.value = name;
-            profileImage.value = profileImage;
-            thumbnailProfileImage.value = thumbnailProfileImage;
+            userName.value = response.payload.name;
+            profileImage.value = response.payload.profileImage;
+            thumbnailProfileImage.value =
+                response.payload.thumbnailProfileImage;
             isLoggined.value = true;
         } else {
             userName.value = '';
