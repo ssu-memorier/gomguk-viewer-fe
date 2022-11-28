@@ -1,33 +1,27 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { requestProfile } from '@/api/user';
+import { Profile } from '@/types/ProfileType';
+
 export const useUserStore = defineStore('user', () => {
+    const profile = ref<Profile>({});
     const isLoggined = ref<boolean>(false);
-    const userName = ref<string>('');
-    const profileImage = ref<string>('');
-    const thumbnailProfileImage = ref<string>('');
 
     async function getProfile() {
         const response = await requestProfile();
+
         if (response.isSuccess) {
-            userName.value = response.payload.name;
-            profileImage.value = response.payload.profileImage;
-            thumbnailProfileImage.value =
-                response.payload.thumbnailProfileImage;
+            profile.value = response.payload.data;
             isLoggined.value = true;
         } else {
-            userName.value = '';
-            profileImage.value = '';
-            thumbnailProfileImage.value = '';
+            profile.value = {};
             isLoggined.value = false;
         }
     }
 
     return {
         isLoggined,
-        userName,
-        profileImage,
-        thumbnailProfileImage,
+        profile,
         getProfile,
     };
 });

@@ -1,9 +1,13 @@
 <template>
     <div class="profile">
-        <img class="profileImage" :src="profileImage" v-if="profileImage" />
+        <img
+            class="profileImage"
+            :src="profile.profileImage"
+            v-if="profile.profileImage"
+        />
         <img class="profileImage" src="@/assets/images/svg/user.svg" v-else />
-        <span class="userName">{{ userName || 'user name' }}</span>
-        <small class="provider">kakao</small>
+        <span class="userName">{{ profile.name }}</span>
+        <small class="provider">{{ profile.provider }}</small>
         <hr class="boundary" />
         <logout-button></logout-button>
     </div>
@@ -14,7 +18,7 @@ import { useUserStore } from '@/store/user';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
-const { userName, profileImage } = storeToRefs(userStore);
+const { profile } = storeToRefs(userStore);
 </script>
 <style scoped lang="scss">
 .profile {
