@@ -12,7 +12,6 @@ export const VI = 'vi';
 export const ID = 'id';
 export const FA = 'fa';
 export const AR = 'ar';
-export const MM = 'mm';
 export const TH = 'th';
 export const RU = 'ru';
 export const IT = 'it';
@@ -32,7 +31,6 @@ export default [
     { KEY: ID, NAME: '인도네시아어' },
     { KEY: FA, NAME: '페르시아어' },
     { KEY: AR, NAME: '아랍어' },
-    { KEY: MM, NAME: '미얀마어' },
     { KEY: TH, NAME: '태국어' },
     { KEY: RU, NAME: '러시아어' },
     { KEY: IT, NAME: '이탈리아어' },

@@ -18,11 +18,14 @@ export const useFileStore = defineStore('file', () => {
     const highlightStore = useHighlightStore();
     const pdfStore = usePdfStore();
     const alertStore = useAlertStore();
+    const isLoading = ref<boolean>(false);
 
     const currentFileInfo = ref<IFileInfo | undefined>();
 
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
+        isLoading.value = true;
         const response = await requestFileList();
+        isLoading.value = false;
         if (!response.isSuccess) {
             alertStore.pushAlert({
                 time: new Date(),
@@ -40,15 +43,19 @@ export const useFileStore = defineStore('file', () => {
             key: pdf.name.replace(/\.[^/.]+$/, ''),
             file: pdf,
         });
-
         if (!response.isSuccess) {
             alertStore.pushAlert({
                 time: new Date(),
                 message: response.message,
             });
-            return false;
+        } else {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.payload,
+            });
         }
-        return true;
+
+        return response.isSuccess;
     }
 
     async function updateFile(): Promise<boolean> {
@@ -73,9 +80,14 @@ export const useFileStore = defineStore('file', () => {
                 time: new Date(),
                 message: response.message,
             });
-            return false;
+        } else {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.payload,
+            });
         }
-        return true;
+
+        return response.isSuccess;
     }
 
     async function loadFile(fileInfo: IFileInfo): Promise<boolean> {
@@ -120,5 +132,6 @@ export const useFileStore = defineStore('file', () => {
         loadFile,
         deleteFile,
         updateFile,
+        isLoading,
     };
 });

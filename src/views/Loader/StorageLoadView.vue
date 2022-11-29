@@ -7,6 +7,9 @@
             <span class="size">{{ FILE.VIEW.SIZE }}</span>
             <span class="delete">{{ FILE.VIEW.DELETE }}</span>
         </li>
+        <span v-if="fileStore.isLoading" class="loading">
+            <img src="@/assets/images/gif/loading.gif"
+        /></span>
         <li
             class="item"
             v-for="file in fileList"
@@ -64,6 +67,7 @@ async function deleteFile(fileInfo: IFileInfo) {
 }
 
 async function updateFileList() {
+    fileList.value = [];
     const list = await fileStore.fetchFileList();
     if (!list) return;
 
@@ -144,6 +148,10 @@ ul {
     }
     li.item {
         height: $FILE-HEIGHT;
+    }
+    .loading img {
+        width: 100px;
+        height: 100px;
     }
 }
 </style>
