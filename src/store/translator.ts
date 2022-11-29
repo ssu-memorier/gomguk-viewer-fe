@@ -46,7 +46,7 @@ export const useTranslatorStore = defineStore('translator', () => {
         };
         isLoading.value = true;
         const response = await requestTranslatedText(option);
-
+        isLoading.value = false;
         if (!response.isSuccess) {
             alertStore.pushAlert({
                 time: new Date(),
@@ -57,7 +57,6 @@ export const useTranslatorStore = defineStore('translator', () => {
         }
         translatedText.value = response.payload.text.translated;
         allTranslations.value = response.payload.allTranslations || {};
-        isLoading.value = false;
     }
 
     return {
