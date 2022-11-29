@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { requestProfile } from '@/api/user';
+import { requestProfile, requestRefreshLogin } from '@/api/user';
 import { Profile } from '@/types/ProfileType';
+import changeLocation from '@/utils/changeLocation';
+import AUTH from '@/constants/AUTH';
 
 export const useUserStore = defineStore('user', () => {
     const profile = ref<Profile>({});
@@ -19,9 +21,20 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    async function logout() {
+        changeLocation(AUTH.BASE + AUTH.URL.LOGOUT);
+        isLoggined.value = false;
+        profile.value = {};
+    }
+
+    async function refreshLogin() {
+        await requestRefreshLogin();
+    }
     return {
         isLoggined,
         profile,
         getProfile,
+        logout,
+        refreshLogin,
     };
 });
