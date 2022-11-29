@@ -61,7 +61,8 @@ axios.interceptors.response.use(
                     userStore.refreshLogin();
                     break;
                 }
-                case AUTH.RESPONSE.LOGIN_EXPIRED: {
+                case AUTH.RESPONSE.LOGIN_EXPIRED:
+                case AUTH.RESPONSE.INVALID_TOKEN: {
                     userStore.logout();
                     break;
                 }

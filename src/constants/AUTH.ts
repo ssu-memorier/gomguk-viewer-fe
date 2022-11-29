@@ -18,6 +18,7 @@ export default {
     RESPONSE: {
         REFRESH_LOGIN: 'REFRESH_LOGIN',
         LOGIN_EXPIRED: 'LOGIN_EXPIRED',
+        INVALID_TOKEN: 'INVALID_TOKEN',
     },
     VIEW: {
         LOGOUT: '로그아웃',
