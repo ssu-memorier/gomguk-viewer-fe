@@ -67,6 +67,7 @@ async function deleteFile(fileInfo: IFileInfo) {
 }
 
 async function updateFileList() {
+    fileList.value = [];
     const list = await fileStore.fetchFileList();
     if (!list) return;
 
