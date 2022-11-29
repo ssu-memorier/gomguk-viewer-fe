@@ -12,7 +12,6 @@ import {
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { ref } from 'vue';
 import { useAlertStore } from '@/store/alert';
-import FILE from '@/constants/FILE';
 
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
@@ -44,11 +43,17 @@ export const useFileStore = defineStore('file', () => {
             key: pdf.name.replace(/\.[^/.]+$/, ''),
             file: pdf,
         });
-
-        alertStore.pushAlert({
-            time: new Date(),
-            message: response.message,
-        });
+        if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
+        } else {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.payload,
+            });
+        }
 
         return response.isSuccess;
     }
@@ -70,10 +75,17 @@ export const useFileStore = defineStore('file', () => {
             },
         });
 
-        alertStore.pushAlert({
-            time: new Date(),
-            message: response.message,
-        });
+        if (!response.isSuccess) {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.message,
+            });
+        } else {
+            alertStore.pushAlert({
+                time: new Date(),
+                message: response.payload,
+            });
+        }
 
         return response.isSuccess;
     }

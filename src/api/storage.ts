@@ -43,11 +43,13 @@ export const requestUploadFile = Request.create(
         formData.append('dir', dir);
         formData.append('key', key);
         formData.append('data', file);
-        await model.post(STORAGE.URL.FILE, formData, {
+        const response = await model.post(STORAGE.URL.FILE, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
+
+        return response.data;
     }
 );
 
@@ -60,9 +62,11 @@ export const requestUpdateFile = Request.create(
             data,
         });
 
-        await model.put(STORAGE.URL.FILE, sendData, {
+        const response = await model.put(STORAGE.URL.FILE, sendData, {
             headers: { 'Content-Type': 'application/json' },
         });
+
+        return response.data;
     }
 );
 
