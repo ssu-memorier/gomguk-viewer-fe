@@ -10,7 +10,7 @@
         <file-loaders-view></file-loaders-view>
     </center-modal>
     <div class="dropdown profileMenu" v-show="modalStore.isShowProfileMenu">
-        <logout-button></logout-button>
+        <profile-view></profile-view>
     </div>
     <div class="dropdown loginMethods" v-show="modalStore.isShowLoginMethods">
         <kakao-login-button></kakao-login-button>
@@ -26,7 +26,7 @@ import CenterModal from '@/components/CenterModal.vue';
 import MastheadView from '@/views/MastheadView.vue';
 import AlertView from '@/views/AlertView.vue';
 import GuideView from '@/views/GuideView.vue';
-import LogoutButton from '@/components/button/LogoutButton.vue';
+import ProfileView from '@/views/ProfileView.vue';
 import KakaoLoginButton from '@/components/button/KakaoLoginButton.vue';
 import GoogleLoginButton from '@/components/button/GoogleLoginButton.vue';
 import PaperView from '@/views/Paper/PaperView.vue';
@@ -37,6 +37,7 @@ import { usePdfStore } from '@/store/file/pdf';
  * TODO: 제거 예정
  */
 import axios from 'axios';
+import AUTH from '@/constants/AUTH';
 
 const $main = ref();
 const userStore = useUserStore();
@@ -55,7 +56,20 @@ axios.interceptors.response.use(
     },
     (err) => {
         if (err.response.status === 401) {
-            userStore.isLoggined = false;
+            switch (err.response.message) {
+                case AUTH.RESPONSE.REFRESH_LOGIN: {
+                    userStore.refreshLogin();
+                    break;
+                }
+                case AUTH.RESPONSE.LOGIN_EXPIRED:
+                case AUTH.RESPONSE.INVALID_TOKEN: {
+                    userStore.logout();
+                    break;
+                }
+                default: {
+                    userStore.logout();
+                }
+            }
         }
     }
 );

@@ -12,8 +12,6 @@ export const requestFileList = Request.create(async () => {
     const response = await model.get(`${STORAGE.URL.LIST}`);
     const result = response.data.contents;
 
-    if (response.status !== 200) throw Error(response.data.message);
-
     return result;
 });
 
