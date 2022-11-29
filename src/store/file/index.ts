@@ -12,17 +12,21 @@ import {
 import { IFileInfo } from '@/Interface/IFileInfo';
 import { ref } from 'vue';
 import { useAlertStore } from '@/store/alert';
+import FILE from '@/constants/FILE';
 
 export const useFileStore = defineStore('file', () => {
     const editorStore = useEditorStore();
     const highlightStore = useHighlightStore();
     const pdfStore = usePdfStore();
     const alertStore = useAlertStore();
+    const isLoading = ref<boolean>(false);
 
     const currentFileInfo = ref<IFileInfo | undefined>();
 
     async function fetchFileList(): Promise<IFileInfo[] | undefined> {
+        isLoading.value = true;
         const response = await requestFileList();
+        isLoading.value = false;
         if (!response.isSuccess) {
             alertStore.pushAlert({
                 time: new Date(),
@@ -41,14 +45,12 @@ export const useFileStore = defineStore('file', () => {
             file: pdf,
         });
 
-        if (!response.isSuccess) {
-            alertStore.pushAlert({
-                time: new Date(),
-                message: response.message,
-            });
-            return false;
-        }
-        return true;
+        alertStore.pushAlert({
+            time: new Date(),
+            message: response.message,
+        });
+
+        return response.isSuccess;
     }
 
     async function updateFile(): Promise<boolean> {
@@ -68,14 +70,12 @@ export const useFileStore = defineStore('file', () => {
             },
         });
 
-        if (!response.isSuccess) {
-            alertStore.pushAlert({
-                time: new Date(),
-                message: response.message,
-            });
-            return false;
-        }
-        return true;
+        alertStore.pushAlert({
+            time: new Date(),
+            message: response.message,
+        });
+
+        return response.isSuccess;
     }
 
     async function loadFile(fileInfo: IFileInfo): Promise<boolean> {
@@ -120,5 +120,6 @@ export const useFileStore = defineStore('file', () => {
         loadFile,
         deleteFile,
         updateFile,
+        isLoading,
     };
 });
