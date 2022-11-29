@@ -15,6 +15,10 @@ export default {
     BASE: '/auth',
     URL: URL,
     PROVIDER: PROVIDER,
+    RESPONSE: {
+        REFRESH_LOGIN: 'REFRESH_LOGIN',
+        LOGIN_EXPIRED: 'LOGIN_EXPIRED',
+    },
     VIEW: {
         LOGOUT: '로그아웃',
         LOGIN: '로그인',
