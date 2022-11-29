@@ -9,3 +9,15 @@ export const requestProfile = Request.create(async () => {
 
     return result;
 });
+
+export const requestLogout = Request.create(async () => {
+    const result = await model.get(AUTH.URL.LOGOUT);
+
+    return result;
+});
+
+export const requestRefreshLogin = Request.create(async () => {
+    const result = await model.get(AUTH.URL.REFRESH_LOGIN);
+
+    return result;
+});

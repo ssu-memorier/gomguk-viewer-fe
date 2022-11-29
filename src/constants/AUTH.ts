@@ -8,6 +8,7 @@ export const URL = {
     GOOGLE_LOGIN: '/google',
     LOGOUT: '/logout',
     PROFILE: '/profile',
+    REFRESH_LOGIN: '/refresh-token',
 } as const;
 
 export default {
