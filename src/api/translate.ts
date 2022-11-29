@@ -17,7 +17,7 @@ export const requestTranslatedText = Request.create(
             target: params.target,
         };
         const response = await model.post(TRANSLATOR.TRANSLATE_URL, body);
-        const translateResult = response.data.body;
+        const translateResult = response.data;
 
         return translateResult;
     }
