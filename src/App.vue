@@ -37,6 +37,7 @@ import { usePdfStore } from '@/store/file/pdf';
  * TODO: 제거 예정
  */
 import axios from 'axios';
+import AUTH from '@/constants/AUTH';
 
 const $main = ref();
 const userStore = useUserStore();
@@ -55,7 +56,20 @@ axios.interceptors.response.use(
     },
     (err) => {
         if (err.response.status === 401) {
-            userStore.isLoggined = false;
+            switch (err.response.message) {
+                case AUTH.RESPONSE.REFRESH_LOGIN: {
+                    userStore.refreshLogin();
+                    break;
+                }
+                case AUTH.RESPONSE.LOGIN_EXPIRED:
+                case AUTH.RESPONSE.INVALID_TOKEN: {
+                    userStore.logout();
+                    break;
+                }
+                default: {
+                    userStore.logout();
+                }
+            }
         }
     }
 );
