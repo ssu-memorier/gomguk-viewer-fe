@@ -11,7 +11,8 @@
 - Vue3 (with Composition API)
 - Typescript
 - Pinia
-- pdfjs-dist
+- PDF.js
+- editor.js
 - SCSS
 
 ## 테스트 서버
