@@ -55,7 +55,7 @@ PDF.js의 scale을 조정하는 과정에서 위 gif처럼 화면이 깜빡이�
 
 위와 같은 방식으로 PDF Page를 확대/축소 하기 위해 이전 PDF는 scale만 변경해 남겨두고 (해상도가 깨지도록), 새로운 scale이 적용된 PDF 랜더링이 끝나면 화면에 표시하는 방식을 적용했습니다. `원본 → 확대된(하지만 깨지는) 캔버스 → 새로 랜더링한 캔버스` 순으로 덮어 씌운다 생각하면 됩니다. 
 
-결과적으로 깜빡이는 현상을 제거할 수 있었습니다.
+결과적으로 깜빡이는 현상을 제거할 수 있었습니다.  
 ![scale](https://user-images.githubusercontent.com/40891497/210166024-69886c75-5d65-4393-9653-2cd50837fa4f.gif)
 
 #### PDF 확대/축소 최적화 - lazy loading 적용
@@ -72,21 +72,21 @@ PDF의 크기가 커지면 확대/축소시 렌더링 시간이 크게 늘어나
 #### Hit Test 비용 최적화 - `content-visibility:auto`
 곰국 뷰어의 화면은 PDF viewer영역과 번역기 영역으로 나누어져 있는데, 이 둘의 크기를 조절할 수 있습니다. 특정 상황에서 이 화면을 조절할 때 프레임 드랍이 관측되어 성능을 측정하게 되었는데요. 테스트 방식은 아래와 같이 8page 크기의 PDF를 불러와 번역기 영역의 크기를 위아래로 10회 바꾸는 방식으로 진행했습니다.
 
-![example](https://user-images.githubusercontent.com/40891497/210166599-81615507-bc60-403d-b15c-e38ad742f1d9.gif)
+![example](https://user-images.githubusercontent.com/40891497/210166599-81615507-bc60-403d-b15c-e38ad742f1d9.gif)  
 
-![image](https://user-images.githubusercontent.com/40891497/210166717-77058fb5-4a39-4896-898e-2aa45f22fe5d.png)
+![image](https://user-images.githubusercontent.com/40891497/210166717-77058fb5-4a39-4896-898e-2aa45f22fe5d.png)  
 테스트 결과 렌더링 시간이 크게 소요되고 있음을 확인할 수 있었는데요. 
 
-![image](https://user-images.githubusercontent.com/40891497/210166729-e4cf39fe-5406-44e9-8876-0b89249e1dcf.png)
+![image](https://user-images.githubusercontent.com/40891497/210166729-e4cf39fe-5406-44e9-8876-0b89249e1dcf.png)  
 자세한 내용을 보면 Hit Test 비용이 2441ms로 큰 비중을 차지함을 알 수 있었습니다. Hit Test 비용은 렌더러 프로세스가 유저의 마우스(또는 터치) 이벤트가 어떤 DOM 요소에서 발생했는지 확인하는 비용으로 이 Hit Test 비용이 크게 증가한 것으로 미루어보아 다음 가설을 세울 수 있었습니다.
 
 가설) 보이지 않는 영역의 DOM Tree까지 Hit Test가 수행되어 Hit Test 비용이 크게 측정되었다. 
 
 따라서 이를 해결하기 위해 css의 `content-visibility` 속성을 적용했습니다. 이 속성은 화면에 보이지 않는 영역은 페인팅 작업을 생략해 렌더링 성능을 최적화할 수 있는 속성입니다. 각 PDF 페이지들에 `content-visibility:auto`를 설정한 뒤 다시 한번 테스트를 진행했습니다.
 
-![image](https://user-images.githubusercontent.com/40891497/210166935-dc382b7c-6fb2-4088-a18e-f4907d193a0f.png)
-![image](https://user-images.githubusercontent.com/40891497/210166943-5d149a61-8f75-4833-a0a2-09a594ef7252.png)
-
+![image](https://user-images.githubusercontent.com/40891497/210166935-dc382b7c-6fb2-4088-a18e-f4907d193a0f.png)  
+![image](https://user-images.githubusercontent.com/40891497/210166943-5d149a61-8f75-4833-a0a2-09a594ef7252.png)  
+ 
 결과적으로 Hit Test 비용이 2441ms -> 185ms로 크게 감소한 것을 확인할 수 있었습니다.
 
 ## 개발자
