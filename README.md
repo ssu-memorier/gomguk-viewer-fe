@@ -4,6 +4,13 @@
 
 **PDF Viewer, 번역기, 메모장으로 구성된 웹앱을 제공합니다** 
 
+## 개요
+곰국 뷰어의 웹 프론트엔드 영역
+
+## 개발 내용
+
+## 화면 소개
+
 ## 개발자
 @dev2820
 
@@ -15,6 +22,4 @@
 - editor.js
 - SCSS
 
-## 테스트 서버
 
-http://gomguk-fe-development.s3-website.ap-northeast-2.amazonaws.com/
